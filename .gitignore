@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/QuanLyKhachSanApp/.vs/QuanLyKhachSanApp/v16/Server/sqlite3
+/QuanLyKhachSanApp/.vs/QuanLyKhachSanApp/v16
+/QuanLyKhachSanCli/node_modules
+/QuanLyKhachSanCli/bin
