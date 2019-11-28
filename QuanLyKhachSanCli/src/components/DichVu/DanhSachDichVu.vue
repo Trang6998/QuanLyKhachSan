@@ -11,35 +11,44 @@
             <v-card-text>
                 <v-layout row wrap>
                     <v-flex xs12>
-                    <v-data-table :headers="tableHeader"
-                                :items="dsDichVu"
-                                @update:pagination="getDataFromApi" :pagination.sync="searchParamsDichVu"
-                                :total-items="searchParamsDichVu.totalItems"
-                                :loading="loadingTable"
-                                class="table-border table">
-                        <template slot="items" slot-scope="props">
-                    <td>{{ props.item.DichVuID }}</td>
-                    <td>{{ props.item.TenDichVu }}</td>
-                    <td>{{ props.item.MoTa }}</td>
-                    <td>{{ props.item.GiaBan }}</td>
-                    <td>{{ props.item.DonViTinh }}</td>
-                    <td>{{ props.item.TrangThai ? "Yes" : "No" }}</td>
-                    <td class="text-xs-center" style="width:80px;">
-                        <v-btn flat icon small :to="'/dichvu/'+props.item.DichVuID" class="ma-0">
-                            <v-icon small>edit</v-icon>
-                        </v-btn>
-                        <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-                            <v-icon small>delete</v-icon>
-                        </v-btn>
-                    </td>
+                        <v-layout nowrap>
+                            <v-flex xs6>
+                                <v-text-field v-model="searchParamsDichVu.tenDichVu" @input="getDataFromApi(searchParamsDichVu)"></v-text-field>
+                            </v-flex>
+                            <v-spacer></v-spacer>
+                            <v-btn>Them</v-btn>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-data-table :headers="tableHeader"
+                                      :items="dsDichVu"
+                                      @update:pagination="getDataFromApi" :pagination.sync="searchParamsDichVu"
+                                      :total-items="searchParamsDichVu.totalItems"
+                                      :loading="loadingTable"
+                                      class="table-border table">
+                            <template slot="items" slot-scope="props">
+                                <td>{{ props.item.DichVuID }}</td>
+                                <td>{{ props.item.TenDichVu }}</td>
+                                <td>{{ props.item.MoTa }}</td>
+                                <td>{{ props.item.GiaBan }}</td>
+                                <td>{{ props.item.DonViTinh }}</td>
+                                <td>{{ props.item.TrangThai ? "Yes" : "No" }}</td>
+                                <td class="text-xs-center" style="width:80px;">
+                                    <v-btn flat icon small :to="'/dichvu/'+props.item.DichVuID" class="ma-0">
+                                        <v-icon small>edit</v-icon>
+                                    </v-btn>
+                                    <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
+                                        <v-icon small>delete</v-icon>
+                                    </v-btn>
+                                </td>
                             </template>
                         </v-data-table>
-                    </v-flex xs12>
+                    </v-flex>
                 </v-layout>
             </v-card-text>
         </v-card>
         <v-dialog v-model="dialogConfirmDelete" max-width="290">
-                    <v-card>
+            <v-card>
                 <v-card-title class="headline">Xác nhận xóa</v-card-title>
                 <v-card-text class="pt-3">Bạn có chắc chắn muốn xóa?</v-card-text>
                 <v-card-actions>

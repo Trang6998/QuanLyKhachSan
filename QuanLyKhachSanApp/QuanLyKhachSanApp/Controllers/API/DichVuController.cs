@@ -12,13 +12,18 @@ namespace QuanLyKhachSanApp.Controllers
     [RoutePrefix("api/dichvu")]
     public class DichVuController : BaseApiController
     {
+        // fromBody - Lon, fromUri - Nho
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]string tenDichVu = null, [FromUri]float? giaBan = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
                 IQueryable<DichVu> results = db.DichVu;
-            
+
+                if (!string.IsNullOrWhiteSpace(tenDichVu))
+                    results = results.Where(x => x.TenDichVu.Contains(tenDichVu));
+                if (giaBan.HasValue)
+                    results = results.Where(x => x.GiaBan == giaBan);
                 results = results.OrderBy(o => o.DichVuID);
 
                 return Ok((await GetPaginatedResponse(results, pagination)));

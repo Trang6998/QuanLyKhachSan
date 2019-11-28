@@ -3,6 +3,8 @@ import { BaseApi } from './BaseApi'
 import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { DichVu } from '@/models/DichVu'
 export interface DichVuApiSearchParams extends Pagination {
+    tenDichVu?: string;
+    giaBan?: number;
 }
 class DichVuApi extends BaseApi {
     search(searchParams: DichVuApiSearchParams): Promise<PaginatedResponse<DichVu>> {
