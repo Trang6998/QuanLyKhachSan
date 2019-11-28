@@ -237,6 +237,9 @@
     <Content Include="src\components\KhachHang\ThemSuaKhachHang.vue" />
     <Content Include="src\components\KiemKe\DanhSachKiemKe.vue" />
     <Content Include="src\components\KiemKe\ThemSuaKiemKe.vue" />
+    <Content Include="src\components\Layout\LeftSideBar.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\LoaiPhong\DanhSachLoaiPhong.vue" />
     <Content Include="src\components\LoaiPhong\ThemSuaLoaiPhong.vue" />
     <Content Include="src\components\Login\ErrorPage.vue" />

@@ -12,7 +12,11 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "vee-validate": "^2.1.0-beta.8",
+    "dayspan-vuetify": "^0.3.6",
+    "js-cookie": "^2.2.0",
+    "printd": "^1.1.0",
+    "v-money": "^0.8.1",
+    "vee-validate": "^2.1.5",
     "vue": "^2.5.16",
     "vue-class-component": "^6.2.0",
     "vue-moment": "^4.0.0",
