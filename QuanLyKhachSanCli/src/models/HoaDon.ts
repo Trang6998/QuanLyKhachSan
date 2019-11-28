@@ -12,7 +12,10 @@ export interface HoaDon {
     MaHoaDon: string;
     NgayThanhToan: Date;
     SoTaiKhoan: string;
-    TongTien: number;
+    ThoiGianNhanPhong: Date;
+    ThoiGianTraPhong: Date;
+    PhuThu: number;
+    LyDo: string;
     DatPhong?: DatPhong;
     KhachHang?: KhachHang;
     NhanVien?: NhanVien;
