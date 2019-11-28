@@ -26,39 +26,6 @@
                                                 </v-layout>
                                             </template>
                                         </v-img>
-                                        <!-- <v-tooltip bottom>
-                                          
-                                            <v-img v-if="dichVu.anhDaiDien != null" slot="activator"
-                                                   :src="APIS.HOST + 'fileupload/download?key=' + dichVu.anhDaiDien"
-                                                   @click="$refs.inpFile.click()" style="max-width: 100%;" id="img"
-                                                   aspect-ratio="1"
-                                                   class="grey lighten-2">
-                                                <template v-slot:placeholder>
-                                                    <v-layout fill-height
-                                                              align-center
-                                                              justify-center
-                                                              ma-0>
-                                                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                                                    </v-layout>
-                                                </template>
-                                            </v-img>
-                                            <v-img v-else src='/static/images/photo-3x4.jpg' slot="activator"
-                                                   @click="$refs.inpFile.click()" style="max-width: 100%;" id="img"
-                                                   aspect-ratio="1"
-                                                   class="grey lighten-2">
-                                                <template v-slot:placeholder>
-                                                    <v-layout fill-height
-                                                              align-center
-                                                              justify-center
-                                                              ma-0>
-                                                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                                                    </v-layout>
-                                                </template>
-                                            </v-img>
-                                            <span>Nhấn để thay đổi ảnh đại diện</span>
-                                        </v-tooltip>
-                                        <input type="file" accept="image/*" style="display:none;" ref="inpFile" id="File" @change="changeImg()" capture="camera"> -->
-
                                     </v-flex>
                                     <v-flex xs12>
                                         <v-btn small flat class="ma-0" aspect-ratio="1" @click="$refs.inpFile1.click()">
