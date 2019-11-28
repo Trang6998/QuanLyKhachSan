@@ -1,7 +1,7 @@
 export default {
 
-    HOST: 'http://localhost:44363/',
-    BASE_API: 'http://localhost:44363/api',
-    AUTH_LOGIN: 'http://localhost:44363/api/auth/login',
-    BASE_API_ODATA: 'http://localhost:44363/odata/'
+    HOST: 'https://localhost:44363/',
+    BASE_API: 'https://localhost:44363/api',
+    AUTH_LOGIN: 'https://localhost:44363/api/auth/login',
+    BASE_API_ODATA: 'https://localhost:44363/odata/'
 }
