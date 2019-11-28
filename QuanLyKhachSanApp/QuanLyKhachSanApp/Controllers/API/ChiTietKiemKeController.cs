@@ -1,0 +1,118 @@
+using System;
+using System.Data.Entity;
+using System.Linq;
+using System.Web.Http;
+using System.Threading.Tasks;
+using HVITCore.Controllers;
+using System.Data.Entity.Infrastructure;
+using QuanLyKhachSanApp.Models;
+
+namespace QuanLyKhachSanApp.Controllers
+{
+    [RoutePrefix("api/chitietkiemke")]
+    public class ChiTietKiemKeController : BaseApiController
+    {
+        [HttpGet, Route("")]
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? kiemKeID = null, [FromUri]int? vatDungPhongID = null)
+        {
+            using (var db = new dbQuanLyKhachSan())
+            {
+                IQueryable<ChiTietKiemKe> results = db.ChiTietKiemKe;
+                if (pagination == null)
+                    pagination = new Pagination();
+                if (pagination.includeEntities)
+                {
+                }
+
+                if (kiemKeID.HasValue) results = results.Where(o => o.KiemKeID == kiemKeID);
+                if (vatDungPhongID.HasValue) results = results.Where(o => o.VatDungPhongID == vatDungPhongID);
+
+                results = results.OrderBy(o => o.ChiTietKiemKeID);
+
+                return Ok((await GetPaginatedResponse(results, pagination)));
+            }
+        }
+
+        [HttpGet, Route("{chiTietKiemKeID:int}")]
+        public async Task<IHttpActionResult> Get(int chiTietKiemKeID)
+        {
+            using (var db = new dbQuanLyKhachSan())
+            {
+                var chiTietKiemKe = await db.ChiTietKiemKe
+                    .SingleOrDefaultAsync(o => o.ChiTietKiemKeID == chiTietKiemKeID);
+
+                if (chiTietKiemKe == null)
+                    return NotFound();
+
+                return Ok(chiTietKiemKe);
+            }
+        }
+
+        [HttpPost, Route("")]
+        public async Task<IHttpActionResult> Insert([FromBody]ChiTietKiemKe chiTietKiemKe)
+        {
+            if (chiTietKiemKe.ChiTietKiemKeID != 0) return BadRequest("Invalid ChiTietKiemKeID");
+
+            using (var db = new dbQuanLyKhachSan())
+            {
+                db.ChiTietKiemKe.Add(chiTietKiemKe);
+                await db.SaveChangesAsync();
+            }
+
+            return Ok(chiTietKiemKe);
+        }
+
+        [HttpPut, Route("{chiTietKiemKeID:int}")]
+        public async Task<IHttpActionResult> Update(int chiTietKiemKeID, [FromBody]ChiTietKiemKe chiTietKiemKe)
+        {
+            if (chiTietKiemKe.ChiTietKiemKeID != chiTietKiemKeID) return BadRequest("Id mismatch");
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            using (var db = new dbQuanLyKhachSan())
+            {
+                db.Entry(chiTietKiemKe).State = EntityState.Modified;
+
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException ducEx)
+                {
+                    bool exists = db.ChiTietKiemKe.Count(o => o.ChiTietKiemKeID == chiTietKiemKeID) > 0;
+                    if (!exists)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw ducEx;
+                    }
+                }
+
+                return Ok(chiTietKiemKe);
+            }
+        }
+
+        [HttpDelete, Route("{chiTietKiemKeID:int}")]
+        public async Task<IHttpActionResult> Delete(int chiTietKiemKeID)
+        {
+            using (var db = new dbQuanLyKhachSan())
+            {
+                var chiTietKiemKe = await db.ChiTietKiemKe.SingleOrDefaultAsync(o => o.ChiTietKiemKeID == chiTietKiemKeID);
+
+                if (chiTietKiemKe == null)
+                    return NotFound();
+
+                db.Entry(chiTietKiemKe).State = EntityState.Deleted;
+
+                await db.SaveChangesAsync();
+
+                return Ok();
+            }
+        }
+
+    }
+}
