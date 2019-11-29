@@ -41,8 +41,6 @@
                         <v-flex xs6 sm4 md3>
                             <v-autocomplete v-model="phieuNhapKho.NhanVienID"
                             :items="dsNhanVien"
-                            :loading="dsNhanVienLoading"
-                            :search-input.sync="searchNhanVien"
                             item-text="NhanVienID"
                             item-value="NhanVienID"
                             label="NhanVienID"
