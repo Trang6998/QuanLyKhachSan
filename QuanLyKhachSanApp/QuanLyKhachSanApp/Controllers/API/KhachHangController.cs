@@ -13,12 +13,13 @@ namespace QuanLyKhachSanApp.Controllers
     public class KhachHangController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]string query = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
                 IQueryable<KhachHang> results = db.KhachHang;
-
+                if (!string.IsNullOrWhiteSpace(query))
+                    results = results.Where(x => x.HoTen.Contains(query) || x.SoDienThoai.Contains(query));
                 results = results.OrderBy(o => o.KhachHangID);
 
                 return Ok((await GetPaginatedResponse(results, pagination)));

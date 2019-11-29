@@ -100,9 +100,8 @@
                     link: '/',
                     show: true,
                     items: [
-                        { title: 'Thông tin cá nhân', link: '/danh-muc-san-pham', show: true },
-                        { title: 'Đặt phòng', link: '/dich-vu', show: true },
-                        { title: 'Hóa đơn', link: '/danh-sach-don-hang', show: true },
+                        { title: 'Đặt phòng', link: '/khachdatphong', show: true },
+                        { title: 'Đặt dịch vụ', link: '/khachdatdichvu', show: true },
                     ]
                 },
                 {
@@ -111,14 +110,16 @@
                     link: '/',
                     show: true,
                     items: [
-                        { title: 'Quản lý vật dụng', link: '/ql-dich-vu', show: true },
-                        { title: 'Quản lý phòng', link: '/ql-danh-muc', show: true },
-                        { title: 'Quản lý loại phòng', link: '/ql-san-pham', show: true },
-                        { title: 'Quản lý dịch vụ', link: '/ql-nha-cung-cap', show: true },
-                        { title: 'Khách đặt phòng', link: '/khach-dat-dich-vu', action: 'add', show: true },
-                        { title: 'Quản lý hóa đơn', link: '/xu-ly-don-hang', action: 'add', show: true },
-                        { title: 'Nhập kho', link: '/xu-ly-don-hang', action: 'add', show: true },
-                        { title: 'Quản lý nhân viên', link: '/xu-ly-don-hang', show: true },
+                        { title: 'Quản lý vật dụng', link: '/vatdung', show: true },
+                        { title: 'Quản lý phòng', link: '/phong', show: true },
+                        { title: 'Quản lý loại phòng', link: '/loaiphong', show: true },
+                        { title: 'Quản lý dịch vụ', link: '/dichvu', show: true },
+                        { title: 'Khách đặt phòng', link: '/datphong', action: 'add', show: true },
+                        { title: 'Khách đặt dịch vụ', link: '/datdichvu', action: 'add', show: true },
+                        { title: 'Quản lý hóa đơn', link: '/hoadon', action: 'add', show: true },
+                        { title: 'Nhập kho', link: '/phieunhapkho', action: 'add', show: true },
+                        { title: 'Danh sách nhân viên', link: '/nhanvien', show: true },
+                        { title: 'Danh sách khách hàng', link: '/khachhang', show: true },
                     ]
                 },
                 {
@@ -127,7 +128,7 @@
                     link: '/',
                     show: true,
                     items: [
-                        { title: 'Kiểm kê vật dụng', link: 'ds-mau-1', show: true},
+                        { title: 'Kiểm kê vật dụng', link: 'kiemke', show: true},
                         { title: 'Mẫu thống kê 1', link: 'ds-mau-3', show: true},
 
                     ]
