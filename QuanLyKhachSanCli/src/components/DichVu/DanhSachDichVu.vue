@@ -1,5 +1,12 @@
 <template>
     <v-flex xs12>
+        <v-breadcrumbs divider="/" class="pa-0">
+            <v-icon slot="divider">chevron_right</v-icon>
+            <v-breadcrumbs-item>
+                <v-btn flat class="ma-0" @click="$router.go(-1)" small><v-icon>arrow_back</v-icon> Quay lại</v-btn>
+            </v-breadcrumbs-item>
+            <v-breadcrumbs-item to="/dichvu" exact>DichVu</v-breadcrumbs-item>
+        </v-breadcrumbs>
         <v-card>
             <v-card-text>
                 <v-layout row wrap>
@@ -9,7 +16,7 @@
                                 <v-text-field v-model="searchParamsDichVu.tenDichVu" @input="getDataFromApi(searchParamsDichVu)"></v-text-field>
                             </v-flex>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" @click="showModalThemSua(false, {})">Thêm mới</v-btn>
+                            <v-btn>Them</v-btn>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
@@ -20,14 +27,14 @@
                                       :loading="loadingTable"
                                       class="table-border table">
                             <template slot="items" slot-scope="props">
-                                <td>{{ props.index + 1 }}</td>
+                                <td>{{ props.item.DichVuID }}</td>
                                 <td>{{ props.item.TenDichVu }}</td>
                                 <td>{{ props.item.MoTa }}</td>
                                 <td>{{ props.item.GiaBan }}</td>
                                 <td>{{ props.item.DonViTinh }}</td>
-                                <td>{{ props.item.TrangThai ? "Đang phục vụ" : "Dừng phục vụ" }}</td>
+                                <td>{{ props.item.TrangThai ? "Yes" : "No" }}</td>
                                 <td class="text-xs-center" style="width:80px;">
-                                    <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">
+                                    <v-btn flat icon small :to="'/dichvu/'+props.item.DichVuID" class="ma-0">
                                         <v-icon small>edit</v-icon>
                                     </v-btn>
                                     <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
@@ -51,23 +58,20 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <them-sua-dich-vu ref="themSuaDichVu" @getLaiDanhSach="getDataFromApi(searchParamsDichVu)"></them-sua-dich-vu>
     </v-flex>
 </template>
 <script lang="ts">
     import { Vue } from 'vue-property-decorator';
     import DichVuApi, { DichVuApiSearchParams } from '@/apiResources/DichVuApi';
     import { DichVu } from '@/models/DichVu';
-    import ThemSuaDichVu from './ThemSuaDichVu.vue';
+
     export default Vue.extend({
-        components: {
-            ThemSuaDichVu
-        },
+        components: {},
         data() {
             return {
                 dsDichVu: [] as DichVu[],
                 tableHeader: [
-                    { text: 'STT', value: 'DichVuID', align: 'center', sortable: true },
+                    { text: 'DichVuID', value: 'DichVuID', align: 'center', sortable: true },
                     { text: 'TenDichVu', value: 'TenDichVu', align: 'center', sortable: true },
                     { text: 'MoTa', value: 'MoTa', align: 'center', sortable: true },
                     { text: 'GiaBan', value: 'GiaBan', align: 'center', sortable: true },
@@ -94,9 +98,6 @@
                     this.searchParamsDichVu.totalItems = res.Pagination.totalItems;
                     this.loadingTable = false;
                 });
-            },
-            showModalThemSua(isUpdate: boolean, item: any) { // refs gọi từ cha -=> con 
-                (this.$refs.themSuaDichVu as any).show(isUpdate, item); // gọi đến hàm show bên modal con
             },
             confirmDelete(dichVu: DichVu): void {
                 this.selectedDichVu = dichVu;

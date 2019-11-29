@@ -5,7 +5,7 @@
             <v-breadcrumbs-item>
                 <v-btn flat class="ma-0" @click="$router.go(-1)" small><v-icon>arrow_back</v-icon> Quay lại</v-btn>
             </v-breadcrumbs-item>
-            <v-breadcrumbs-item to="/phieunhapkho" exact>PhieuNhapKho</v-breadcrumbs-item>
+            <v-breadcrumbs-item to="/phieunhapkho" exact>Phiếu nhập kho</v-breadcrumbs-item>
         </v-breadcrumbs>
         <v-card>
             <v-card-text>
@@ -18,18 +18,19 @@
                                 :loading="loadingTable"
                                 class="table-border table">
                         <template slot="items" slot-scope="props">
-                    <td>{{ props.item.PhieuNhapID }}</td>
+                            <td>{{ props.index }}</td>
+                            <td>{{ props.item.PhieuNhapID }}</td>
                             <td>{{ props.item.NgayNhap === null ? "" : props.item.NgayNhap|moment('DD/MM/YYYY') }}</td>
-                    <td>{{ props.item.TongTien }}</td>
-                    <td class="text-xs-center" style="width:80px;">
-                        <v-btn flat icon small :to="'/phieunhapkho/'+props.item.PhieuNhapID" class="ma-0">
-                            <v-icon small>edit</v-icon>
-                        </v-btn>
-                        <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-                            <v-icon small>delete</v-icon>
-                        </v-btn>
-                    </td>
-                            </template>
+                            <td>{{ props.item.TongTien }}</td>
+                            <td class="text-xs-center" style="width:80px;">
+                                <v-btn flat icon small :to="'/phieunhapkho/'+props.item.PhieuNhapID" class="ma-0">
+                                    <v-icon small>edit</v-icon>
+                                </v-btn>
+                                <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
+                                    <v-icon small>delete</v-icon>
+                                </v-btn>
+                            </td>
+                        </template>
                         </v-data-table>
                     </v-flex xs12>
                 </v-layout>
@@ -59,9 +60,10 @@
             return {
                 dsPhieuNhapKho: [] as PhieuNhapKho[],
                 tableHeader: [
-                    { text: 'PhieuNhapID', value: 'PhieuNhapID', align: 'center', sortable: true },
-                    { text: 'NgayNhap', value: 'NgayNhap', align: 'center', sortable: true },
-                    { text: 'TongTien', value: 'TongTien', align: 'center', sortable: true },
+                    { text: 'STT', value: 'index', align: 'center', sortable: true },
+                    { text: 'ID', value: 'PhieuNhapID', align: 'center', sortable: true },
+                    { text: 'Ngày nhập', value: 'NgayNhap', align: 'center', sortable: true },
+                    { text: 'Tổng tiền', value: 'TongTien', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
                 searchParamsPhieuNhapKho: { includeEntities: true, rowsPerPage: 10 } as PhieuNhapKhoApiSearchParams,
