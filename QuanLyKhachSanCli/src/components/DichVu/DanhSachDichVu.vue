@@ -9,7 +9,7 @@
                                 <v-text-field v-model="searchParamsDichVu.tenDichVu" @input="getDataFromApi(searchParamsDichVu)"></v-text-field>
                             </v-flex>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" @click="showModalThemSua(false, {})">Thêm mới</v-btn>
+                                <v-btn color="primary" @click="showModalThemSua(false, {})">Thêm mới</v-btn>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
@@ -68,11 +68,11 @@
                 dsDichVu: [] as DichVu[],
                 tableHeader: [
                     { text: 'STT', value: 'DichVuID', align: 'center', sortable: true },
-                    { text: 'TenDichVu', value: 'TenDichVu', align: 'center', sortable: true },
-                    { text: 'MoTa', value: 'MoTa', align: 'center', sortable: true },
-                    { text: 'GiaBan', value: 'GiaBan', align: 'center', sortable: true },
-                    { text: 'DonViTinh', value: 'DonViTinh', align: 'center', sortable: true },
-                    { text: 'TrangThai', value: 'TrangThai', align: 'center', sortable: true },
+                    { text: 'Tên Dịch Vụ', value: 'TenDichVu', align: 'center', sortable: true },
+                    { text: 'Mô Tả', value: 'MoTa', align: 'center', sortable: true },
+                    { text: 'Giá Bán', value: 'GiaBan', align: 'center', sortable: true },
+                    { text: 'Đơn Vị Tính', value: 'DonViTinh', align: 'center', sortable: true },
+                    { text: 'Trạng Thái', value: 'TrangThai', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
                 searchParamsDichVu: { includeEntities: true, rowsPerPage: 10 } as DichVuApiSearchParams,
