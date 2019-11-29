@@ -13,7 +13,7 @@ namespace QuanLyKhachSanApp.Controllers
     public class NhanVienController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? boPhanID = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]string query = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -25,7 +25,7 @@ namespace QuanLyKhachSanApp.Controllers
                     results = results.Include(o => o.BoPhan);
                 }
 
-                if (boPhanID.HasValue) results = results.Where(o => o.BoPhanID == boPhanID);
+                if (!string.IsNullOrWhiteSpace(query)) results = results.Where(o => o.TenNhanVien.Contains(query) || o.SoDienThoai.Contains(query));
 
                 results = results.OrderBy(o => o.NhanVienID);
 
