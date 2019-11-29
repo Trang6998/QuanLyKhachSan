@@ -16,6 +16,7 @@ namespace QuanLyKhachSanApp.Models
         public int NhanVienID { get; set; }
 
         public int? LoaiPhongID { get; set; }
+        public int? DichVuID { get; set; }
 
         [MaxLength(50)]
         public string HoTen { get; set; }
@@ -37,6 +38,8 @@ namespace QuanLyKhachSanApp.Models
 
         [ForeignKey("LoaiPhongID")]
         public virtual LoaiPhong LoaiPhong { get; set; }
+        [ForeignKey("DichVuID")]
+        public virtual DichVu DichVu { get; set; }
 
         [ForeignKey("NhanVienID")]
         public virtual NhanVien NhanVien { get; set; }

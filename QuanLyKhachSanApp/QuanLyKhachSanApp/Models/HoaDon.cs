@@ -27,8 +27,13 @@ namespace QuanLyKhachSanApp.Models
         [MaxLength(20)]
         public string SoTaiKhoan { get; set; }
 
-        public double? TongTien { get; set; }
+        public DateTime? ThoiGianNhanPhong { get; set; }
 
+        public DateTime? ThoiGianTraPhong { get; set; }
+
+        public double? PhuThu { get; set; }
+        [MaxLength(500)]
+        public string LyDo { get; set; }
         [ForeignKey("DatPhongID")]
         public virtual DatPhong DatPhong { get; set; }
 

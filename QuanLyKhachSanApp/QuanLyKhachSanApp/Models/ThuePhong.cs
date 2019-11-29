@@ -15,9 +15,6 @@ namespace QuanLyKhachSanApp.Models
 
         public int? HoaDonID { get; set; }
 
-        public DateTime? ThoiGianNhanPhong { get; set; }
-
-        public DateTime? ThoiGianTraPhong { get; set; }
 
         public int? BangGiaID { get; set; }
 
