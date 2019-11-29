@@ -36,9 +36,8 @@
                         <v-flex xs6 sm4 md3>
                             <v-autocomplete v-model="phong.LoaiPhongID"
                             :items="dsLoaiPhong"
-                            :loading="dsLoaiPhongLoading"
                             :search-input.sync="searchLoaiPhong"
-                            item-text="LoaiPhongID"
+                            item-text="TenLoaiPhong"
                             item-value="LoaiPhongID"
                             label="LoaiPhongID"
                             placeholder="Nhập LoaiPhongID"
@@ -123,6 +122,8 @@
     import ThuePhongApi, { ThuePhongApiSearchParams } from '@/apiResources/ThuePhongApi';
     import { VatDungPhong } from '@/models/VatDungPhong';
     import VatDungPhongApi, { VatDungPhongApiSearchParams } from '@/apiResources/VatDungPhongApi';
+import { LoaiPhong } from '@/models/LoaiPhong';
+import LoaiPhongApi, { LoaiPhongApiSearchParams } from '@/apiResources/LoaiPhongApi';
 
     export default Vue.extend({
         $_veeValidate: {
@@ -131,6 +132,8 @@
         components: {},
         data() {
             return {
+                searchLoaiPhong:'',
+                dsLoaiPhong: [] as LoaiPhong[],
                 isUpdate: false,
                 phong: {} as Phong,
                 dsThuePhong: [] as ThuePhong[],
@@ -155,6 +158,7 @@
                 ],
                 loading: false,
                 searchParamsPhong: {} as PhongApiSearchParams,
+                
             }
         },
         watch: {
@@ -168,11 +172,20 @@
                 this.isUpdate = false;
             }
         },
+        created() {
+            this.getLoaiPhong();
+        },
         methods: {
             getDataFromApi(id: number): void {
                 PhongApi.detail(id).then(res => {
                     this.phong = res;
                 });
+            },
+            getLoaiPhong() {
+                var searchParams = {} as LoaiPhongApiSearchParams;
+                LoaiPhongApi.search(searchParams).then(res => {
+                    this.dsLoaiPhong = res.Data;
+                })
             },
             save(): void {
                 this.$validator.validateAll('frmAddEdit').then((res) => {
