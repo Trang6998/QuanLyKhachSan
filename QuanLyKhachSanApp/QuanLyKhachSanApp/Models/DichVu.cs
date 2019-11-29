@@ -27,6 +27,7 @@ namespace QuanLyKhachSanApp.Models
 
         [InverseProperty("DichVu")]
         public virtual ICollection<DatDichVu> DatDichVu { get; set; }
-
+        [InverseProperty("DichVu")]
+        public virtual ICollection<DatPhong> DatPhong { get; set; }
     }
 }

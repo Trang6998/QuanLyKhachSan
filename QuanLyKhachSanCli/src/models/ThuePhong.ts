@@ -6,8 +6,7 @@ export interface ThuePhong {
     ThuePhongID: number;
     PhongID: number;
     HoaDonID: number;
-    ThoiGianNhanPhong: Date;
-    ThoiGianTraPhong: Date;
+    
     BangGiaID: number;
     BangGia?: BangGia;
     HoaDon?: HoaDon;
