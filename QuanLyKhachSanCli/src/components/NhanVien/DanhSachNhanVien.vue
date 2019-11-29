@@ -11,6 +11,15 @@
             <v-card-text>
                 <v-layout row wrap>
                     <v-flex xs12>
+                        <v-layout nowrap>
+                            <v-flex xs6>
+                                <v-text-field v-model="searchParamsNhanVien.query" @input="getDataFromApi(searchParamsNhanVien)"></v-text-field>
+                            </v-flex>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" @click="showModalThemSua(false, {})">Thêm mới</v-btn>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs12>
                     <v-data-table :headers="tableHeader"
                                 :items="dsNhanVien"
                                 @update:pagination="getDataFromApi" :pagination.sync="searchParamsNhanVien"
@@ -18,21 +27,22 @@
                                 :loading="loadingTable"
                                 class="table-border table">
                         <template slot="items" slot-scope="props">
-                    <td>{{ props.item.NhanVienID }}</td>
-                    <td>{{ props.item.TenNhanVien }}</td>
-                    <td>{{ props.item.SoDienThoai }}</td>
-                    <td>{{ props.item.TenDangNhap }}</td>
-                    <td>{{ props.item.MatKhau }}</td>
-                    <td>{{ props.item.LoaiTaiKhoanID }}</td>
-                    <td class="text-xs-center" style="width:80px;">
-                        <v-btn flat icon small :to="'/nhanvien/'+props.item.NhanVienID" class="ma-0">
-                            <v-icon small>edit</v-icon>
-                        </v-btn>
-                        <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-                            <v-icon small>delete</v-icon>
-                        </v-btn>
-                    </td>
-                            </template>
+                            <td>{{ props.item.TenNhanVien }}</td>
+                            <td>{{ props.item.SoDienThoai }}</td>
+                            <td>{{ props.item.TenDangNhap }}</td>
+                            <td>{{ props.item.MatKhau }}</td>
+                            <td>{{ props.item.LoaiTaiKhoanID }}</td>
+                            <td>{{ props.item.BoPhanID }}</td>
+                            <td class="text-xs-center" style="width:80px;">
+                                <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">
+                                    <v-icon small>edit</v-icon>
+                                </v-btn>
+                                <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
+                                    <v-icon small>delete</v-icon>
+                                </v-btn>
+                            </td>
+                            </td>
+                        </template>
                         </v-data-table>
                     </v-flex xs12>
                 </v-layout>
@@ -49,25 +59,29 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <them-sua-nhan-vien ref="themSuaNhanVien" @getLaiDanhSach="getDataFromApi(searchParamsNhanVien)"></them-sua-nhan-vien>
     </v-flex>
 </template>
 <script lang="ts">
     import { Vue } from 'vue-property-decorator';
     import NhanVienApi, { NhanVienApiSearchParams } from '@/apiResources/NhanVienApi';
     import { NhanVien } from '@/models/NhanVien';
+    import ThemSuaNhanVien from './ThemSuaNhanVien.vue';
 
     export default Vue.extend({
-        components: {},
+        components: {
+            ThemSuaNhanVien
+        },
         data() {
             return {
                 dsNhanVien: [] as NhanVien[],
                 tableHeader: [
-                    { text: 'NhanVienID', value: 'NhanVienID', align: 'center', sortable: true },
-                    { text: 'TenNhanVien', value: 'TenNhanVien', align: 'center', sortable: true },
-                    { text: 'SoDienThoai', value: 'SoDienThoai', align: 'center', sortable: true },
-                    { text: 'TenDangNhap', value: 'TenDangNhap', align: 'center', sortable: true },
-                    { text: 'MatKhau', value: 'MatKhau', align: 'center', sortable: true },
-                    { text: 'LoaiTaiKhoanID', value: 'LoaiTaiKhoanID', align: 'center', sortable: true },
+                    { text: 'Tên nhân viên', value: 'TenNhanVien', align: 'center', sortable: true },
+                    { text: 'Số điện thoại', value: 'SoDienThoai', align: 'center', sortable: true },
+                    { text: 'Tên đăng nhập', value: 'TenDangNhap', align: 'center', sortable: true },
+                    { text: 'Mật khẩu', value: 'MatKhau', align: 'center', sortable: true },
+                    { text: 'Loại tài khoản', value: 'LoaiTaiKhoanID', align: 'center', sortable: true },
+                    { text: 'Tên bộ phận', value: 'BoPhanID', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
                 searchParamsNhanVien: { includeEntities: true, rowsPerPage: 10 } as NhanVienApiSearchParams,
@@ -89,6 +103,9 @@
                     this.searchParamsNhanVien.totalItems = res.Pagination.totalItems;
                     this.loadingTable = false;
                 });
+            },
+            showModalThemSua(isUpdate: boolean, item: any) { // refs gọi từ cha -=> con 
+                (this.$refs.themSuaNhanVien as any).show(isUpdate, item); // gọi đến hàm show bên modal con
             },
             confirmDelete(nhanVien: NhanVien): void {
                 this.selectedNhanVien = nhanVien;

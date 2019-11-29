@@ -3,7 +3,7 @@ import { BaseApi } from './BaseApi'
 import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { NhanVien } from '@/models/NhanVien'
 export interface NhanVienApiSearchParams extends Pagination {
-    boPhanID?:number;
+    query?: String;
 }
 class NhanVienApi extends BaseApi {
     search(searchParams: NhanVienApiSearchParams): Promise<PaginatedResponse<NhanVien>> {

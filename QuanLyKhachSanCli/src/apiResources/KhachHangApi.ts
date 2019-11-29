@@ -3,6 +3,7 @@ import { BaseApi } from './BaseApi'
 import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { KhachHang } from '@/models/KhachHang'
 export interface KhachHangApiSearchParams extends Pagination {
+    query?: string;
 }
 class KhachHangApi extends BaseApi {
     search(searchParams: KhachHangApiSearchParams): Promise<PaginatedResponse<KhachHang>> {

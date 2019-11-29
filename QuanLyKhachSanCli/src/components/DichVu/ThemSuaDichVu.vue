@@ -2,17 +2,12 @@
     <v-dialog v-model="dialog" width="500" persistent scrollable>
         <v-container pa-0 grid-list-md>
             <v-card>
-                <v-card-title class="primary white--text" style="height: 60px">
-                        <v-flex xs4></v-flex>
-                        <v-flex xs4>
-                            <h3>{{isUpdate ? 'CẬP NHẬT DỊCH VỤ' : 'THÊM MỚI DỊCH VỤ'}}</h3>
-                        </v-flex>
-                        <v-flex xs4>
-                            <div class="text-xs-right">
-                                <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
-                            </div>
-                        </v-flex>
+                <v-card-title class="primary white--text" style="padding: 5px 15px 5px 15px">
+                    <h3>{{isUpdate ? 'Cập nhật dịch vụ' : 'Thêm mới dịch vụ'}}</h3>
+                    <v-spacer></v-spacer>
+                    <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
                 </v-card-title>
+
                 <v-card-text>
                     <v-form scope="frmAddEdit">
                         <v-layout row wrap>
@@ -21,17 +16,14 @@
                                               label="Tên Dịch Vụ"
                                               type="text"
                                               :error-messages="errors.collect('TenDichVu', 'frmAddEdit')"
-                                              v-validate="''"
+                                              v-validate="'required'"
                                               data-vv-scope="frmAddEdit"
                                               data-vv-name="TenDichVu"
                                               hide-details
                                               clearable></v-text-field>
                                 <v-spacer></v-spacer>
                             </v-flex>
-
-
-
-                            <v-flex xs12>
+                            <v-flex xs6>
                                 <v-text-field v-model="dichVu.GiaBan"
                                               label="Giá Bán"
                                               type="number"
@@ -42,9 +34,7 @@
                                               hide-details
                                               clearable></v-text-field>
                             </v-flex>
-                           
-
-                            <v-flex xs12>
+                            <v-flex xs6>
                                 <v-text-field v-model="dichVu.DonViTinh"
                                               label="Đơn Vị Tính"
                                               type="text"
@@ -55,17 +45,18 @@
                                               hide-details
                                               clearable></v-text-field>
                             </v-flex>
-
                             <v-flex xs12>
-                                <v-text-field v-model="dichVu.MoTa"
-                                              label="Mô Tả"
-                                              type="text"
-                                              :error-messages="errors.collect('MoTa', 'frmAddEdit')"
-                                              v-validate="''"
-                                              data-vv-scope="frmAddEdit"
-                                              data-vv-name="MoTa"
-                                              hide-details
-                                              clearable></v-text-field>
+                               
+                                <v-textarea v-model="dichVu.MoTa"
+                                            label="Mô Tả"
+                                            rows="5"
+                                            type="text"
+                                            :error-messages="errors.collect('MoTa', 'frmAddEdit')"
+                                            v-validate="''"
+                                            data-vv-scope="frmAddEdit"
+                                            data-vv-name="MoTa"
+                                            hide-details
+                                            clearable></v-textarea>
                             </v-flex>
 
                             <v-flex xs12>
@@ -75,14 +66,12 @@
                                             data-vv-scope="frmAddEdit"
                                             data-vv-name="TrangThai"></v-checkbox>
                             </v-flex>
-                            <!--<v-flex xs12>
-        <vue-ckeditor class="mt-1" v-model="dichVu.MoTa" />
-    </v-flex>-->
                         </v-layout>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
-                        <v-btn class="primary " :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-container>
