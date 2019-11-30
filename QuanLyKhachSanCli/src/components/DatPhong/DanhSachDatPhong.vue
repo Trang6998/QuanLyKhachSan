@@ -1,13 +1,22 @@
 <template>
     <v-flex xs12>
-        <v-card style="min-height: 500px">
+        <v-breadcrumbs divider="/" class="pa-0">
+            <v-icon slot="divider">chevron_right</v-icon>
+            <v-breadcrumbs-item>
+                <v-btn flat class="ma-0" @click="$router.go(-1)" small><v-icon>arrow_back</v-icon> Quay lại</v-btn>
+            </v-breadcrumbs-item>
+            <v-breadcrumbs-item to="/datphong" exact>Đặt phòng</v-breadcrumbs-item>
+        </v-breadcrumbs>
+        <v-card style="min-height: 40em">
             <v-card-text>
                 <v-layout row wrap>
-                    <v-flex xs12>
+                    <v-flex>
                         <v-layout noswap>
-                                <v-text-field v-model="searchParamsDatPhong.HoTen" @input="getDataFromApi(searchParamsDatPhong)"></v-text-field>
-                                <v-spacer></v-spacer>
-                                <v-btn @click="showDialogThemSua(false, {})">Thêm mới</v-btn>
+                            <v-flex xs5>
+                                <v-text-field label="Tìm kiếm" append-icon="search" v-model="searchParamsDatPhong.HoTen" @input="getDataFromApi(searchParamsDatPhong)"></v-text-field>
+                            </v-flex>
+                            <v-spacer></v-spacer>
+                            <v-btn small color="primary" style="margin-top: auto;" @click="showDialogThemSua(false, {})">+ Thêm mới</v-btn>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
@@ -42,7 +51,7 @@
             </v-card-text>
         </v-card>
         <v-dialog v-model="dialogConfirmDelete" max-width="290">
-                    <v-card>
+            <v-card>
                 <v-card-title class="headline">Xác nhận xóa</v-card-title>
                 <v-card-text class="pt-3">Bạn có chắc chắn muốn xóa?</v-card-text>
                 <v-card-actions>
