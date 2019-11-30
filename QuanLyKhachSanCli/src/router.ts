@@ -34,9 +34,17 @@ import DanhSachVatDung from './components/VatDung/DanhSachVatDung.vue';
 import ThemSuaVatDung from './components/VatDung/ThemSuaVatDung.vue';
 import DanhSachVatDungPhong from './components/VatDungPhong/DanhSachVatDungPhong.vue';
 import ThemSuaVatDungPhong from './components/VatDungPhong/ThemSuaVatDungPhong.vue';
+
+import ThongTinCaNhan from './components/KhachHang/ThongTinCaNhan.vue';
+
 Vue.use(Router);
 export default new Router({
     routes: [
+        {
+            path: '/thongtincanhan',
+            name: 'thongTinCaNhan',
+            component: ThongTinCaNhan,
+        },
         {
             path: '/banggia',
             name: 'bangGia',

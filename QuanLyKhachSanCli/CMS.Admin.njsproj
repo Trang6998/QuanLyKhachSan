@@ -233,17 +233,17 @@
     <Content Include="src\components\HoaDon\DanhSachHoaDon.vue" />
     <Content Include="src\components\HoaDon\ThemSuaHoaDon.vue" />
     <Content Include="src\components\Home.vue" />
+    <Content Include="src\components\KhachHang\ThongTinCaNhan.vue" />
     <Content Include="src\components\KhachHang\DanhSachKhachHang.vue" />
     <Content Include="src\components\KhachHang\ThemSuaKhachHang.vue" />
     <Content Include="src\components\KiemKe\DanhSachKiemKe.vue" />
+    <Content Include="src\components\KiemKe\ModalChiTietKiemKe.vue" />
     <Content Include="src\components\KiemKe\ThemSuaKiemKe.vue" />
     <Content Include="src\components\Layout\LeftSideBar.vue">
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\components\LoaiPhong\DanhSachLoaiPhong.vue" />
     <Content Include="src\components\LoaiPhong\ThemSuaLoaiPhong.vue" />
-    <Content Include="src\components\Login\ErrorPage.vue" />
-    <Content Include="src\components\Login\Login.vue" />
     <Content Include="src\components\NhanVien\DanhSachNhanVien.vue" />
     <Content Include="src\components\NhanVien\ThemSuaNhanVien.vue" />
     <Content Include="src\components\PhieuNhapKho\DanhSachPhieuNhapKho.vue" />
