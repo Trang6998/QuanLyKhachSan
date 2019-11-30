@@ -1,6 +1,6 @@
 <template>
-    <v-layout>
-        <v-img src="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
+    <v-layout style="width:fit-content">
+        <v-img style="width:fit-content" src="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
             <v-layout row>
                 <v-flex xs8></v-flex>
                 <v-flex xs4 style="padding: 40px">
@@ -29,14 +29,13 @@
                             </v-flex>
 
                             <v-flex xs12 pl-5 pr-5>
-                                <v-datepicker>
-                                    v-model="datPhong.ThoiGianDat"
-                                    label="Thời Gian Đặt"
-                                    :error-messages="errors.collect('Thời Gian Đặt', 'frmAddEdit')"
-                                    v-validate="'required'"
-                                    data-vv-scope="frmAddEdit"
-                                    data-vv-name="Thời Gian Đặt"
-                                    clearable>
+                                <v-datepicker v-model="datPhong.ThoiGianDat"
+                                              label="Thời Gian Đặt"
+                                              :error-messages="errors.collect('Thời Gian Đặt', 'frmAddEdit')"
+                                              v-validate="'required'"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Thời Gian Đặt"
+                                              clearable>
                                 </v-datepicker>
                             </v-flex>
 
@@ -55,7 +54,6 @@
                                                 v-model="datPhong.LoaiPhongID"
                                                 item-text="TenLoaiPhong"
                                                 item-value="LoaiPhongID"
-                                           
                                                 label="Loại Phòng"
                                                 :error-messages="errors.collect('Loại Phòng', 'frmAddEdit')"
                                                 v-validate="'required'"
@@ -101,7 +99,7 @@
         },
         data() {
             return {
-                
+
                 tableHeader: [
                     { text: 'Họ Tên', value: 'HoTen', align: 'center', sortable: true },
                     { text: 'Số Điện Thoại', value: 'SoDienThoai', align: 'center', sortable: true },
@@ -124,32 +122,31 @@
             this.getDataFromApi()
         },
         methods: {
-            getDataFromApi(): void{
+            getDataFromApi(): void {
                 LoaiPhongApi.search(this.searchParamsLoaiPhong).then(z => {
                     this.dsLoaiPhong = z.Data;
                 })
             },
-             save(): void {
-              
-                 this.$validator.validateAll('frmAddEdit').then((res) => {
-                     if (res) {
-                         this.datPhong.HoaDon = undefined;
-                         this.datPhong.LoaiPhong = undefined;
-                         this.datPhong.NhanVien = undefined;
-                        
-                          
-                         this.loading = true;
-                         DatPhongApi.insert(this.datPhong).then(res => {
-                               
-                                 this.loading = false;
-                                 this.$snotify.success('Thêm mới thành công!');
-                             }).catch(res => {
-                                 this.loading = false;
-                                 this.$snotify.error('Thêm mới thất bại!');
-                             });
-                         
-                     }
-                 });
+            save(): void {
+
+                this.$validator.validateAll('frmAddEdit').then((res) => {
+                    if (res) {
+                        this.datPhong.HoaDon = undefined;
+                        this.datPhong.LoaiPhong = undefined;
+                        this.datPhong.NhanVien = undefined;
+                        this.datPhong.TrangThai = 1;
+                        this.loading = true;
+                        DatPhongApi.insert(this.datPhong).then(res => {
+                            this.datPhong = {} as DatPhong;
+                            this.loading = false;
+                            this.$snotify.success('Đặt phòng thành công!');
+                        }).catch(res => {
+                            this.loading = false;
+                            this.$snotify.error('Đặt phòng thất bại!');
+                        });
+
+                    }
+                });
 
             },
         }
