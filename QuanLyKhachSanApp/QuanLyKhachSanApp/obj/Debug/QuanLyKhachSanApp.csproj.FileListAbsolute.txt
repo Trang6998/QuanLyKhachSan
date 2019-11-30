@@ -226,3 +226,4 @@ D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\Microsoft.AI.WindowsSe
 D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\Microsoft.ApplicationInsights.xml
 D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\System.IO.Pipelines.xml
 D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\System.Threading.Tasks.Extensions.xml
+D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\obj\Debug\QuanLyKhachSanApp.csprojAssemblyReference.cache
