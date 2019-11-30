@@ -4,7 +4,7 @@ import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { DatPhong } from '@/models/DatPhong'
 export interface DatPhongApiSearchParams extends Pagination {
     nhanVienID?:number;
-    loaiPhongID?:number;
+    HoTen?: string;
 }
 class DatPhongApi extends BaseApi {
     search(searchParams: DatPhongApiSearchParams): Promise<PaginatedResponse<DatPhong>> {

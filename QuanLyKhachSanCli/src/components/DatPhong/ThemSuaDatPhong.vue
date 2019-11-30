@@ -1,176 +1,111 @@
 <template>
-    <v-flex xs12>
-        <v-breadcrumbs divider="/" class="pa-0">
-            <v-icon slot="divider">chevron_right</v-icon>
-            <v-breadcrumbs-item>
-                <v-btn flat class="ma-0" @click="$router.go(-1)" small><v-icon>arrow_back</v-icon> Quay lại</v-btn>
-            </v-breadcrumbs-item>
-            <v-breadcrumbs-item to="/datphong" exact>DatPhong</v-breadcrumbs-item>
-            <v-breadcrumbs-item>{{isUpdate?'Cập nhật':'Thêm mới'}}</v-breadcrumbs-item>
-        </v-breadcrumbs>
+    <v-dialog v-model="dialog" width="600" persistent scrollable>
         <v-card>
+            <v-card-title class="primary white--text" style="height: 3.5em">
+                <v-flex xs4>
+                    <h3>{{isUpdate ? 'CẬP NHẬT ĐẶT PHÒNG' : 'ĐẶT PHÒNG'}}</h3>
+                </v-flex>
+                <v-spacer></v-spacer>
+                <v-flex>
+                    <div class="text-xs-right">
+                        <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
+                    </div>
+                </v-flex>
+            </v-card-title>
             <v-card-text>
                 <v-form scope="frmAddEdit">
                     <v-layout row wrap>
-                        <v-flex xs6 sm4 md3>
-                            <v-autocomplete v-model="datPhong.NhanVienID"
-                            :items="dsNhanVien"
-                            :loading="dsNhanVienLoading"
-                            :search-input.sync="searchNhanVien"
-                            item-text="NhanVienID"
-                            item-value="NhanVienID"
-                            label="NhanVienID"
-                            placeholder="Nhập NhanVienID"
-                            :error-messages="errors.collect('NhanVienID', 'frmAddEdit')"
-                            v-validate="'required'"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="NhanVienID"
-                            clearable
-                            ></v-autocomplete>
-                        </v-flex>
-                        <v-flex xs6 sm4 md3>
+                        <v-flex xs6 sm4 md4 style="padding-right: 15px">
                             <v-autocomplete v-model="datPhong.LoaiPhongID"
-                            :items="dsLoaiPhong"
-                            :loading="dsLoaiPhongLoading"
-                            :search-input.sync="searchLoaiPhong"
-                            item-text="LoaiPhongID"
-                            item-value="LoaiPhongID"
-                            label="LoaiPhongID"
-                            placeholder="Nhập LoaiPhongID"
-                            :error-messages="errors.collect('LoaiPhongID', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="LoaiPhongID"
-                            clearable
-                            ></v-autocomplete>
+                                            :items="dsLoaiPhong"
+                                            item-text="TenLoaiPhong"
+                                            item-value="LoaiPhongID"
+                                            label="Loại phòng"
+                                            placeholder="Chọn loại phòng"
+                                            :rules="text"
+                                            required
+                                            :error-messages="errors.collect('LoaiPhongID', 'frmAddEdit')"
+                                            v-validate="''"
+                                            data-vv-scope="frmAddEdit"
+                                            data-vv-name="LoaiPhongID"
+                                            clearable></v-autocomplete>
                         </v-flex>
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="datPhong.HoTen"
-                            label="HoTen"
-                            type="text"
-                            :error-messages="errors.collect('HoTen', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="HoTen"
-                            hide-details
-                            clearable
-                            ></v-text-field>
+                        <v-flex xs6 sm4 md6 style="padding-right: 15px">
+                            <v-datetimepicker v-model="datPhong.ThoiGianDat"
+                                              label="Ngày thuê"
+                                              :rules="text"
+                                              required
+                                              type="datetime-local"
+                                              :error-messages="errors.collect('ThoiGianDat', 'frmAddEdit')"
+                                              v-validate="''"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="ThoiGianDat"
+                                              clearable></v-datetimepicker>
                         </v-flex>
-
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="datPhong.SoDienThoai"
-                            label="SoDienThoai"
-                            type="text"
-                            :error-messages="errors.collect('SoDienThoai', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="SoDienThoai"
-                            hide-details
-                            clearable
-                            ></v-text-field>
+                        <v-flex xs6 sm4 md4 style="padding-right: 15px">
+                            <v-text-field v-model="datPhong.HoTen"
+                                          label="Họ tên"
+                                          type="text"
+                                          :rules="text"
+                                          required
+                                          :error-messages="errors.collect('HoTen', 'frmAddEdit')"
+                                          v-validate="''"
+                                          data-vv-scope="frmAddEdit"
+                                          data-vv-name="HoTen"
+                                          clearable></v-text-field>
                         </v-flex>
-
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="datPhong.ThoiGianDat"
-                            label="ThoiGianDat"
-                            type="datetime-local"
-                            :error-messages="errors.collect('ThoiGianDat', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="ThoiGianDat"
-                            hide-details
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="datPhong.SoLuongNguoi"
-                            label="SoLuongNguoi"
-                            type="number"
-                            :error-messages="errors.collect('SoLuongNguoi', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="SoLuongNguoi"
-                            hide-details
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="datPhong.SoNgayDat"
-                            label="SoNgayDat"
-                            type="number"
-                            :error-messages="errors.collect('SoNgayDat', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="SoNgayDat"
-                            hide-details
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="datPhong.TienCoc"
-                            label="TienCoc"
-                            type="number"
-                            :error-messages="errors.collect('TienCoc', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="TienCoc"
-                            hide-details
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="datPhong.NgayTao"
-                            label="NgayTao"
-                            type="datetime-local"
-                            :error-messages="errors.collect('NgayTao', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="NgayTao"
-                            hide-details
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex xs12>
-                            <v-tabs color="primary" dark slider-color="white">
-                                <v-tab :key="1" ripple>
-                                    HoaDon
-                                </v-tab>
-                                <v-tab-item :key="1">
-                                    <v-card flat>
-                                            <div class="text-xs-right">
-                                                <v-btn color="info" to="/hoadon/add" small>Thêm mới</v-btn>
-                                            </div>
-                                        <v-card-text class="pa-0">
-                <v-data-table :headers="tableHeaderHoaDon"
-                              :items="dsHoaDon"
-                              :pagination.sync="searchParamsHoaDon"
-                              :total-items="searchParamsHoaDon.totalItems"
-                              :loading="dsHoaDonLoading"
-                              class="table-border table">
-                    <template slot="items" slot-scope="props">
-                <td>{{ props.item.HoaDonID }}</td>
-                        <td>{{ props.item.DatPhong.NhanVienID }}</td>
-                        <td>{{ props.item.DatPhong.DatPhongID }}</td>
-                        <td>{{ props.item.DatPhong.KhachHangID }}</td>
-                <td>{{ props.item.MaHoaDon }}</td>
-                        <td>{{ props.item.NgayThanhToan === null ? "" : props.item.NgayThanhToan|moment('DD/MM/YYYY HH:mm:ss') }}</td>
-                <td>{{ props.item.SoTaiKhoan }}</td>
-                <td>{{ props.item.TongTien }}</td>
-                        </template>
-                    </v-data-table>
-                                        </v-card-text>
-                                    </v-card>
-                                </v-tab-item>
-                            </v-tabs>
+                        <v-flex xs6 sm4 md4 style="padding-right: 15px">
+                            <v-text-field v-model="datPhong.SoDienThoai"
+                                          label="Số điện thoại"
+                                          type="text"
+                                          :rules="SDT"
+                                          required
+                                          :error-messages="errors.collect('SoDienThoai', 'frmAddEdit')"
+                                          v-validate="''"
+                                          data-vv-scope="frmAddEdit"
+                                          data-vv-name="SoDienThoai"
+                                          clearable></v-text-field>
                         </v-flex>
 
+                        <v-flex xs6 sm4 md4 style="padding-right: 15px">
+                            <v-text-field v-model="datPhong.SoLuongNguoi"
+                                          label="Số người ở"
+                                          type="number"
+                                          :error-messages="errors.collect('SoLuongNguoi', 'frmAddEdit')"
+                                          v-validate="''"
+                                          data-vv-scope="frmAddEdit"
+                                          data-vv-name="SoLuongNguoi"
+                                          clearable></v-text-field>
+                        </v-flex><br />
+                        <v-flex xs6 sm4 md4 style="padding-right: 15px">
+                            <v-text-field v-model="datPhong.SoNgayDat"
+                                          label="Số ngày thuê"
+                                          type="number"
+                                          :rules="text"
+                                          required
+                                          :error-messages="errors.collect('SoNgayDat', 'frmAddEdit')"
+                                          v-validate="''"
+                                          data-vv-scope="frmAddEdit"
+                                          data-vv-name="SoNgayDat"
+                                          clearable></v-text-field>
+                        </v-flex>
+                        <v-flex xs6 sm4 md4 style="padding-right: 15px">
+                            <v-text-field v-model="datPhong.TienCoc"
+                                          label="Tiền cọc"
+                                          type="number"
+                                          :error-messages="errors.collect('TienCoc', 'frmAddEdit')"
+                                          v-validate="''"
+                                          data-vv-scope="frmAddEdit"
+                                          data-vv-name="TienCoc"
+                                          clearable></v-text-field>
+                        </v-flex>
+                        <v-flex md12>
+                            <v-radio-group v-if="isUpdate" v-model="datPhong.TrangThai" label="Trạng thái" row>
+                                <v-radio label="Đã đặt" :value="0"></v-radio>
+                                <v-radio label="Đã nhận" :value="1"></v-radio>
+                                <v-radio label="Đã hủy" :value="2"></v-radio>
+                            </v-radio-group>
+                        </v-flex>
                     </v-layout>
                 </v-form>
             </v-card-text>
@@ -179,15 +114,15 @@
                 <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
             </v-card-actions>
         </v-card>
-    </v-flex>
+    </v-dialog>
 </template>
 
 <script lang="ts">
     import { Vue } from 'vue-property-decorator';
     import DatPhongApi, { DatPhongApiSearchParams } from '@/apiResources/DatPhongApi';
     import { DatPhong } from '@/models/DatPhong';
-    import { HoaDon } from '@/models/HoaDon';
-    import HoaDonApi, { HoaDonApiSearchParams } from '@/apiResources/HoaDonApi';
+    import { LoaiPhong } from '@/models/LoaiPhong';
+    import LoaiPhongApi, { LoaiPhongApiSearchParams } from '@/apiResources/LoaiPhongApi';
 
     export default Vue.extend({
         $_veeValidate: {
@@ -196,54 +131,60 @@
         components: {},
         data() {
             return {
+                SDT: [v => !!v || 'SDT is required',
+                      v => (v && v.length == 10) || '10 characters'],
+                text: [v => !!v || 'required'],
+                dialog: false,
                 isUpdate: false,
                 datPhong: {} as DatPhong,
-                dsHoaDon: [] as HoaDon[],
+                dsLoaiPhong: [] as LoaiPhong[],
                 dsHoaDonLoading: false,
                 searchHoaDon: '',
-                searchParamsHoaDon: { includeEntities: true } as HoaDonApiSearchParams,
-                tableHeaderHoaDon: [
-                    { text: 'HoaDonID', value: 'HoaDonID', align: 'center', sortable: true },
-                    { text: 'NhanVienID', value: 'NhanVienID', align: 'center', sortable: true },
-                    { text: 'DatPhongID', value: 'DatPhongID', align: 'center', sortable: true },
-                    { text: 'KhachHangID', value: 'KhachHangID', align: 'center', sortable: true },
-                    { text: 'MaHoaDon', value: 'MaHoaDon', align: 'center', sortable: true },
-                    { text: 'NgayThanhToan', value: 'NgayThanhToan', align: 'center', sortable: true },
-                    { text: 'SoTaiKhoan', value: 'SoTaiKhoan', align: 'center', sortable: true },
-                    { text: 'TongTien', value: 'TongTien', align: 'center', sortable: true },
-                ],
                 loading: false,
                 searchParamsDatPhong: {} as DatPhongApiSearchParams,
             }
         },
         watch: {
         },
+        created() {
+            this.getLoaiPhong();
+        },
         mounted() {
-            if (this.$route.name === 'suaDatPhong') {
-                this.isUpdate = true;
-                let id = parseInt(this.$route.params.id, 10);
-                this.getDataFromApi(id);
-            } else {
-                this.isUpdate = false;
-            }
         },
         methods: {
+            show(isUpdate: boolean, item: any) {
+                this.isUpdate = isUpdate;
+                this.datPhong = item;
+                this.dialog = true;
+            },
+            getLoaiPhong(): void {
+                var search = {} as LoaiPhongApiSearchParams;
+                LoaiPhongApi.search(search).then(
+                    res => {
+                        this.dsLoaiPhong = res.Data;
+                    });
+            },
             getDataFromApi(id: number): void {
                 DatPhongApi.detail(id).then(res => {
                     this.datPhong = res;
                 });
             },
             save(): void {
+                if (this.datPhong.HoTen.length == 0 || this.datPhong.LoaiPhongID == null || this.datPhong.SoDienThoai.length == 0
+                    || this.datPhong.TienCoc == null || this.datPhong.SoNgayDat == null || this.datPhong.ThoiGianDat == null) {
+                    this.$snotify.warning('Vui lòng nhập thông tin!');
+                    return;
+                }
                 this.$validator.validateAll('frmAddEdit').then((res) => {
                    if (res) {
-                        this.datPhong.LoaiPhong = undefined;
-                        this.datPhong.NhanVien = undefined;
-                        this.datPhong.HoaDon = undefined;
+                       this.datPhong.LoaiPhong = undefined;
+                       this.datPhong.NhanVienID = 1;// lấy nhân viên đăng nhập
                         if (this.isUpdate) {
-                            let id = parseInt(this.$route.params.id, 10);
                             this.loading = true;
-                            DatPhongApi.update(id, this.datPhong).then(res => {
+                            DatPhongApi.update(this.datPhong.DatPhongID, this.datPhong).then(res => {
                                 this.loading = false;
+                                this.$emit("getDatPhong");
+                                this.dialog = false;
                                 this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
                                 this.loading = false;
@@ -252,9 +193,10 @@
                         } else {
                             this.loading = true;
                             DatPhongApi.insert(this.datPhong).then(res => {
-                                this.$router.push('/datphong/' + res.DatPhongID);
                                 this.datPhong = res;
                                 this.isUpdate = true;
+                                this.$emit("getDatPhong");
+                                this.dialog = false;
                                 this.loading = false;
                                 this.$snotify.success('Thêm mới thành công!');
                             }).catch(res => {
@@ -263,11 +205,6 @@
                             });
                         }
                     }
-                });
-            },
-            getDSHoaDon(): void {
-                HoaDonApi.search(this.searchParamsHoaDon).then(res => {
-                    this.dsHoaDon = res.Data;
                 });
             },
         }
