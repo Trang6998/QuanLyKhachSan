@@ -13,7 +13,7 @@ namespace QuanLyKhachSanApp.Controllers
     public class DatPhongController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null, [FromUri]int? loaiPhongID = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null, [FromUri]string HoTen = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -26,7 +26,7 @@ namespace QuanLyKhachSanApp.Controllers
                 }
 
                 if (nhanVienID.HasValue) results = results.Where(o => o.NhanVienID == nhanVienID);
-                if (loaiPhongID.HasValue) results = results.Where(o => o.LoaiPhongID == loaiPhongID);
+                if (!string.IsNullOrWhiteSpace(HoTen)) results = results.Where(o => o.HoTen.Contains(HoTen));
 
                 results = results.OrderBy(o => o.DatPhongID);
 
@@ -54,7 +54,8 @@ namespace QuanLyKhachSanApp.Controllers
         public async Task<IHttpActionResult> Insert([FromBody]DatPhong datPhong)
         {
             if (datPhong.DatPhongID != 0) return BadRequest("Invalid DatPhongID");
-
+            datPhong.NgayTao = DateTime.Now;
+            datPhong.TrangThai = 0;
             using (var db = new dbQuanLyKhachSan())
             {
                 db.DatPhong.Add(datPhong);
@@ -75,6 +76,7 @@ namespace QuanLyKhachSanApp.Controllers
             }
             using (var db = new dbQuanLyKhachSan())
             {
+                datPhong.NgayTao = DateTime.Now;
                 db.Entry(datPhong).State = EntityState.Modified;
 
                 try

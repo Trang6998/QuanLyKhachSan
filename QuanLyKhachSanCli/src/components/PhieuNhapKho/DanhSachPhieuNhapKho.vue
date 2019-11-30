@@ -7,16 +7,16 @@
             </v-breadcrumbs-item>
             <v-breadcrumbs-item to="/phieunhapkho" exact>Phiếu nhập kho</v-breadcrumbs-item>
         </v-breadcrumbs>
-        <v-card>
+        <v-card style="min-height: 40em">
             <v-card-text>
                 <v-layout row wrap>
                         <v-flex xs12>
                             <v-layout nowrap>
-                                <v-flex xs6>
-                                    <v-text-field v-model="searchParamsPhieuNhapKho.PhieuNhapID" @input="getDataFromApi(searchParamsPhieuNhapKho)"></v-text-field>
+                                <v-flex xs5>
+                                    <v-text-field label="Tìm kiếm" append-icon="search" v-model="searchParamsPhieuNhapKho.PhieuNhapID" @input="getDataFromApi(searchParamsPhieuNhapKho)"></v-text-field>
                                 </v-flex>
                                 <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="showDialogThemSua(false, {})">Thêm mới</v-btn>
+                                <v-btn small color="primary" style="margin: auto" @click="showDialogThemSua(false, {})">+ Thêm mới</v-btn>
                             </v-layout>
                         </v-flex>
                         <v-flex xs12>

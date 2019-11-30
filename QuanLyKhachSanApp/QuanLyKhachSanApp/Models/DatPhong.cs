@@ -34,7 +34,7 @@ namespace QuanLyKhachSanApp.Models
 
         public DateTime? NgayTao { get; set; }
 
-        public Boolean? TrangThai { get; set; }
+        public int TrangThai { get; set; }
 
         [ForeignKey("LoaiPhongID")]
         public virtual LoaiPhong LoaiPhong { get; set; }
