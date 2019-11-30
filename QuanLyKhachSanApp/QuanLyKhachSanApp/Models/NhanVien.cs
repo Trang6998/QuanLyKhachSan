@@ -20,16 +20,13 @@ namespace QuanLyKhachSanApp.Models
 
         public int? BoPhanID { get; set; }
 
-        [MaxLength(50)]
-        public string TenDangNhap { get; set; }
-
-        [MaxLength(50)]
-        public string MatKhau { get; set; }
-
-        public int? LoaiTaiKhoanID { get; set; }
+        public int? UsersID { get; set; }
 
         [ForeignKey("BoPhanID")]
         public virtual BoPhan BoPhan { get; set; }
+
+        [ForeignKey("UsersID")]
+        public virtual Users Users { get; set; }
 
         [InverseProperty("NhanVien")]
         public virtual ICollection<DatPhong> DatPhong { get; set; }

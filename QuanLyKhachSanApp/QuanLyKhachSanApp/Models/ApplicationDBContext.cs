@@ -26,6 +26,8 @@ namespace QuanLyKhachSanApp.Models
         public DbSet<ThuePhong> ThuePhong { get; set; }
         public DbSet<VatDung> VatDung { get; set; }
         public DbSet<VatDungPhong> VatDungPhong { get; set; }
+        public DbSet<AccessTokens> AccessTokens { get; set; }
+        public DbSet<Users> Users { get; set; }
 
         public void ConfigureModelBuilder(DbModelBuilder modelBuilder)
         {

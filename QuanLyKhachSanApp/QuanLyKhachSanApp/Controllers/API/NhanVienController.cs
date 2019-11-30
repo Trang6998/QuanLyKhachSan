@@ -48,7 +48,6 @@ namespace QuanLyKhachSanApp.Controllers
                 return Ok(nhanVien);
             }
         }
-
         [HttpPost, Route("")]
         public async Task<IHttpActionResult> Insert([FromBody]NhanVien nhanVien)
         {
