@@ -3,6 +3,7 @@ import { BaseApi } from './BaseApi'
 import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { LoaiPhong } from '@/models/LoaiPhong'
 export interface LoaiPhongApiSearchParams extends Pagination {
+    query?: String;
 }
 class LoaiPhongApi extends BaseApi {
     search(searchParams: LoaiPhongApiSearchParams): Promise<PaginatedResponse<LoaiPhong>> {

@@ -13,11 +13,13 @@ namespace QuanLyKhachSanApp.Controllers
     public class LoaiPhongController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]string query = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
                 IQueryable<LoaiPhong> results = db.LoaiPhong;
+
+                if (!string.IsNullOrWhiteSpace(query)) results = results.Where(o => o.TenLoaiPhong.Contains(query));
 
                 results = results.OrderBy(o => o.LoaiPhongID);
 
