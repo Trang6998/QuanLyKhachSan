@@ -34,9 +34,31 @@ import DanhSachVatDung from './components/VatDung/DanhSachVatDung.vue';
 import ThemSuaVatDung from './components/VatDung/ThemSuaVatDung.vue';
 import DanhSachVatDungPhong from './components/VatDungPhong/DanhSachVatDungPhong.vue';
 import ThemSuaVatDungPhong from './components/VatDungPhong/ThemSuaVatDungPhong.vue';
+
+
+/*thuy link khachdatphong va khachdatdichvu*/
+import ThemKhachDatPhong from './components/DatPhong/ThemKhachDatPhong.vue';
+import ThemKhachDatDichVu from './components/DatDichVu/ThemKhachDatDichVu.vue';
+
+
+
+
+
 Vue.use(Router);
 export default new Router({
     routes: [
+        /*thuy them khach dat phong*/
+        {
+            path: '/khachdatdichvu',
+            name: 'themKhachDatDichVu',
+            component: ThemKhachDatDichVu,
+        },
+        {
+            path: '/khachdatphong',
+            name: '/khachDatPhong',
+            component: ThemKhachDatPhong,
+        },
+
         {
             path: '/banggia',
             name: 'bangGia',
