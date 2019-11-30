@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HVITCore.Controllers;
 using System.Data.Entity.Infrastructure;
 using QuanLyKhachSanApp.Models;
+using System.Collections.Generic;
 
 namespace QuanLyKhachSanApp.Controllers
 {
@@ -17,22 +18,69 @@ namespace QuanLyKhachSanApp.Controllers
         {
             using (var db = new dbQuanLyKhachSan())
             {
-                IQueryable<ChiTietKiemKe> results = db.ChiTietKiemKe;
+                //IQueryable<ChiTietKiemKe> results = db.ChiTietKiemKe;
                 if (pagination == null)
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
                 }
 
-                if (kiemKeID.HasValue) results = results.Where(o => o.KiemKeID == kiemKeID);
-                if (vatDungPhongID.HasValue) results = results.Where(o => o.VatDungPhongID == vatDungPhongID);
+                //if (vatDungPhongID.HasValue) results = results.Where(o => o.VatDungPhongID == vatDungPhongID);
 
-                results = results.OrderBy(o => o.ChiTietKiemKeID);
+                var res = db.VatDung.Include(x => x.VatDungPhong)
+                                    .Include(x => x.VatDungPhong.Select(y => y.Phong))
+                                    .Include(x => x.VatDungPhong.Select(y => y.ChiTietKiemKe));
+
+               
+                var results = res.Select(x => new
+                {
+                    x.VatDungID,
+                    x.TenVatDung,
+                    x.SoLuongKho,
+                    SoLuongTieuChuan = x.VatDungPhong
+                                        .Sum(y => y.SoLuong),
+                    SoLuongKiemKe = x.VatDungPhong
+                                     .Sum(y => y.ChiTietKiemKe.Where(z => z.KiemKeID == kiemKeID).Sum(z => z.SoLuongKiemKe))
+                });
+                results = results.OrderBy(o => o.VatDungID);
 
                 return Ok((await GetPaginatedResponse(results, pagination)));
             }
         }
+        [HttpGet, Route("getds")]
+        public async Task<IHttpActionResult> GetDS([FromUri]Pagination pagination, [FromUri]int? kiemKeID = null, [FromUri]int? phongID = null)
+        {
+            using (var db = new dbQuanLyKhachSan())
+            {
+                IQueryable<ChiTietKiemKe> results = db.ChiTietKiemKe;
+                if (pagination == null)
+                    pagination = new Pagination();
+                if (pagination.includeEntities)
+                {
+                    results = results.Include(x => x.VatDungPhong)
+                                     .Include(x => x.VatDungPhong.VatDung)
+                                     .Include(x => x.VatDungPhong.Phong);
+                }
 
+                if (kiemKeID.HasValue) results = results.Where(o => o.KiemKeID == kiemKeID);
+                if (phongID.HasValue) results = results.Where(o => o.VatDungPhong.PhongID == phongID);
+
+                var res = results.Select(x => new
+                {
+                    x.ChiTietKiemKeID,
+                    x.VatDungPhongID,
+                    x.KiemKeID,
+                    x.VatDungPhong.Phong.SoPhong,
+                    x.VatDungPhong.VatDung.TenVatDung,
+                    x.VatDungPhong.SoLuong,
+                    x.SoLuongKiemKe,
+                    x.GhiChu
+                });
+                res = res.OrderBy(o => o.ChiTietKiemKeID);
+
+                return Ok((await GetPaginatedResponse(res, pagination)));
+            }
+        }
         [HttpGet, Route("{chiTietKiemKeID:int}")]
         public async Task<IHttpActionResult> Get(int chiTietKiemKeID)
         {
@@ -60,6 +108,20 @@ namespace QuanLyKhachSanApp.Controllers
             }
 
             return Ok(chiTietKiemKe);
+        }
+        [HttpPut, Route("capnhatdanhsach")]
+        public async Task<IHttpActionResult> UpdateDanhSach([FromBody]List<ChiTietKiemKe> lstchiTietKiemKe)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            using (var db = new dbQuanLyKhachSan())
+            {
+                lstchiTietKiemKe.ForEach(p => db.Entry(p).State = EntityState.Modified);
+                await db.SaveChangesAsync();
+                return Ok(lstchiTietKiemKe);
+            }
         }
 
         [HttpPut, Route("{chiTietKiemKeID:int}")]

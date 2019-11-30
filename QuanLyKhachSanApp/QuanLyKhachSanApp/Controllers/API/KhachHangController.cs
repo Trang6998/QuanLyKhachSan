@@ -26,6 +26,19 @@ namespace QuanLyKhachSanApp.Controllers
             }
         }
 
+        [HttpGet, Route("kiemtrathongtin")]
+        public async Task<IHttpActionResult> Get([FromUri]string cmnd)
+        {
+            using (var db = new dbQuanLyKhachSan())
+            {
+                var khachHang = await db.KhachHang
+                    .SingleOrDefaultAsync(o => o.CMND == cmnd);
+
+                return Ok(khachHang);
+            }
+        }
+
+
         [HttpGet, Route("{khachHangID:int}")]
         public async Task<IHttpActionResult> Get(int khachHangID)
         {

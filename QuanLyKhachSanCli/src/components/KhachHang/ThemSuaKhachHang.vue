@@ -15,7 +15,7 @@
                                               label="Họ tên"
                                               type="text"
                                               :error-messages="errors.collect('Họ tên', 'frmAddEdit')"
-                                              v-validate="'required|alpha'"
+                                              v-validate="'required'"
                                               data-vv-scope="frmAddEdit"
                                               data-vv-name="Họ tên"
                                               clearable></v-text-field>
@@ -104,6 +104,7 @@
             show(isUpdate: boolean, item: any) {
                 this.dialog = true;
                 this.$validator.errors.clear("frmAddEdit");
+                this.khachHang = Object.assign({}, item);
                 this.isUpdate = isUpdate;
                 if (this.isUpdate !== true) {
                     this.khachHang = {} as KhachHang;

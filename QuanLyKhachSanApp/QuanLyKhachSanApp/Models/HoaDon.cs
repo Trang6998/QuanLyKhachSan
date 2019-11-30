@@ -12,8 +12,7 @@ namespace QuanLyKhachSanApp.Models
         [Required]
         public int HoaDonID { get; set; }
 
-        [Required]
-        public int NhanVienID { get; set; }
+        public int? NhanVienID { get; set; }
 
         public int? DatPhongID { get; set; }
 
@@ -34,6 +33,9 @@ namespace QuanLyKhachSanApp.Models
         public double? PhuThu { get; set; }
         [MaxLength(500)]
         public string LyDo { get; set; }
+
+        public bool? TrangThai { get; set; }
+
         [ForeignKey("DatPhongID")]
         public virtual DatPhong DatPhong { get; set; }
 

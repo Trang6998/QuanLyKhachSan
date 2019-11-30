@@ -19,6 +19,9 @@ namespace QuanLyKhachSanApp.Models
         [MaxLength(500)]
         public string GhiChu { get; set; }
 
+        [MaxLength(20)]
+        public string MaKiemKe { get; set; }
+
         [ForeignKey("NhanVienID")]
         public virtual NhanVien NhanVien { get; set; }
 

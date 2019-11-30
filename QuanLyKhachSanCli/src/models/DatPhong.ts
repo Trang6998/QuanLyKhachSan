@@ -13,6 +13,7 @@ export interface DatPhong {
     SoNgayDat: number;
     TienCoc: number;
     NgayTao: Date;
+    TrangThai: number;
     LoaiPhong?: LoaiPhong;
     NhanVien?: NhanVien;
     HoaDon?: HoaDon[];

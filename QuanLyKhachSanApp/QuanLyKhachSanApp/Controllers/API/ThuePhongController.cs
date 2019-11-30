@@ -22,15 +22,26 @@ namespace QuanLyKhachSanApp.Controllers
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
+                    results = results.Include(x => x.BangGia)
+                                     .Include(x => x.Phong)
+                                     .Include(x => x.Phong.LoaiPhong);
                 }
 
                 if (phongID.HasValue) results = results.Where(o => o.PhongID == phongID);
                 if (hoaDonID.HasValue) results = results.Where(o => o.HoaDonID == hoaDonID);
                 if (bangGiaID.HasValue) results = results.Where(o => o.BangGiaID == bangGiaID);
 
-                results = results.OrderBy(o => o.ThuePhongID);
+                var res = results.Select(x => new
+                {
+                    x.ThuePhongID,
+                    x.BangGia.GiaPhong,
+                    x.Phong.SoPhong,
+                    x.Phong.LoaiPhong.TenLoaiPhong
+                });
 
-                return Ok((await GetPaginatedResponse(results, pagination)));
+                res = res.OrderBy(o => o.ThuePhongID);
+
+                return Ok((await GetPaginatedResponse(res, pagination)));
             }
         }
 

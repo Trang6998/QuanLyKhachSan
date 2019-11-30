@@ -22,7 +22,8 @@ namespace QuanLyKhachSanApp.Controllers
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
-                    results = results.Include(o => o.VatDung);
+                    results = results.Include(o => o.VatDung)
+                                     .Include(o => o.Phong);
                 }
 
                 if (vatDungID.HasValue) results = results.Where(o => o.VatDungID == vatDungID);

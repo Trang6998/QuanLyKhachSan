@@ -1,79 +1,135 @@
 <template>
     <v-dialog v-model="dialog" width="800">
         <v-card>
+            <v-card-title class="primary white--text" style="height: 3.5em">
+                <v-flex>
+                    <h3 style="margin: auto">{{isUpdate ? 'CẬP NHẬT PHIẾU NHẬP KHO' : 'NHẬP KHO'}}</h3>
+                </v-flex>
+                <v-spacer></v-spacer>
+                <v-flex>
+                    <div class="text-xs-right">
+                        <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
+                    </div>
+                </v-flex>
+            </v-card-title>
             <v-card-text>
                 <v-form scope="frmAddEdit">
                     <v-layout row wrap>
-                        <v-flex xs6 sm4 md3>
-                            <v-datepicker  v-model="phieuNhapKho.NgayNhap"
-                            label="Ngày nhập"
-                            type="date"
-                            :error-messages="errors.collect('NgayNhap', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="NgayNhap|moment('DD/MM/YYYY')"
-                            clearable>
+                        <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
+                            <v-datepicker v-model="phieuNhapKho.NgayNhap"
+                                          label="Ngày nhập"
+                                          type="date"
+                                          :error-messages="errors.collect('NgayNhap', 'frmAddEdit')"
+                                          v-validate="''"
+                                          data-vv-scope="frmAddEdit"
+                                          data-vv-name="NgayNhap|moment('DD/MM/YYYY')"
+                                          clearable>
                             </v-datepicker>
                         </v-flex>
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="phieuNhapKho.TongTien"
-                            label="Tổng tiền"
-                            type="number"
-                            :error-messages="errors.collect('TongTien', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="TongTien"
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
-                        <v-flex xs6 sm4 md3>
-                            <v-autocomplete v-model="phieuNhapKho.NhanVienID"
-                            :items="dsNhanVien"
-                            item-text="TenNhanVien"
-                            item-value="NhanVienID"
-                            label="NhanVienID"
-                            placeholder="Nhập NhanVienID"
-                            :error-messages="errors.collect('NhanVienID', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="NhanVienID"
-                            clearable
-                            ></v-autocomplete>
+                        <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
+                            <v-text-field v-model="phieuNhapKho.TongTien"
+                                          label="Tổng tiền"
+                                          type="number"
+                                          :error-messages="errors.collect('TongTien', 'frmAddEdit')"
+                                          v-validate="''"
+                                          data-vv-scope="frmAddEdit"
+                                          data-vv-name="TongTien"
+                                          clearable></v-text-field>
                         </v-flex>
                         <v-flex xs12>
                             <v-tabs color="primary" dark slider-color="white">
                                 <v-tab :key="1" ripple>
                                     Chi tiết phiếu nhập
                                 </v-tab>
+
                                 <v-tab-item :key="1">
                                     <v-card flat>
-                                            <div class="text-xs-right">
-                                                <v-btn color="info" to="/chitietphieunhap/add" small>Thêm mới</v-btn>
-                                            </div>
+                                        <div>
+                                            <v-card>
+                                                <v-card-text>
+                                                    <v-form scope="frmChiTiet">
+                                                        <v-layout row wrap>
+                                                            <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
+                                                                <v-autocomplete v-model="chiTietPhieuNhap.ThuocTinhID"
+                                                                                :items="dsVatDung"
+                                                                                :search-input.sync="searchPhieuNhapKho"
+                                                                                item-text="TenVatDung"
+                                                                                item-value="VatDungID"
+                                                                                label="Vật dụng"
+                                                                                placeholder="Vật dụng"
+                                                                                :error-messages="errors.collect('ThuocTinhID', 'frmChiTiet')"
+                                                                                v-validate="''"
+                                                                                data-vv-scope="frmChiTiet"
+                                                                                data-vv-name="ThuocTinhID"
+                                                                                clearable></v-autocomplete>
+                                                            </v-flex>
+                                                            <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
+                                                                <v-text-field v-model="chiTietPhieuNhap.SoLuong"
+                                                                              label="Số lượng"
+                                                                              type="number"
+                                                                              :error-messages="errors.collect('SoLuong', 'frmChiTiet')"
+                                                                              v-validate="''"
+                                                                              data-vv-scope="frmChiTiet"
+                                                                              data-vv-name="SoLuong"
+                                                                              hide-details
+                                                                              clearable></v-text-field>
+                                                            </v-flex>
+                                                            <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
+                                                                <v-text-field v-model="chiTietPhieuNhap.GiaNhap"
+                                                                              label="Giá nhập"
+                                                                              type="number"
+                                                                              :error-messages="errors.collect('GiaNhap', 'frmChiTiet')"
+                                                                              v-validate="''"
+                                                                              data-vv-scope="frmChiTiet"
+                                                                              data-vv-name="GiaNhap"
+                                                                              hide-details
+                                                                              clearable></v-text-field>
+                                                            </v-flex>
+                                                            <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
+                                                                <v-text-field v-model="chiTietPhieuNhap.GhiChu"
+                                                                              label="Ghi chú"
+                                                                              type="text"
+                                                                              :error-messages="errors.collect('GhiChu', 'frmChiTiet')"
+                                                                              v-validate="''"
+                                                                              data-vv-scope="frmChiTiet"
+                                                                              data-vv-name="GhiChu"
+                                                                              hide-details
+                                                                              clearable></v-text-field>
+                                                            </v-flex>
+
+                                                        </v-layout>
+                                                    </v-form>
+                                                </v-card-text>
+                                                <v-card-actions>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn small class="primary" :disabled="loading" :loading="loading" @click.native="saveChiTiet">Lưu</v-btn>
+                                                </v-card-actions>
+                                            </v-card>
+                                        </div>
                                         <v-card-text class="pa-0">
-                <v-data-table :headers="tableHeaderChiTietPhieuNhap"
-                              :items="dsChiTietPhieuNhap"
-                              :pagination.sync="searchParamsChiTietPhieuNhap"
-                              :total-items="searchParamsChiTietPhieuNhap.totalItems"
-                              :loading="dsChiTietPhieuNhapLoading"
-                              class="table-border table">
-                    <template slot="items" slot-scope="props">
-                        <td>{{ props.index + 1 }}</td>
-                        <td>{{ props.item.VatDung.TenVatDung }}</td>
-                        <td>{{ props.item.SoLuong }}</td>
-                        <td>{{ props.item.GiaNhap }}</td>
-                        <td>{{ props.item.GhiChu }}</td>
-                        <td class="text-xs-center" style="width:80px;">
-                            <v-btn flat icon small @click="showDialogThemSua(true, props.item)" class="ma-0">
-                                <v-icon small>edit</v-icon>
-                            </v-btn>
-                            <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-                                <v-icon small>delete</v-icon>
-                            </v-btn>
-                        </td>
-                    </template>
-                    </v-data-table>
+                                            <v-data-table :headers="tableHeaderChiTietPhieuNhap"
+                                                          :items="dsChiTietPhieuNhap"
+                                                          :total-items="searchParamsChiTietPhieuNhap.totalItems"
+                                                          selectedClass="table-info"
+                                                          @selectionChanged="chiTietPhieuNhap = $event"
+                                                          class="table-border table">
+                                                <template slot="items" slot-scope="props">
+                                                    <td>{{ props.index + 1 }}</td>
+                                                    <td>{{ props.item.VatDung.TenVatDung }}</td>
+                                                    <td>{{ props.item.SoLuong }}</td>
+                                                    <td>{{ props.item.GiaNhap }}</td>
+                                                    <td>{{ props.item.GhiChu }}</td>
+                                                    <td class="text-xs-center" style="width:80px;">
+                                                        <v-btn flat icon small @click="showChiTiet(props.item)" class="ma-0">
+                                                            <v-icon small>edit</v-icon>
+                                                        </v-btn>
+                                                        <a v-on:click="deletePhieuNhapKho(props.item.ChiTietPhieuNhapID)" onClick="return confirm('are you sure?');"><v-icon small>delete</v-icon></a>
+                                                        <!--<v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
+        <v-icon small>delete</v-icon>
+    </v-btn>-->
+                                                    </td>
+                                                </template>
+                                            </v-data-table>
                                         </v-card-text>
                                     </v-card>
                                 </v-tab-item>
@@ -99,20 +155,26 @@
     import ChiTietPhieuNhapApi, { ChiTietPhieuNhapApiSearchParams } from '@/apiResources/ChiTietPhieuNhapApi';
     import { NhanVien } from '@/models/NhanVien';
     import NhanVienApi, { NhanVienApiSearchParams } from '@/apiResources/NhanVienApi';
+    import { VatDung } from '@/models/VatDung';
+    import VatDungApi, { VatDungApiSearchParams } from '@/apiResources/VatDungApi';
 
     export default Vue.extend({
         $_veeValidate: {
             validator: 'new'
         },
-        components: {},
+        components: {
+        },
         data() {
             return {
                 dialog: false,
                 isUpdate: false,
                 dsNhanVien: [] as NhanVien[],
                 phieuNhapKho: {} as PhieuNhapKho,
+                chiTietPhieuNhap: {} as ChiTietPhieuNhap,
                 dsChiTietPhieuNhap: [] as ChiTietPhieuNhap[],
-                dsChiTietPhieuNhapLoading: false,
+                selectedPhieuNhapKho: {} as ChiTietPhieuNhap,
+                searchVatDung: {} as VatDungApiSearchParams,
+                dsVatDung: [] as VatDung[],
                 searchChiTietPhieuNhap: '',
                 searchParamsChiTietPhieuNhap: { includeEntities: true } as ChiTietPhieuNhapApiSearchParams,
                 tableHeaderChiTietPhieuNhap: [
@@ -123,27 +185,39 @@
                     { text: 'Ghi chú', value: 'GhiChu', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: true },
                 ],
+                dialogConfirmDelete: false,
                 loading: false,
-                searchParamsPhieuNhapKho: {} as PhieuNhapKhoApiSearchParams,
+                searchParamsPhieuNhapKho: {phieuNhapID: null as any} as PhieuNhapKhoApiSearchParams,
             }
         },
-        watch: {
+        watch: { 
         },
         created() {
             this.getNhanVien();
+            this.getVatDung();
         },
         mounted() {
         },
         methods: {
             show(isUpdate: boolean, item: any): void {
-                debugger
                 this.dialog = true;
                 this.isUpdate = isUpdate;
-                this.phieuNhapKho = item;
-                this.searchParamsChiTietPhieuNhap.phieuNhapID = this.phieuNhapKho.PhieuNhapID;
-                ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
-                    this.dsChiTietPhieuNhap = res.Data;
-                });
+                this.dsChiTietPhieuNhap = [] as ChiTietPhieuNhap[];
+                this.phieuNhapKho = Object.assign({}, item);
+                if (isUpdate === true) {
+                    this.searchParamsChiTietPhieuNhap.phieuNhapID = this.phieuNhapKho.PhieuNhapID;
+                    ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
+                        this.dsChiTietPhieuNhap = res.Data;
+                    });
+                }
+            },
+            getVatDung(): void {
+                this.searchVatDung = {} as VatDungApiSearchParams;
+                VatDungApi.search(this.searchVatDung).then(
+                    res => {
+                        this.dsVatDung = res.Data;
+                    }
+                )
             },
             getDataFromApi(id: number): void {
                 PhieuNhapKhoApi.detail(id).then(res => {
@@ -158,16 +232,16 @@
             },
             save(): void {
                 this.$validator.validateAll('frmAddEdit').then((res) => {
-                   if (res) {
-                        this.phieuNhapKho.NhanVien = undefined;
+                    if (res) {
+                        this.phieuNhapKho.NhanVienID = 1;// lấy lúc đăng nhập
                         this.phieuNhapKho.ChiTietPhieuNhap = undefined;
                         if (this.isUpdate) {
-                            let id = parseInt(this.$route.params.id, 10);
                             this.loading = true;
-                            PhieuNhapKhoApi.update(id, this.phieuNhapKho).then(res => {
+                            PhieuNhapKhoApi.update(this.phieuNhapKho.PhieuNhapID, this.phieuNhapKho).then(res => {
                                 this.loading = false;
                                 this.dialog = false;
                                 this.$emit("getLaiDanhSach");
+                                this.isUpdate = false;
                                 this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
                                 this.loading = false;
@@ -179,7 +253,7 @@
                                 this.phieuNhapKho = res;
                                 this.dialog = false;
                                 this.$emit("getLaiDanhSach");
-                                this.isUpdate = true;
+                                this.isUpdate = false;
                                 this.loading = false;
                                 this.$snotify.success('Thêm mới thành công!');
                             }).catch(res => {
@@ -188,6 +262,35 @@
                             });
                         }
                     }
+                });
+            },
+            saveChiTiet(): void {
+                this.$validator.validateAll('frmChiTiet').then((res) => {
+                    if (res) {
+                        if (this.isUpdateChiTiet) {
+                            this.loading = true;
+                            ChiTietPhieuNhapApi.update(this.phieuNhapKho.PhieuNhapID, this.chiTietPhieuNhap).then(res => {
+                                
+                                this.$snotify.success('Cập nhật thành công!');
+                            }).catch(res => {
+                                this.$snotify.error('Cập nhật thất bại!');
+                            });
+                        } else {
+                            this.phieuNhapKho.ChiTietPhieuNhap.push(underfined);
+                        }
+                    }
+                });
+            },
+            deletePhieuNhapKho(id: number): void {
+                ChiTietPhieuNhapApi.delete(this.selectedPhieuNhapKho.PhieuNhapID).then(res => {
+                    this.$snotify.success('Xóa thành công!');
+                    this.searchParamsChiTietPhieuNhap.phieuNhapID = this.phieuNhapKho.PhieuNhapID;
+                    ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
+                        this.dsChiTietPhieuNhap = res.Data;
+                    });
+                    this.dialogConfirmDelete = false;
+                }).catch(res => {
+                    this.$snotify.error('Xóa thất bại!');
                 });
             },
         }
