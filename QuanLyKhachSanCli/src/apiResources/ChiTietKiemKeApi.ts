@@ -52,6 +52,17 @@ class ChiTietKiemKeApi extends BaseApi {
             })
         });
     }
+    updateDanhSach(lstchiTietKiemKe: ChiTietKiemKe[]): Promise<PaginatedResponse<ChiTietKiemKe>> {
+        return new Promise<PaginatedResponse<ChiTietKiemKe>>((resolve: any, reject: any) => {
+            HTTP.put('chitietkiemke/capnhatdanhsach',
+                lstchiTietKiemKe
+            ).then((response) => {
+                resolve(response.data);
+            }).catch((error) => {
+                reject(error);
+            })
+        });
+    }
     insert(chiTietKiemKe: ChiTietKiemKe): Promise<ChiTietKiemKe> {
         return new Promise<ChiTietKiemKe>((resolve: any, reject: any) => {
             HTTP.post('chitietkiemke', 

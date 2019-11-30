@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HVITCore.Controllers;
 using System.Data.Entity.Infrastructure;
 using QuanLyKhachSanApp.Models;
+using System.Collections.Generic;
 
 namespace QuanLyKhachSanApp.Controllers
 {
@@ -67,6 +68,8 @@ namespace QuanLyKhachSanApp.Controllers
                 var res = results.Select(x => new
                 {
                     x.ChiTietKiemKeID,
+                    x.VatDungPhongID,
+                    x.KiemKeID,
                     x.VatDungPhong.Phong.SoPhong,
                     x.VatDungPhong.VatDung.TenVatDung,
                     x.VatDungPhong.SoLuong,
@@ -105,6 +108,20 @@ namespace QuanLyKhachSanApp.Controllers
             }
 
             return Ok(chiTietKiemKe);
+        }
+        [HttpPut, Route("capnhatdanhsach")]
+        public async Task<IHttpActionResult> UpdateDanhSach([FromBody]List<ChiTietKiemKe> lstchiTietKiemKe)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            using (var db = new dbQuanLyKhachSan())
+            {
+                lstchiTietKiemKe.ForEach(p => db.Entry(p).State = EntityState.Modified);
+                await db.SaveChangesAsync();
+                return Ok(lstchiTietKiemKe);
+            }
         }
 
         [HttpPut, Route("{chiTietKiemKeID:int}")]

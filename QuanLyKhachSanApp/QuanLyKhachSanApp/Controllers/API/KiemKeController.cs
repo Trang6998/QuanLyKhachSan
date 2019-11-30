@@ -61,6 +61,7 @@ namespace QuanLyKhachSanApp.Controllers
             {
                 db.KiemKe.Add(kiemKe);
                 await db.SaveChangesAsync();
+                kiemKe.MaKiemKe = "K-" + kiemKe.KiemKeID;
                 List<ChiTietKiemKe> chiTietKiemKes = new List<ChiTietKiemKe>();
                 db.VatDungPhong.ToList().ForEach(vd =>
                 {
