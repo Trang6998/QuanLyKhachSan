@@ -18,13 +18,7 @@ export default {
 
     UPDATE_USER(state: any, user: any) {
         state.user = user
-        if (state.user.User.LoaiTaiKhoanId === 1) {
-            state.user.HoGiaDinh = true
-        } else if (state.user.User.LoaiTaiKhoanId === 2) {
-            state.user.QuanTriVien = true
-        } else if (state.user.User.PhongId !== null) {
-            state.user.Phong = true
-        }
+       
     },
 
     [TOOGLE_LEFT_SIDE_BAR](state: any) {
@@ -38,7 +32,7 @@ export default {
 
     CLEAR_ALL_DATA(state: any) {
         state.user = {
-            Token: {
+            AccessToken: {
                 IsAuthenticated: false,
                 Token: null,
                 UserName: null,
@@ -48,19 +42,8 @@ export default {
             },
             Profile: {
                 Username: null,
-                FullName: null,
-            },
-            User: {
-                HoGiaDinhId: null,
-                TenChuHo: '',
-                ToaNha: '',
-                Phong: '',
-                SoDienThoai: null,
-                ToaNhaId: null,
-                UserId: null,
-                PhongId: null,
-                LoaiTaiKhoanId: null,
-                AnhDaiDien: null
+                Userid: null,
+                NhanVien: null
             }
         }
     }

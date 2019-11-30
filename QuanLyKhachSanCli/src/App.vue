@@ -1,51 +1,10 @@
-<!--<template>
-    <v-app>
-        <v-navigation-drawer persistent :mini-variant="miniVariant" :clipped="clipped"
-                             v-model="drawer" enable-resize-watcher fixed app>
-            <v-list>
-                <v-list-tile value="true" v-for="(item, i) in items" :key="i" :to="item.link">
-                    <v-list-tile-action>
-                        <v-icon v-html="item.icon"></v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title v-text="item.title"></v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-            </v-list>
-        </v-navigation-drawer>
-        <v-toolbar app
-                   :clipped-left="clipped">
-            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-            <v-btn icon @click.stop="miniVariant = !miniVariant">
-                <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
-            </v-btn>
-            <v-btn icon @click.stop="clipped = !clipped">
-                <v-icon>web</v-icon>
-            </v-btn>
-            <v-btn icon @click.stop="fixed = !fixed">
-                <v-icon>remove</v-icon>
-            </v-btn>
-            <v-toolbar-title v-text="title"></v-toolbar-title>
-        </v-toolbar>
-        <v-content>
-            <v-container fluid fill-height grid-list-xs style="padding:10px;">
-                <v-layout justify-center>
-                    <router-view></router-view>
-                </v-layout>
-                <vue-snotify></vue-snotify>
-            </v-container>
-        </v-content>
-        <v-footer :fixed="fixed" app>
-            <span>&copy; 2017</span>
-        </v-footer>
-    </v-app>
-</template>-->
+
 <template>
     <v-app>
-        <left-side-bar></left-side-bar>
-        <v-toolbar style="background: #e46c0a;" dark app :clipped-left="$vuetify.breakpoint.lgAndUp" fixed>
+        <left-side-bar v-if="isLoggedIn"></left-side-bar>
+        <v-toolbar v-if="isLoggedIn" style="background: #e46c0a;" dark app :clipped-left="$vuetify.breakpoint.lgAndUp" fixed>
             <v-toolbar-title style="width: 100%" class="ml-0 pl-3">
-                <v-toolbar-side-icon></v-toolbar-side-icon>
+                <v-toolbar-side-icon  @click.stop="updateDrawer"></v-toolbar-side-icon>
                 <span class="hidden-sm-and-down">Quản lý khách sạn</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
@@ -58,17 +17,17 @@
                 <v-list>
                     <v-list-tile to="">
                         <v-list-tile-title>
-                            Thông tin tài kho?n
+                            {{user?user.Username:''}}
                         </v-list-tile-title>
                     </v-list-tile>
-                    <v-list-tile>
+                    <v-list-tile to="">
                         <v-list-tile-title>
-                            ??i m?t kh?u
+                            Thông tin tài khoản
                         </v-list-tile-title>
                     </v-list-tile>
-                    <v-list-tile>
+                    <v-list-tile @click="logout()">
                         <v-list-tile-title>
-                            ??ng xu?t
+                            Đăng xuất
                         </v-list-tile-title>
                     </v-list-tile>
                 </v-list>
@@ -85,10 +44,12 @@
     </v-app>
 </template>
 
-<script>
+<script lang="ts">
     import "vue-snotify/styles/material.css";
     import "vue-snotify/styles/material.css";
     import { Vue } from 'vue-property-decorator';
+    import auth from '@/auth';
+    import store from '@/store/store';
     import LeftSideBar from '@/components/Layout/LeftSideBar.vue';
     export default Vue.extend({
         name: 'App',
@@ -193,12 +154,29 @@
                 miniVariant: false,
                 right: true,
                 rightDrawer: false,
-                title: 'Title'
+                title: 'Title',
+                user: {} as any
             };
+        },
+        computed: {
+            isLoggedIn(): boolean {
+                this.user = store.state.user.Profile
+                return store.state.user
+                    && store.state.user.AccessToken
+                    && store.state.user.AccessToken.IsAuthenticated;
+            }
         },
         methods: {
             show() {
                 this.$store.state.app.showLeftSideBar = !this.$store.state.app.showLeftSideBar
+            },
+            logout() {
+                auth.logout();
+            },
+             updateDrawer() {
+                let app = this.$store.state.app;
+                app.drawer = !this.$store.state.app.drawer;
+                this.$store.commit('UPDATE_APP', app);
             },
         }
     });
