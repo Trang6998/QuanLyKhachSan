@@ -18,6 +18,15 @@ class KhachHangApi extends BaseApi {
             })
         });
     }
+    kiemtra(cmnd: string): Promise<KhachHang> {
+        return new Promise<KhachHang>((resolve: any, reject: any) => {
+            HTTP.get('khachhang/kiemtrathongtin?cmnd=' + cmnd).then((response) => {
+                resolve(response.data);
+            }).catch((error) => {
+                reject(error);
+            })
+        });
+    }
     detail(id: number): Promise<KhachHang> {
         return new Promise<KhachHang>((resolve: any, reject: any) => {
             HTTP.get('khachhang/' + id).then((response) => {

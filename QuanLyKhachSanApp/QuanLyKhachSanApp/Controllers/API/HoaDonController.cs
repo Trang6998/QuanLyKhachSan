@@ -13,7 +13,14 @@ namespace QuanLyKhachSanApp.Controllers
     public class HoaDonController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null, [FromUri]int? datPhongID = null, [FromUri]int? khachHangID = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, 
+                                                    [FromUri]int? nhanVienID = null, 
+                                                    [FromUri]int? datPhongID = null, 
+                                                    [FromUri]int? khachHangID = null, 
+                                                    [FromUri]string query = null, 
+                                                    [FromUri]bool? trangThai = null,
+                                                    [FromUri]DateTime? tuNgay = null,
+                                                    [FromUri]DateTime? denNgay = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -22,16 +29,40 @@ namespace QuanLyKhachSanApp.Controllers
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
-                    results = results.Include(o => o.KhachHang);
+                    results = results.Include(o => o.KhachHang)
+                                     .Include(o => o.DatDichVu.Select(x => x.DichVu))
+                                     .Include(o => o.ThuePhong.Select(z => z.BangGia));
                 }
 
                 if (nhanVienID.HasValue) results = results.Where(o => o.NhanVienID == nhanVienID);
                 if (datPhongID.HasValue) results = results.Where(o => o.DatPhongID == datPhongID);
                 if (khachHangID.HasValue) results = results.Where(o => o.KhachHangID == khachHangID);
+                if (trangThai.HasValue) results = results.Where(o => o.TrangThai == trangThai);
+                if (tuNgay.HasValue) results = results.Where(o => o.NgayThanhToan >= tuNgay);
+                if (denNgay.HasValue) results = results.Where(o => o.NgayThanhToan <= denNgay);
+                if (!string.IsNullOrWhiteSpace(query))
+                    results = results.Where(o => o.MaHoaDon.Contains(query) || o.KhachHang.SoDienThoai.Contains(query));
 
-                results = results.OrderBy(o => o.HoaDonID);
+                var res = results.Select(x => new
+                {
+                    x.HoaDonID,
+                    x.MaHoaDon,
+                    x.NgayThanhToan,
+                    x.ThoiGianNhanPhong,
+                    x.PhuThu,
+                    x.TrangThai,
+                    KhachHang = new
+                    {
+                        x.KhachHang.HoTen,
+                        x.KhachHang.SoDienThoai
+                    },
+                    TongThanhToan = x.ThuePhong.Sum(y => y.BangGia.GiaPhong) + x.DatDichVu.Sum(y => y.DichVu.GiaBan*y.SoLuong),
+                    
+                });
 
-                return Ok((await GetPaginatedResponse(results, pagination)));
+                res = res.OrderBy(o => o.HoaDonID);
+
+                return Ok((await GetPaginatedResponse(res, pagination)));
             }
         }
 
@@ -42,12 +73,51 @@ namespace QuanLyKhachSanApp.Controllers
             {
                 var hoaDon = await db.HoaDon
                     .Include(o => o.KhachHang)
+                    .Include(o => o.ThuePhong)
+                    .Include(o => o.ThuePhong.Select(y => y.BangGia))
+                    .Include(o => o.ThuePhong.Select(y => y.Phong))
+                    .Include(o => o.ThuePhong.Select(y => y.Phong.LoaiPhong))
+                    .Include(o => o.DatDichVu)
+                    .Include(o => o.DatDichVu.Select(y => y.DichVu))
                     .SingleOrDefaultAsync(o => o.HoaDonID == hoaDonID);
 
                 if (hoaDon == null)
                     return NotFound();
 
-                return Ok(hoaDon);
+                var res = new
+                {
+                    hoaDon.HoaDonID,
+                    hoaDon.KhachHangID,
+                    hoaDon.DatPhongID,
+                    hoaDon.NhanVienID,
+                    hoaDon.MaHoaDon,
+                    hoaDon.NgayThanhToan,
+                    hoaDon.ThoiGianNhanPhong,
+                    hoaDon.ThoiGianTraPhong,
+                    hoaDon.TrangThai,
+                    hoaDon.KhachHang,
+                    hoaDon.LyDo,
+                    hoaDon.PhuThu,
+                    hoaDon.SoTaiKhoan,
+                    TongThanhToan = hoaDon.ThuePhong.Sum(y => y.BangGia.GiaPhong) + hoaDon.DatDichVu.Sum(y => y.DichVu.GiaBan * y.SoLuong),
+                    ThuePhong = hoaDon.ThuePhong.Select(x => new
+                    {
+                        x.ThuePhongID,
+                        x.BangGia.GiaPhong,
+                        x.Phong.SoPhong,
+                        x.Phong.LoaiPhong.TenLoaiPhong
+                    }),
+                    DatDichVu = hoaDon.DatDichVu.Select(x => new
+                    {
+                        x.DatDichVuID,
+                        x.DichVu.TenDichVu,
+                        x.DichVu.GiaBan,
+                        x.DichVu.MoTa,
+                        x.SoLuong
+                    })
+                };
+
+                return Ok(res);
             }
         }
 
@@ -59,6 +129,9 @@ namespace QuanLyKhachSanApp.Controllers
             using (var db = new dbQuanLyKhachSan())
             {
                 db.HoaDon.Add(hoaDon);
+                await db.SaveChangesAsync();
+                hoaDon.MaHoaDon = "HD-" + hoaDon.HoaDonID.ToString();
+                db.Entry(hoaDon).State = EntityState.Modified;
                 await db.SaveChangesAsync();
             }
 
@@ -108,12 +181,13 @@ namespace QuanLyKhachSanApp.Controllers
 
                 if (hoaDon == null)
                     return NotFound();
+                var lstDatDichVu = db.DatDichVu.Where(o => o.HoaDonID == hoaDon.HoaDonID);
+                var lstThuePhong = db.ThuePhong.Where(o => o.HoaDonID == hoaDon.HoaDonID);
+                if (lstDatDichVu.Count() > 0)
+                    db.DatDichVu.RemoveRange(lstDatDichVu);
 
-                if (await db.DatDichVu.AnyAsync(o => o.HoaDonID == hoaDon.HoaDonID))
-                    return BadRequest("Unable to delete the hoadon as it has related datdichvu");
-
-                if (await db.ThuePhong.AnyAsync(o => o.HoaDonID == hoaDon.HoaDonID))
-                    return BadRequest("Unable to delete the hoadon as it has related thuephong");
+                if (lstThuePhong.Count() > 0)
+                    db.ThuePhong.RemoveRange(lstThuePhong);
 
                 db.Entry(hoaDon).State = EntityState.Deleted;
 

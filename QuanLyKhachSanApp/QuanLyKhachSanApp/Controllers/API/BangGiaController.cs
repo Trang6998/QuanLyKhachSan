@@ -63,6 +63,24 @@ namespace QuanLyKhachSanApp.Controllers
             return Ok(bangGia);
         }
 
+        [HttpGet, Route("giaapdung")]
+        public async Task<IHttpActionResult> GetGiaApDung([FromUri]DateTime? ngayNhanPhong, [FromUri]int loaiPhongID)
+        {
+            using (var db = new dbQuanLyKhachSan())
+            {
+                var loaiPhong = await db.LoaiPhong.Include(x => x.BangGia)
+                    .SingleOrDefaultAsync(o => o.LoaiPhongID == loaiPhongID);
+
+                if (loaiPhong == null)
+                    return NotFound();
+
+                var giaApDung = loaiPhong.BangGia.FirstOrDefault(x => x.ApDungTuNgay <= ngayNhanPhong
+                                                          && x.ApDungDenNgay >= ngayNhanPhong);
+
+                return Ok(giaApDung);
+            }
+        }
+
         [HttpPut, Route("{bangGiaID:int}")]
         public async Task<IHttpActionResult> Update(int bangGiaID, [FromBody]BangGia bangGia)
         {

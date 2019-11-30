@@ -4,13 +4,26 @@ import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { ChiTietKiemKe } from '@/models/ChiTietKiemKe'
 export interface ChiTietKiemKeApiSearchParams extends Pagination {
     kiemKeID?:number;
-    vatDungPhongID?:number;
+    vatDungPhongID?: number;
+    phongID?: number;
 }
 class ChiTietKiemKeApi extends BaseApi {
     search(searchParams: ChiTietKiemKeApiSearchParams): Promise<PaginatedResponse<ChiTietKiemKe>> {
 
         return new Promise<PaginatedResponse<ChiTietKiemKe>>((resolve: any, reject: any) => {
             HTTP.get('chitietkiemke', {
+                params: searchParams
+            }).then((response) => {
+                resolve(response.data);
+            }).catch((error) => {
+                reject(error);
+            })
+        });
+    }
+    getds(searchParams: ChiTietKiemKeApiSearchParams): Promise<PaginatedResponse<ChiTietKiemKe>> {
+
+        return new Promise<PaginatedResponse<ChiTietKiemKe>>((resolve: any, reject: any) => {
+            HTTP.get('chitietkiemke/getds', {
                 params: searchParams
             }).then((response) => {
                 resolve(response.data);
