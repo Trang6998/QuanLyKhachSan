@@ -18,6 +18,17 @@ class BangGiaApi extends BaseApi {
             })
         });
     }
+    giaapdung(ngayNhanPhong: Date, loaiPhongID: number): Promise<BangGia> {
+        return new Promise<BangGia>((resolve: any, reject: any) => {
+            HTTP.get('banggia/giaapdung?ngayNhanPhong=' + ngayNhanPhong
+                + '&loaiPhongID=' + loaiPhongID
+            ).then((response) => {
+                resolve(response.data);
+            }).catch((error) => {
+                reject(error);
+            })
+        });
+    }
     detail(id: number): Promise<BangGia> {
         return new Promise<BangGia>((resolve: any, reject: any) => {
             HTTP.get('banggia/' + id).then((response) => {

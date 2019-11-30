@@ -3,7 +3,10 @@ import { BaseApi } from './BaseApi'
 import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { KiemKe } from '@/models/KiemKe'
 export interface KiemKeApiSearchParams extends Pagination {
-    nhanVienID?:number;
+    nhanVienID?: number;
+    tuNgay?: Date;
+    denNgay?: Date;
+    maKiemKe?: string;
 }
 class KiemKeApi extends BaseApi {
     search(searchParams: KiemKeApiSearchParams): Promise<PaginatedResponse<KiemKe>> {

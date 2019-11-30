@@ -5,7 +5,11 @@ import { HoaDon } from '@/models/HoaDon'
 export interface HoaDonApiSearchParams extends Pagination {
     nhanVienID?:number;
     datPhongID?:number;
-    khachHangID?:number;
+    khachHangID?: number;
+    query?: string;
+    trangThai?: boolean;
+    tuNgay?: Date;
+    denNgay?: Date;
 }
 class HoaDonApi extends BaseApi {
     search(searchParams: HoaDonApiSearchParams): Promise<PaginatedResponse<HoaDon>> {

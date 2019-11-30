@@ -1,80 +1,108 @@
 <template>
-    <v-flex xs12>
-        <v-breadcrumbs divider="/" class="pa-0">
-            <v-icon slot="divider">chevron_right</v-icon>
-            <v-breadcrumbs-item>
-                <v-btn flat class="ma-0" @click="$router.go(-1)" small><v-icon>arrow_back</v-icon> Quay lại</v-btn>
-            </v-breadcrumbs-item>
-            <v-breadcrumbs-item to="/hoadon" exact>HoaDon</v-breadcrumbs-item>
-        </v-breadcrumbs>
-        <v-card>
-            <v-card-text>
-                <v-layout row wrap>
-                    <v-flex xs12>
-                    <v-data-table :headers="tableHeader"
-                                :items="dsHoaDon"
-                                @update:pagination="getDataFromApi" :pagination.sync="searchParamsHoaDon"
-                                :total-items="searchParamsHoaDon.totalItems"
-                                :loading="loadingTable"
-                                class="table-border table">
-                        <template slot="items" slot-scope="props">
-                    <td>{{ props.item.HoaDonID }}</td>
-                            <td>{{ props.item.NhanVien.NhanVienID }}</td>
-                            <td>{{ props.item.DatPhong.DatPhongID }}</td>
-                            <td>{{ props.item.KhachHang.KhachHangID }}</td>
-                    <td>{{ props.item.MaHoaDon }}</td>
-                            <td>{{ props.item.NgayThanhToan === null ? "" : props.item.NgayThanhToan|moment('DD/MM/YYYY HH:mm:ss') }}</td>
-                    <td>{{ props.item.SoTaiKhoan }}</td>
-                    <td>{{ props.item.TongTien }}</td>
-                    <td class="text-xs-center" style="width:80px;">
-                        <v-btn flat icon small :to="'/hoadon/'+props.item.HoaDonID" class="ma-0">
-                            <v-icon small>edit</v-icon>
-                        </v-btn>
-                        <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-                            <v-icon small>delete</v-icon>
-                        </v-btn>
-                    </td>
-                            </template>
-                        </v-data-table>
-                    </v-flex xs12>
+    <v-card width="100%" style="padding: 20px">
+        <v-layout row wrap>
+            <v-flex xs12>
+                <h3>Danh sách hóa đơn</h3>
+            </v-flex>
+            <v-flex xs12>
+                <v-layout norwap>
+                    <v-flex xs6 md5>
+                        <v-text-field label="Tìm kiếm"
+                                      append-icon="search"
+                                      placeholder="Nhập mã hóa đơn, họ tên, SĐT khách hàng ..."
+                                      hide-details
+                                      v-model="searchParamsHoaDon.query"
+                                      @input="getDataFromApi(searchParamsHoaDon)">
+
+                        </v-text-field>
+                    </v-flex>
+                    <v-flex xs2>
+                        <v-datepicker v-model="searchParamsHoaDon.tuNgay" label="Từ ngày"  ma-0 pa-0 
+                                      hide-details @input="getDataFromApi(searchParamsHoaDon)"></v-datepicker>
+                    </v-flex>
+                    <v-flex xs2>
+                        <v-datepicker v-model="searchParamsHoaDon.denNgay" label="Đến ngày"  ma-0 pa-0 
+                                      hide-details @input="getDataFromApi(searchParamsHoaDon)"></v-datepicker>
+                    </v-flex>
                 </v-layout>
-            </v-card-text>
-        </v-card>
-        <v-dialog v-model="dialogConfirmDelete" max-width="290">
-                    <v-card>
-                <v-card-title class="headline">Xác nhận xóa</v-card-title>
-                <v-card-text class="pt-3">Bạn có chắc chắn muốn xóa?</v-card-text>
-                <v-card-actions>
+            </v-flex>
+            <v-flex xs12>
+                <v-layout norwap>
+                    <v-flex xs6>
+                        <v-radio-group v-model="searchParamsHoaDon.trangThai" style="margin:auto" hide-details @change="getDataFromApi(searchParamsHoaDon)" row>
+                            <v-radio label="Tất cả" :value="null"></v-radio>
+                            <v-radio label="Chưa thanh toán" :value="false"></v-radio>
+                            <v-radio label="Đã thanh toán" :value="true"></v-radio>
+                        </v-radio-group>
+                    </v-flex>
                     <v-spacer></v-spacer>
-                    <v-btn @click.native="dialogConfirmDelete=false" flat>Hủy</v-btn>
-                    <v-btn color="red darken-1" @click.native="deleteHoaDon" flat>Xác Nhận</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </v-flex>
+                    <v-btn small @click="showModalThemSua(false,{})" style="margin-top: auto" color="primary">+ Khách thuê phòng</v-btn>
+                </v-layout>
+            </v-flex>
+            <v-flex xs12>
+                <v-data-table :headers="tableHeader"
+                              :items="dsHoaDon"
+                              @update:pagination="getDataFromApi" :pagination.sync="searchParamsHoaDon"
+                              :total-items="searchParamsHoaDon.totalItems"
+                              :loading="loadingTable"
+                              class="table-border table">
+                    <template slot="items" slot-scope="props">
+                        <td>{{ props.index + 1 }}</td>
+                        <td>{{ props.item.MaHoaDon }}</td>
+                        <td>{{ props.item.KhachHang ? props.item.KhachHang.HoTen : ''}}</td>
+                        <td>{{ props.item.KhachHang ? props.item.KhachHang.SoDienThoai : ''}}</td>
+                        <td>{{ props.item.ThoiGianNhanPhong === null ? "" : props.item.ThoiGianNhanPhong|moment('DD/MM/YYYY HH:mm:ss') }}</td>
+                        <td>{{ (props.item.TongThanhToan != 0) ? (props.item.TongThanhToan + (props.item.PhuThu? props.item.PhuThu: 0)) : 0}}</td>
+                        <td>{{ props.item.TrangThai ? "Đã thanh toán" : "Chưa thanh toán" }}</td>
+                        <td class="text-xs-center" style="width:80px;">
+                            <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">
+                                <v-icon small>{{props.item.TrangThai? 'remove_red_eye':'edit'}}</v-icon>
+                            </v-btn>
+                            <v-btn flat color="red" icon small class="ma-0" v-show="!props.item.TrangThai"  @click="confirmDelete(props.item)">
+                                <v-icon small>delete</v-icon>
+                            </v-btn>
+                        </td>
+                    </template>
+                </v-data-table>
+            </v-flex>
+            <v-dialog v-model="dialogConfirmDelete" max-width="290">
+                <v-card>
+                    <v-card-title class="headline">Xác nhận xóa</v-card-title>
+                    <v-card-text class="pt-3">Bạn có chắc chắn muốn xóa?</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click.native="dialogConfirmDelete=false" flat>Hủy</v-btn>
+                        <v-btn color="red darken-1" @click.native="deleteHoaDon" flat>Xác Nhận</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <them-sua-hoa-don ref="themSuaHoaDon" @getLaiDanhSach="getDataFromApi(searchParamsHoaDon)"></them-sua-hoa-don>
+        </v-layout>
+    </v-card>
 </template>
 <script lang="ts">
     import { Vue } from 'vue-property-decorator';
     import HoaDonApi, { HoaDonApiSearchParams } from '@/apiResources/HoaDonApi';
     import { HoaDon } from '@/models/HoaDon';
-
+    import ThemSuaHoaDon from './ThemSuaHoaDon.vue';
     export default Vue.extend({
-        components: {},
+        components: {
+            ThemSuaHoaDon
+        },
         data() {
             return {
                 dsHoaDon: [] as HoaDon[],
                 tableHeader: [
-                    { text: 'HoaDonID', value: 'HoaDonID', align: 'center', sortable: true },
-                    { text: 'NhanVienID', value: 'NhanVien.NhanVienID', align: 'center', sortable: true },
-                    { text: 'DatPhongID', value: 'DatPhong.DatPhongID', align: 'center', sortable: true },
-                    { text: 'KhachHangID', value: 'KhachHang.KhachHangID', align: 'center', sortable: true },
-                    { text: 'MaHoaDon', value: 'MaHoaDon', align: 'center', sortable: true },
-                    { text: 'NgayThanhToan', value: 'NgayThanhToan', align: 'center', sortable: true },
-                    { text: 'SoTaiKhoan', value: 'SoTaiKhoan', align: 'center', sortable: true },
-                    { text: 'TongTien', value: 'TongTien', align: 'center', sortable: true },
+                    { text: 'STT', value: 'HoaDonID', align: 'center', sortable: true },
+                    { text: 'Mã hóa đơn', value: 'MaHoaDon', align: 'center', sortable: true },
+                    { text: 'Tên khách hàng', value: 'KhachHang.KhachHangID', align: 'center', sortable: true },
+                    { text: 'Số điện thoại', value: 'KhachHang.KhachHangID', align: 'center', sortable: true },
+                    { text: 'Ngày nhận phòng', value: 'NgayThanhToan', align: 'center', sortable: true },
+                    { text: 'Tổng tiền', value: 'TongTien', align: 'center', sortable: true },
+                    { text: 'Trạng thái', value: 'NgayThanhToan', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
-                searchParamsHoaDon: { includeEntities: true, rowsPerPage: 10 } as HoaDonApiSearchParams,
+                searchParamsHoaDon: { includeEntities: true, rowsPerPage: 10 , trangThai: null as any} as HoaDonApiSearchParams,
                 loadingTable: false,
                 selectedHoaDon: {} as HoaDon,
                 dialogConfirmDelete: false,
@@ -93,6 +121,9 @@
                     this.searchParamsHoaDon.totalItems = res.Pagination.totalItems;
                     this.loadingTable = false;
                 });
+            },
+            showModalThemSua(isUpdate: boolean, item: any) {
+                (this.$refs.themSuaHoaDon as any).show(isUpdate, item);
             },
             confirmDelete(hoaDon: HoaDon): void {
                 this.selectedHoaDon = hoaDon;

@@ -28,9 +28,18 @@ namespace QuanLyKhachSanApp.Controllers
                 if (dichVuID.HasValue) results = results.Where(o => o.DichVuID == dichVuID);
                 if (hoaDonID.HasValue) results = results.Where(o => o.HoaDonID == hoaDonID);
 
-                results = results.OrderBy(o => o.DatDichVuID);
+                var res = results.Select(x => new
+                {
+                    x.DatDichVuID,
+                    x.DichVu.TenDichVu,
+                    x.DichVu.GiaBan,
+                    x.DichVu.MoTa,
+                    x.SoLuong
+                });
 
-                return Ok((await GetPaginatedResponse(results, pagination)));
+                res = res.OrderBy(o => o.DatDichVuID);
+
+                return Ok((await GetPaginatedResponse(res, pagination)));
             }
         }
 

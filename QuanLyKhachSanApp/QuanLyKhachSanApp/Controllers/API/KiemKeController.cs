@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HVITCore.Controllers;
 using System.Data.Entity.Infrastructure;
 using QuanLyKhachSanApp.Models;
+using System.Collections.Generic;
 
 namespace QuanLyKhachSanApp.Controllers
 {
@@ -13,7 +14,7 @@ namespace QuanLyKhachSanApp.Controllers
     public class KiemKeController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null, [FromUri]DateTime? tuNgay = null, [FromUri]DateTime? denNgay = null, [FromUri]string maKiemKe = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -22,9 +23,13 @@ namespace QuanLyKhachSanApp.Controllers
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
+                    results = results.Include(x => x.NhanVien);
                 }
 
                 if (nhanVienID.HasValue) results = results.Where(o => o.NhanVienID == nhanVienID);
+                if (tuNgay.HasValue) results = results.Where(o => o.NgayKiemKe >= tuNgay);
+                if (denNgay.HasValue) results = results.Where(o => o.NgayKiemKe <= denNgay);
+                if (!string.IsNullOrWhiteSpace(maKiemKe)) results = results.Where(o => o.MaKiemKe.Contains(maKiemKe));
 
                 results = results.OrderBy(o => o.KiemKeID);
 
@@ -56,11 +61,20 @@ namespace QuanLyKhachSanApp.Controllers
             {
                 db.KiemKe.Add(kiemKe);
                 await db.SaveChangesAsync();
+                List<ChiTietKiemKe> chiTietKiemKes = new List<ChiTietKiemKe>();
+                db.VatDungPhong.ToList().ForEach(vd =>
+                {
+                    ChiTietKiemKe chiTietKiemKe = new ChiTietKiemKe();
+                    chiTietKiemKe.KiemKeID = kiemKe.KiemKeID;
+                    chiTietKiemKe.VatDungPhongID = vd.VatDungPhongID;
+                    chiTietKiemKe.SoLuongKiemKe = vd.SoLuong;
+                    chiTietKiemKes.Add(chiTietKiemKe);
+                });
+                db.ChiTietKiemKe.AddRange(chiTietKiemKes);
+                await db.SaveChangesAsync();
+                return Ok(kiemKe);
             }
-
-            return Ok(kiemKe);
         }
-
         [HttpPut, Route("{kiemKeID:int}")]
         public async Task<IHttpActionResult> Update(int kiemKeID, [FromBody]KiemKe kiemKe)
         {
