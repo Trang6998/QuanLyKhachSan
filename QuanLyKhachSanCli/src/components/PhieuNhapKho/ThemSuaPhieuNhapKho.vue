@@ -154,6 +154,7 @@
     import NhanVienApi, { NhanVienApiSearchParams } from '@/apiResources/NhanVienApi';
     import { VatDung } from '@/models/VatDung';
     import VatDungApi, { VatDungApiSearchParams } from '@/apiResources/VatDungApi';
+    import store from '@/store/store';
 
     export default Vue.extend({
         $_veeValidate: {
@@ -184,7 +185,8 @@
                 ],
                 dialogConfirmDelete: false,
                 loading: false,
-                searchParamsPhieuNhapKho: {phieuNhapID: null as any} as PhieuNhapKhoApiSearchParams,
+                searchParamsPhieuNhapKho: { phieuNhapID: null as any } as PhieuNhapKhoApiSearchParams,
+                isUpdateChiTiet: false
             }
         },
         watch: { 
@@ -234,7 +236,7 @@
             save(): void {
                 this.$validator.validateAll('frmAddEdit').then((res) => {
                     if (res) {
-                        this.phieuNhapKho.NhanVienID = 1;// lấy lúc đăng nhập
+                        this.phieuNhapKho.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
                         this.phieuNhapKho.ChiTietPhieuNhap = undefined;
                         if (this.isUpdate) {
                             this.loading = true;
@@ -277,7 +279,7 @@
                                 this.$snotify.error('Cập nhật thất bại!');
                             });
                         } else {
-                            this.phieuNhapKho.ChiTietPhieuNhap.push(underfined);
+                            (this.phieuNhapKho.ChiTietPhieuNhap as ChiTietPhieuNhap[]).push(this.chiTietPhieuNhap);
                         }
                     }
                 });

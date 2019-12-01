@@ -1,10 +1,12 @@
+import { NhanVien } from "../models/NhanVien";
+
 export const STORAGE_KEY = 'insight-client-system';
 let Cookies = require('js-cookie');
 
 let syncedData = {
 
     user: {
-        Token: {
+        AccessToken: {
             IsAuthenticated: false,
             Token: null,
             UserName: null,
@@ -13,24 +15,10 @@ let syncedData = {
             ExpiresTime: null
         },
         Profile: {
+            Userid: null,
             Username: null,
-            FullName: null,
-        },
-        User: {
-            HoGiaDinhId: null,
-            TenChuHo: '',
-            ToaNha: '',
-            Phong: '',
-            SoDienThoai: null,
-            ToaNhaId: null,
-            UserId: null,
-            PhongId: null,
-            LoaiTaiKhoanId: null,
-            AnhDaiDien: null
-        },
-        HoGiaDinh: false,
-        QuanTriVien: false,
-        Phong: false
+            NhanVien: {} as NhanVien
+        }
     }
 }
 

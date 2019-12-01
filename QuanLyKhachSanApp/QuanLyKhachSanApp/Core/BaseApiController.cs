@@ -11,11 +11,14 @@ using System.Threading.Tasks;
 using System.Web.Http.Filters;
 using System.Web.Http.Controllers;
 using System.Security.Claims;
+using QuanLyKhachSanApp.Models;
+using HVIT.Security;
 
 namespace HVITCore.Controllers
 {
     public class BaseApiController : ApiController
     {
+        private NhanVien nhanVien;
         protected async Task<PaginatedResponse<T>> GetPaginatedResponse<T>(IQueryable<T> query, Pagination pagination)
         {
             if (pagination == null) pagination = new Pagination();
@@ -46,6 +49,24 @@ namespace HVITCore.Controllers
                 Pagination = paginationHeader,
                 Data = results
             };
+        }
+        protected NhanVien GetNhanVien()
+        {
+            if (nhanVien == null)
+            {
+                using (dbQuanLyKhachSan db = new dbQuanLyKhachSan())
+                {
+                    TokenProvider tokenProvider = new TokenProvider();
+                    if (this.User != null)
+                    {
+                        nhanVien = db.NhanVien
+                            .Include(x => x.Users)
+                            .FirstOrDefault(x => x.Users.UserName.Equals(this.User.Identity.Name));
+
+                    }
+                }
+            }
+            return nhanVien;
         }
     }
     public class Pagination

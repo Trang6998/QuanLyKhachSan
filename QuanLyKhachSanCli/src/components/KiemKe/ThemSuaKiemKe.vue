@@ -45,7 +45,7 @@
                                 <v-layout nowrap>
                                     <h3>Chi tiết kiểm kê</h3>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="primary" @click="showModalChiTietKiemKe()" small>Cập nhật</v-btn>
+                                    <v-btn color="primary" v-show="isUpdate" @click="showModalChiTietKiemKe()" small>Cập nhật thông tin kiểm kê</v-btn>
                                 </v-layout>
                             </v-flex>
                             <v-flex xs12>
@@ -71,7 +71,7 @@
                     <v-spacer></v-spacer>
                     <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
                 </v-card-actions>
-                <modal-chi-tiet-kiem-ke ref="modalChiTietKiemKe"></modal-chi-tiet-kiem-ke>
+                <modal-chi-tiet-kiem-ke ref="modalChiTietKiemKe" @getLaiKiemKe="getDSChiTietKiemKe()"></modal-chi-tiet-kiem-ke>
             </v-card>
         </v-container>
     </v-dialog>
@@ -83,6 +83,8 @@
     import { ChiTietKiemKe } from '@/models/ChiTietKiemKe';
     import ChiTietKiemKeApi, { ChiTietKiemKeApiSearchParams } from '@/apiResources/ChiTietKiemKeApi';
     import ModalChiTietKiemKe from './ModalChiTietKiemKe.vue'
+    import store from '@/store/store';
+
     export default Vue.extend({
         $_veeValidate: {
             validator: 'new'
@@ -143,10 +145,11 @@
                         this.kiemKe.NhanVien = undefined;
                         this.kiemKe.ChiTietKiemKe = undefined;
                         if (this.isUpdate) {
-                            let id = parseInt(this.$route.params.id, 10);
                             this.loading = true;
-                            KiemKeApi.update(id, this.kiemKe).then(res => {
+                            KiemKeApi.update(this.kiemKe.KiemKeID, this.kiemKe).then(res => {
                                 this.loading = false;
+                                this.dialog = false;
+                                this.$emit("getLaiDanhSach");
                                 this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
                                 this.loading = false;
@@ -154,10 +157,12 @@
                             });
                         } else {
                             this.loading = true;
+                            this.kiemKe.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
                             KiemKeApi.insert(this.kiemKe).then(res => {
                                 this.kiemKe = res;
                                 this.searchParamsChiTietKiemKe.kiemKeID = res.KiemKeID;
                                 this.getDSChiTietKiemKe();
+                                this.$emit("getLaiDanhSach");
                                 this.isUpdate = true;
                                 this.loading = false;
                                 this.$snotify.success('Thêm mới thành công!');

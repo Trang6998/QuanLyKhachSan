@@ -116,8 +116,8 @@
                         { title: 'Quản lý dịch vụ', link: '/dichvu', show: true },
                         { title: 'Khách đặt phòng', link: '/datphong', action: 'add', show: true },
                         { title: 'Khách đặt dịch vụ', link: '/datdichvu', action: 'add', show: true },
-                        { title: 'Quản lý hóa đơn', link: '/hoadon', action: 'add', show: true },
-                        { title: 'Nhập kho', link: '/phieunhapkho', action: 'add', show: true },
+                        { title: 'Quản lý hóa đơn', link: '/hoadon', show: true },
+                        { title: 'Nhập kho', link: '/phieunhapkho', show: true },
                         { title: 'Danh sách nhân viên', link: '/nhanvien', show: true },
                         { title: 'Danh sách khách hàng', link: '/khachhang', show: true },
                     ]

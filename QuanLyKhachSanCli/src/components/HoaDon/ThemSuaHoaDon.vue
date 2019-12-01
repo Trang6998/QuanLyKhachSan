@@ -334,7 +334,7 @@
     import { LoaiPhong } from '@/models/LoaiPhong';
     import { DichVu } from '@/models/DichVu';
     import { BangGia } from '@/models/BangGia';
-
+    import store from '@/store/store';
     export default Vue.extend({
         $_veeValidate: {
             validator: 'new'
@@ -585,6 +585,7 @@
                         } else {
                             this.loading = true;
                             this.hoaDon.KhachHangID = this.khachHang.KhachHangID;
+                            this.hoaDon.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
                             HoaDonApi.insert(this.hoaDon).then(res => {
                                 this.hoaDon = res;
                                 this.isUpdate = true;

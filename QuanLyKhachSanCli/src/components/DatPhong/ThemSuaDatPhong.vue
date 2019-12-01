@@ -47,9 +47,8 @@
                                           label="Họ tên"
                                           type="text"
                                           :rules="text"
-                                          required
                                           :error-messages="errors.collect('HoTen', 'frmAddEdit')"
-                                          v-validate="''"
+                                          v-validate="'required'"
                                           data-vv-scope="frmAddEdit"
                                           data-vv-name="HoTen"
                                           clearable></v-text-field>
@@ -58,10 +57,8 @@
                             <v-text-field v-model="datPhong.SoDienThoai"
                                           label="Số điện thoại"
                                           type="text"
-                                          :rules="SDT"
-                                          required
                                           :error-messages="errors.collect('SoDienThoai', 'frmAddEdit')"
-                                          v-validate="''"
+                                          v-validate="'required|numeric'"
                                           data-vv-scope="frmAddEdit"
                                           data-vv-name="SoDienThoai"
                                           clearable></v-text-field>
@@ -123,6 +120,7 @@
     import { DatPhong } from '@/models/DatPhong';
     import { LoaiPhong } from '@/models/LoaiPhong';
     import LoaiPhongApi, { LoaiPhongApiSearchParams } from '@/apiResources/LoaiPhongApi';
+    import store from '@/store/store';
 
     export default Vue.extend({
         $_veeValidate: {
@@ -131,9 +129,7 @@
         components: {},
         data() {
             return {
-                SDT: [v => !!v || 'SDT is required',
-                      v => (v && v.length == 10) || '10 characters'],
-                text: [v => !!v || 'required'],
+               
                 dialog: false,
                 isUpdate: false,
                 datPhong: {} as DatPhong,
@@ -178,7 +174,8 @@
                 this.$validator.validateAll('frmAddEdit').then((res) => {
                    if (res) {
                        this.datPhong.LoaiPhong = undefined;
-                       this.datPhong.NhanVienID = 1;// lấy nhân viên đăng nhập
+                       if (this.datPhong.TrangThai == 2)
+                           this.datPhong.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
                         if (this.isUpdate) {
                             this.loading = true;
                             DatPhongApi.update(this.datPhong.DatPhongID, this.datPhong).then(res => {

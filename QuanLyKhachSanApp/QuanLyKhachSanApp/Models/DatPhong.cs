@@ -12,8 +12,7 @@ namespace QuanLyKhachSanApp.Models
         [Required]
         public int DatPhongID { get; set; }
 
-        [Required]
-        public int NhanVienID { get; set; }
+        public int? NhanVienID { get; set; }
 
         public int? LoaiPhongID { get; set; }
         public int? DichVuID { get; set; }

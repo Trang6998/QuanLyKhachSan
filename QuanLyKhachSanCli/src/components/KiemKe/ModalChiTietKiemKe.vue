@@ -37,8 +37,6 @@
                                                     @change="getDSChiTietKiemKe()"
                                                     clearable></v-autocomplete>
                                 </v-flex>
-                                <v-spacer></v-spacer>
-                                <v-btn color="info" to="/chitietkiemke/add" small>Thêm mới</v-btn>
                             </v-layout>
                         </v-flex>
                         <v-flex xs12>
@@ -60,14 +58,6 @@
                                         <v-text-field hide-details style="padding: 0px"
                                                       v-model="props.item.GhiChu"></v-text-field>
                                     </td>
-                                    <td class="text-xs-center" style="width:80px;">
-                                        <v-btn flat icon small class="ma-0">
-                                            <v-icon small>edit</v-icon>
-                                        </v-btn>
-                                        <v-btn flat color="red" icon small class="ma-0">
-                                            <v-icon small>delete</v-icon>
-                                        </v-btn>
-                                    </td>
                                 </template>
                             </v-data-table>
                         </v-flex>
@@ -75,7 +65,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
+                    <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">Lưu lại</v-btn>
                 </v-card-actions>
             </v-card>
         </v-container>
@@ -123,7 +113,6 @@
                     { text: 'Số lượng quy định', value: 'VatDungPhongID', align: 'center', sortable: true },
                     { text: 'Số lượng kiểm kê', value: 'SoLuongKiemKe', align: 'center', sortable: true },
                     { text: 'Ghi chú', value: 'GhiChu', align: 'center', sortable: true },
-                    { text: 'Thao tác', value: 'GhiChu', align: 'center', sortable: true },
                 ],
                 loading: false,
             }
@@ -133,6 +122,9 @@
         methods: {
             show(id:number) {
                 this.dialog = true;
+                this.dsChiTietKiemKe = [] as ChiTietKiemKe[];
+                this.searchParamsPhong.loaiPhongID = null as any;
+                this.searchParamsChiTietKiemKe.phongID = null as any;
                 this.getDSLoaiPhong();
                 this.searchParamsChiTietKiemKe.kiemKeID = id;
                 this.getDSChiTietKiemKe();
@@ -141,6 +133,14 @@
                 ChiTietKiemKeApi.getds(this.searchParamsChiTietKiemKe).then(res => {
                     this.dsChiTietKiemKe = res.Data;
                 });
+            },
+            save() {
+                this.loading = true;
+                ChiTietKiemKeApi.updateDanhSach(this.dsChiTietKiemKe).then(res => {
+                    this.loading = false;
+                    this.$emit("getLaiKiemKe");
+                    this.$snotify.success("Cập nhật thành công!");
+                })
             },
             getDSPhong(): void {
                 PhongApi.search(this.searchParamsPhong).then(res => {

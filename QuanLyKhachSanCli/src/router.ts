@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Router from 'vue-router';
+import Router, { Route } from 'vue-router';
 import DanhSachBangGia from './components/BangGia/DanhSachBangGia.vue';
 import ThemSuaBangGia from './components/BangGia/ThemSuaBangGia.vue';
 import DanhSachBoPhan from './components/BoPhan/DanhSachBoPhan.vue';
@@ -34,9 +34,38 @@ import DanhSachVatDung from './components/VatDung/DanhSachVatDung.vue';
 import ThemSuaVatDung from './components/VatDung/ThemSuaVatDung.vue';
 import DanhSachVatDungPhong from './components/VatDungPhong/DanhSachVatDungPhong.vue';
 import ThemSuaVatDungPhong from './components/VatDungPhong/ThemSuaVatDungPhong.vue';
+
+
+/*thuy link khachdatphong va khachdatdichvu*/
+import ThemKhachDatPhong from './components/DatPhong/ThemKhachDatPhong.vue';
+import ThemKhachDatDichVu from './components/DatDichVu/ThemKhachDatDichVu.vue';
+
+import Login from './components/Login/Login.vue';
+import store from './store/store';
+import { HTTP } from './HTTPServices';
+
+
+
 Vue.use(Router);
 export default new Router({
     routes: [
+        {
+            path: '/',
+            name: 'login',
+            component: Login,
+        },
+        /*thuy them khach dat phong*/
+        {
+            path: '/khachdatdichvu',
+            name: 'themKhachDatDichVu',
+            component: ThemKhachDatDichVu,
+        },
+        {
+            path: '/khachdatphong',
+            name: '/khachDatPhong',
+            component: ThemKhachDatPhong,
+        },
+
         {
             path: '/banggia',
             name: 'bangGia',
@@ -131,6 +160,7 @@ export default new Router({
             path: '/dichvu',
             name: 'dichVu',
             component: DanhSachDichVu,
+            beforeEnter: guardRoute
         },
         {
             path: '/dichvu/add',
@@ -146,6 +176,7 @@ export default new Router({
             path: '/hoadon',
             name: 'hoaDon',
             component: DanhSachHoaDon,
+            beforeEnter: guardRoute
         },
         {
             path: '/hoadon/add',
@@ -161,6 +192,8 @@ export default new Router({
             path: '/kiemke',
             name: 'kiemKe',
             component: DanhSachKiemKe,
+            beforeEnter: guardRoute
+
         },
         {
             path: '/kiemke/add',
@@ -176,6 +209,8 @@ export default new Router({
             path: '/khachhang',
             name: 'khachHang',
             component: DanhSachKhachHang,
+            beforeEnter: guardRoute
+
         },
         {
             path: '/khachhang/add',
@@ -294,3 +329,30 @@ export default new Router({
         },
     ],
 });
+
+
+function guardRoute(to: Route, from: Route, next: any): void {
+    const isAuthenticated = store.state.user && store.state.user.AccessToken ? store.state.user.AccessToken.IsAuthenticated : false;
+    if (!isAuthenticated) {
+        next({
+            path: '/login',
+            query: {
+                redirect: to.fullPath
+            }
+        });
+    } else {
+        HTTP.get('/auth/validate-token/')
+            .then(response => {
+                next();
+            })
+            .catch(e => {
+                store.commit('CLEAR_ALL_DATA');
+                next({
+                    path: '/login',
+                    query: {
+                        redirect: to.fullPath
+                    }
+                });
+            });
+    }
+}

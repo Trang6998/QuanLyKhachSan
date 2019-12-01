@@ -1,0 +1,155 @@
+<template>
+    <v-layout style="width:fit-content">
+        <v-img style="width:fit-content" src="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
+            <v-layout row>
+                <v-flex xs8></v-flex>
+                <v-flex xs4 style="padding: 40px">
+                    <v-card height="600" style="border: 1px;border-radius: 15px">
+                        <v-layout row wrap>
+                            <v-flex xs12>
+                                <h1 style="text-align: center"> Đặt Phòng</h1>
+                            </v-flex>
+                            <v-flex xs12 pl-5 pr-5>
+                                <v-text-field v-model="datPhong.HoTen"
+                                              label="Họ tên"
+                                              :error-messages="errors.collect('Họ tên', 'frmAddEdit')"
+                                              v-validate="'required'"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Họ tên"
+                                              clearable></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 pl-5 pr-5>
+                                <v-text-field v-model="datPhong.SoDienThoai"
+                                              label="Số điện thoại"
+                                              :error-messages="errors.collect('Số điện thoại', 'frmAddEdit')"
+                                              v-validate="'required'"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Số điện thoại"
+                                              clearable></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs12 pl-5 pr-5>
+                                <v-datepicker v-model="datPhong.ThoiGianDat"
+                                              label="Thời Gian Đặt"
+                                              :error-messages="errors.collect('Thời Gian Đặt', 'frmAddEdit')"
+                                              v-validate="'required'"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Thời Gian Đặt"
+                                              clearable>
+                                </v-datepicker>
+                            </v-flex>
+
+                            <v-flex xs12 pl-5 pr-5>
+                                <v-text-field v-model="datPhong.SoLuongNguoi"
+                                              label="Số Lượng Người"
+                                              :error-messages="errors.collect('Số Lượng Người', 'frmAddEdit')"
+                                              v-validate="'required'"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Số Lượng Người"
+                                              clearable></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs12 pl-5 pr-5>
+                                <v-autocomplete :items="dsLoaiPhong"
+                                                v-model="datPhong.LoaiPhongID"
+                                                item-text="TenLoaiPhong"
+                                                item-value="LoaiPhongID"
+                                                label="Loại Phòng"
+                                                :error-messages="errors.collect('Loại Phòng', 'frmAddEdit')"
+                                                v-validate="'required'"
+                                                data-vv-scope="frmAddEdit"
+                                                data-vv-name="Loại Phòng"
+                                                clearable></v-autocomplete>
+                            </v-flex>
+
+                            <v-flex xs12 pl-5 pr-5>
+                                <v-text-field v-model="datPhong.SoNgayDat"
+                                              type="number"
+                                              label="Số Ngày Đặt"
+                                              :error-messages="errors.collect('Số Ngày Đặt', 'frmAddEdit')"
+                                              v-validate="'required'"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Số Ngày Đặt"
+                                              clearable></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs12 style="text-align: center">
+                                <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">Đặt Phòng</v-btn>
+                            </v-flex>
+
+                        </v-layout>
+                    </v-card>
+                </v-flex>
+            </v-layout>
+        </v-img>
+    </v-layout>
+
+
+</template>
+
+<script lang="ts">
+    import { Vue } from 'vue-property-decorator';
+    import DatPhongApi, { DatPhongApiSearchParams } from '@/apiResources/DatPhongApi';
+    import { DatPhong } from '@/models/DatPhong';
+    import { LoaiPhong } from '@/models/LoaiPhong';
+    import LoaiPhongApi, { LoaiPhongApiSearchParams } from '@/apiResources/LoaiPhongApi';
+
+    export default Vue.extend({
+        components: {
+        },
+        data() {
+            return {
+
+                tableHeader: [
+                    { text: 'Họ Tên', value: 'HoTen', align: 'center', sortable: true },
+                    { text: 'Số Điện Thoại', value: 'SoDienThoai', align: 'center', sortable: true },
+                    { text: 'Thời Gian Đặt', value: 'ThoiGianDat', align: 'center', sortable: true },
+                    { text: 'Số Lượng Người', value: 'SoLuongNguoi', align: 'center', sortable: true },
+                    { text: 'Số Ngày Đặt', value: 'SoNgayDat', align: 'center', sortable: true },
+
+                ],
+                searchParamsLoaiPhong: { includeEntities: true, rowsPerPage: 10 } as LoaiPhongApiSearchParams,
+                loadingTable: false,
+                DatPhong: [] as DatPhong[],
+                datPhong: {} as DatPhong,
+                dsLoaiPhong: [] as LoaiPhong[],
+                loading: false
+            }
+        },
+        watch: {
+        },
+        created() {
+            this.getDataFromApi()
+        },
+        methods: {
+            getDataFromApi(): void {
+                LoaiPhongApi.search(this.searchParamsLoaiPhong).then(z => {
+                    this.dsLoaiPhong = z.Data;
+                })
+            },
+            save(): void {
+
+                this.$validator.validateAll('frmAddEdit').then((res) => {
+                    if (res) {
+                        this.datPhong.HoaDon = undefined;
+                        this.datPhong.LoaiPhong = undefined;
+                        this.datPhong.NhanVien = undefined;
+                        this.datPhong.TrangThai = 1;
+                        this.loading = true;
+                        DatPhongApi.insert(this.datPhong).then(res => {
+                            this.datPhong = {} as DatPhong;
+                            this.loading = false;
+                            this.$snotify.success('Đặt phòng thành công!');
+                        }).catch(res => {
+                            this.loading = false;
+                            this.$snotify.error('Đặt phòng thất bại!');
+                        });
+
+                    }
+                });
+
+            },
+        }
+    });
+</script>
+
