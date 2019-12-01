@@ -45,14 +45,13 @@
                                 <v-tab-item :key="1">
                                     <v-card flat>
                                         <div>
-                                            <v-card>
-                                                <v-card-text>
-                                                    <v-form scope="frmChiTiet">
+                                            <v-form scope="frmChiTiet">
+                                                <v-card>
+                                                    <v-card-text>
                                                         <v-layout row wrap>
                                                             <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
                                                                 <v-autocomplete v-model="chiTietPhieuNhap.ThuocTinhID"
                                                                                 :items="dsVatDung"
-                                                                                :search-input.sync="searchPhieuNhapKho"
                                                                                 item-text="TenVatDung"
                                                                                 item-value="VatDungID"
                                                                                 label="Vật dụng"
@@ -98,20 +97,18 @@
                                                             </v-flex>
 
                                                         </v-layout>
-                                                    </v-form>
-                                                </v-card-text>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn small class="primary" :disabled="loading" :loading="loading" @click.native="saveChiTiet">Lưu</v-btn>
-                                                </v-card-actions>
-                                            </v-card>
+                                                    </v-card-text>
+                                                    <v-card-actions>
+                                                        <v-spacer></v-spacer>
+                                                        <v-btn small class="primary" :disabled="loading" :loading="loading" @click.native="saveChiTiet">Lưu</v-btn>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-form>
                                         </div>
                                         <v-card-text class="pa-0">
                                             <v-data-table :headers="tableHeaderChiTietPhieuNhap"
                                                           :items="dsChiTietPhieuNhap"
                                                           :total-items="searchParamsChiTietPhieuNhap.totalItems"
-                                                          selectedClass="table-info"
-                                                          @selectionChanged="chiTietPhieuNhap = $event"
                                                           class="table-border table">
                                                 <template slot="items" slot-scope="props">
                                                     <td>{{ props.index + 1 }}</td>
@@ -204,6 +201,7 @@
             show(isUpdate: boolean, item: any): void {
                 this.dialog = true;
                 this.isUpdate = isUpdate;
+                this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
                 this.dsChiTietPhieuNhap = [] as ChiTietPhieuNhap[];
                 this.phieuNhapKho = Object.assign({}, item);
                 if (isUpdate === true) {
@@ -221,6 +219,9 @@
                     }
                 )
             },
+            showChiTiet(item: any): void {
+                this.chiTietPhieuNhap = item;
+            },
             getDataFromApi(id: number): void {
                 PhieuNhapKhoApi.detail(id).then(res => {
                     this.phieuNhapKho = res;
@@ -235,8 +236,9 @@
             save(): void {
                 this.$validator.validateAll('frmAddEdit').then((res) => {
                     if (res) {
-                        this.phieuNhapKho.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
-                        this.phieuNhapKho.ChiTietPhieuNhap = undefined;
+                        this.phieuNhapKho.NhanVienID = 1;//store.state.user.Profile.NhanVien.NhanVienID;
+                        this.phieuNhapKho.ChiTietPhieuNhap = this.dsChiTietPhieuNhap;
+                        this.phieuNhapKho.LoaiPhongID = undefined;
                         if (this.isUpdate) {
                             this.loading = true;
                             PhieuNhapKhoApi.update(this.phieuNhapKho.PhieuNhapID, this.phieuNhapKho).then(res => {
@@ -244,11 +246,44 @@
                                 this.dialog = false;
                                 this.$emit("getLaiDanhSach");
                                 this.isUpdate = false;
-                                this.$snotify.success('Cập nhật thành công!');
+                                //this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
                                 this.loading = false;
                                 this.$snotify.error('Cập nhật thất bại!');
                             });
+                        } else {
+                            this.loading = true;
+                            PhieuNhapKhoApi.insert(this.phieuNhapKho).then(res => {
+                                this.phieuNhapKho = res;
+                                this.dialog = false;
+                                this.$emit("getLaiDanhSach");
+                                this.isUpdate = false;
+                                this.loading = false;
+                                this.$snotify.success('Thêm mới thành công!');
+                            }).catch(res => {
+                                this.loading = false;
+                                this.$snotify.error('Thêm mới thất bại!');
+                            });
+                        }
+                    }
+                });
+                this.$validator.validateAll('frmChiTiet').then((res) => {
+                    if (res) {
+                        
+                        if (this.isUpdate) {
+                            this.loading = true;
+                            for (var ct in this.dsChiTietPhieuNhap) {
+                                ChiTietPhieuNhap.update(ct.ChiTietPhieuNhapID, ct).then(res => {
+                                    this.loading = false;
+                                    this.dialog = false;
+                                    //this.$emit("getLaiDanhSach");
+                                    this.isUpdate = false;
+                                    this.$snotify.success('Cập nhật thành công!');
+                                }).catch(res => {
+                                    this.loading = false;
+                                    this.$snotify.error('Cập nhật thất bại!');
+                                });
+                            }
                         } else {
                             this.loading = true;
                             PhieuNhapKhoApi.insert(this.phieuNhapKho).then(res => {

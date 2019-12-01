@@ -80,7 +80,7 @@ namespace QuanLyKhachSanApp.Controllers
             using (var db = new dbQuanLyKhachSan())
             {
                 db.Entry(phieuNhapKho).State = EntityState.Modified;
-
+                
                 try
                 {
                     await db.SaveChangesAsync();
