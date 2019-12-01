@@ -159,9 +159,8 @@
                         this.vatDungPhong.VatDung = undefined;
                         this.vatDungPhong.ChiTietKiemKe = undefined;
                         if (this.isUpdate) {
-                            let id = parseInt(this.$route.params.id, 10);
                             this.loading = true;
-                            VatDungPhongApi.update(id, this.vatDungPhong).then(res => {
+                            VatDungPhongApi.update(this.vatDungPhong.VatDungPhongID, this.vatDungPhong).then(res => {
                                 this.loading = false;
                                 this.dialog = false;
                                 this.$emit("getLaiDanhSach");
@@ -175,7 +174,6 @@
                             VatDungPhongApi.insert(this.vatDungPhong).then(res => {
                                 this.dialog = false;
                                 this.$emit("getLaiDanhSach");
-                                this.$router.push('/vatdungphong/' + res.VatDungPhongID);
                                 this.vatDungPhong = res;
                                 this.isUpdate = true;
                                 this.loading = false;
