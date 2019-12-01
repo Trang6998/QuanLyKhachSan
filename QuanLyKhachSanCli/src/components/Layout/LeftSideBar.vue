@@ -129,8 +129,8 @@
                     show: true,
                     items: [
                         { title: 'Kiểm kê vật dụng', link: 'kiemke', show: true},
-                        { title: 'Mẫu thống kê 1', link: 'ds-mau-3', show: true},
-
+                        { title: 'Báo cáo doanh thu', link: 'baocaodoanhthu', show: true},
+                        { title: 'Thống kê sử dụng dịch vụ', link: 'baocaodichvu', show: true},
                     ]
                 },
                 ]
