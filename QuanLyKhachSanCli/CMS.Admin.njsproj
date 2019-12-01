@@ -207,6 +207,9 @@
     <Content Include="src\assets\logo.png" />
     <Content Include="src\components\BangGia\DanhSachBangGia.vue" />
     <Content Include="src\components\BangGia\ThemSuaBangGia.vue" />
+    <Content Include="src\components\BaoCao\BaoCaoDoanhThu.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\BoPhan\DanhSachBoPhan.vue" />
     <Content Include="src\components\BoPhan\ThemSuaBoPhan.vue" />
     <Content Include="src\components\ChiTietKiemKe\DanhSachChiTietKiemKe.vue" />
@@ -246,6 +249,7 @@
     </Content>
     <Content Include="src\components\LoaiPhong\DanhSachLoaiPhong.vue" />
     <Content Include="src\components\LoaiPhong\ThemSuaLoaiPhong.vue" />
+    <Content Include="src\components\Login\Login.vue" />
     <Content Include="src\components\NhanVien\DanhSachNhanVien.vue" />
     <Content Include="src\components\NhanVien\ThemSuaNhanVien.vue" />
     <Content Include="src\components\PhieuNhapKho\DanhSachPhieuNhapKho.vue" />
@@ -404,6 +408,7 @@
     <Folder Include="src\components\Layout\" />
     <Folder Include="src\components\LoaiPhong\" />
     <Folder Include="src\components\Login\" />
+    <Folder Include="src\components\BaoCao\" />
     <Folder Include="src\components\NhanVien\" />
     <Folder Include="src\components\PhieuNhapKho\" />
     <Folder Include="src\components\Phong\" />

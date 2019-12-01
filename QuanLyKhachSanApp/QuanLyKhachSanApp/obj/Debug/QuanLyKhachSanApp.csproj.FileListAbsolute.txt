@@ -227,3 +227,5 @@ D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\Microsoft.ApplicationI
 D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\System.IO.Pipelines.xml
 D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\System.Threading.Tasks.Extensions.xml
 D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\obj\Debug\QuanLyKhachSanApp.csprojAssemblyReference.cache
+D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\EPPlus.dll
+D:\QuanLyKhachSan\QuanLyKhachSanApp\QuanLyKhachSanApp\bin\EPPlus.xml
