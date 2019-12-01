@@ -34,7 +34,7 @@
             </v-menu>
         </v-toolbar>
         <v-content>
-            <v-container fluid fill-height grid-list-md>
+            <v-container fluid fill-height grid-list-md style="padding: 10px">
                 <v-layout justify-center>
                     <router-view></router-view>
                 </v-layout>

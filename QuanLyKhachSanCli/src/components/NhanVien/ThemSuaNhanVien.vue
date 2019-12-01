@@ -15,11 +15,10 @@
                                 <v-text-field v-model="nhanVien.TenNhanVien"
                                               label="Tên nhân viên"
                                               type="text"
-                                              :error-messages="errors.collect('TenNhanVien', 'frmAddEdit')"
-                                              v-validate="''"
+                                              :error-messages="errors.collect('Tên nhân viên', 'frmAddEdit')"
+                                              v-validate="'required'"
                                               data-vv-scope="frmAddEdit"
-                                              data-vv-name="TenNhanVien"
-                                              hide-details
+                                              data-vv-name="Tên nhân viên"
                                               clearable></v-text-field>
                                 <v-spacer></v-spacer>
                             </v-flex>
@@ -28,11 +27,10 @@
                                 <v-text-field v-model="nhanVien.SoDienThoai"
                                               label="Số điện thoại"
                                               type="text"
-                                              :error-messages="errors.collect('SoDienThoai', 'frmAddEdit')"
-                                              v-validate="''"
+                                              :error-messages="errors.collect('Số điện thoại', 'frmAddEdit')"
+                                              v-validate="'required'"
                                               data-vv-scope="frmAddEdit"
-                                              data-vv-name="SoDienThoai"
-                                              hide-details
+                                              data-vv-name="Số điện thoại"
                                               clearable></v-text-field>
                             </v-flex>
 
@@ -52,17 +50,6 @@
                                                 clearable></v-autocomplete>
                             </v-flex>
                             <v-flex xs6>
-                                <v-text-field v-model="nhanVien.LoaiTaiKhoanID"
-                                              label="Loại tài khoản"
-                                              type="number"
-                                              :error-messages="errors.collect('LoaiTaiKhoanID', 'frmAddEdit')"
-                                              v-validate="''"
-                                              data-vv-scope="frmAddEdit"
-                                              data-vv-name="LoaiTaiKhoanID"
-                                              hide-details
-                                              clearable></v-text-field>
-                            </v-flex>
-                            <v-flex xs12>
                                 <v-text-field v-model="nhanVien.TenDangNhap"
                                               label="Tên đăng nhập"
                                               type="text"
@@ -70,19 +57,7 @@
                                               v-validate="''"
                                               data-vv-scope="frmAddEdit"
                                               data-vv-name="TenDangNhap"
-                                              hide-details
-                                              clearable></v-text-field>
-                            </v-flex>
-
-                            <v-flex xs12>
-                                <v-text-field v-model="nhanVien.MatKhau"
-                                              label="Mật khẩu"
-                                              type="text"
-                                              :error-messages="errors.collect('MatKhau', 'frmAddEdit')"
-                                              v-validate="''"
-                                              data-vv-scope="frmAddEdit"
-                                              data-vv-name="MatKhau"
-                                              hide-details
+                                              hide-details disabled
                                               clearable></v-text-field>
                             </v-flex>
                         </v-layout>
