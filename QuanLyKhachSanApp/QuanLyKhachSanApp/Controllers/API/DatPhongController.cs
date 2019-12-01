@@ -13,7 +13,7 @@ namespace QuanLyKhachSanApp.Controllers
     public class DatPhongController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null, [FromUri]string HoTen = null,[FromUri]DateTime? NgayBD = null, [FromUri]DateTime? NgayKT = null,[FromUri]int? TrangThai = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null, [FromUri]string HoTen = null,[FromUri]DateTime? NgayBD = null, [FromUri]DateTime? NgayKT = null,[FromUri]int? TrangThai = null, [FromUri]bool? laDatPhong = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -22,17 +22,17 @@ namespace QuanLyKhachSanApp.Controllers
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
-                    results = results.Include(o => o.LoaiPhong);
+                    results = results.Include(o => o.LoaiPhong).Include(o => o.DichVu);
                 }
                 if(TrangThai.HasValue) results = results.Where(o => o.TrangThai == TrangThai);
                 if (nhanVienID.HasValue) results = results.Where(o => o.NhanVienID == nhanVienID);
                 if (!string.IsNullOrWhiteSpace(HoTen)) results = results.Where(o => o.HoTen.Contains(HoTen));
-                if(NgayBD != null && NgayKT != null)
-                    results = results.Where(o => o.ThoiGianDat >= NgayBD && o.ThoiGianDat <= NgayKT);
-                else  if(NgayBD!= null)
-                        results = results.Where(o => o.ThoiGianDat >= NgayBD);
-                else if(NgayKT != null)
-                    results = results.Where(o => o.ThoiGianDat <= NgayKT);
+                if (NgayBD.HasValue) results = results.Where(o => o.ThoiGianDat >= NgayBD);
+                if (NgayKT.HasValue) results = results.Where(o => o.ThoiGianDat <= NgayKT);
+                if (laDatPhong.HasValue && laDatPhong == true)
+                    results = results.Where(o => o.LoaiPhongID != null);
+                if (laDatPhong.HasValue && laDatPhong == false)
+                    results = results.Where(o => o.DichVuID != null);
                 results = results.OrderBy(o => o.DatPhongID);
 
                 return Ok((await GetPaginatedResponse(results, pagination)));

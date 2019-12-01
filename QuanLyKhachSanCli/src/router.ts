@@ -10,7 +10,7 @@ import DanhSachNhanVien from './components/NhanVien/DanhSachNhanVien.vue';
 import DanhSachPhieuNhapKho from './components/PhieuNhapKho/DanhSachPhieuNhapKho.vue';
 import DanhSachPhong from './components/Phong/DanhSachPhong.vue';
 import DanhSachVatDung from './components/VatDung/DanhSachVatDung.vue';
-
+import DanhSachDatDichVu from './components/DatDichVu/DanhSachDatDichVu.vue';
 import ThemKhachDatPhong from './components/DatPhong/ThemKhachDatPhong.vue';
 import ThemKhachDatDichVu from './components/DatDichVu/ThemKhachDatDichVu.vue';
 import BaoCaoDoanhThu from './components/BaoCao/BaoCaoDoanhThu.vue'
@@ -59,7 +59,12 @@ export default new Router({
             component: DanhSachDatPhong,
             beforeEnter: guardRoute
         },
-        
+        {
+            path: '/datdichvu',
+            name: 'datdichvu',
+            component: DanhSachDatDichVu,
+            beforeEnter: guardRoute
+        },
         {
             path: '/dichvu',
             name: 'dichVu',

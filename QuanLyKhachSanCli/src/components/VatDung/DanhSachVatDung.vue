@@ -29,10 +29,10 @@
                                       :loading="loadingTable"
                                       class="table-border table">
                             <template slot="items" slot-scope="props">
-                                <td>{{ props.item.VatDungID }}</td>
-                                <td>{{ props.item.TenVatDung }}</td>
-                                <td>{{ props.item.SoLuongKho }}</td>
-                                <td>{{ props.item.MoTa }}</td>
+                                <td class="text-xs-center">{{ props.index + 1 }}</td>
+                                <td class="text-xs-center">{{ props.item.TenVatDung }}</td>
+                                <td class="text-xs-center">{{ props.item.SoLuongKho }}</td>
+                                <td class="text-xs-center">{{ props.item.MoTa }}</td>
                                 <td class="text-xs-center" style="width:80px;">
                                     <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">
                                         <v-icon small>edit</v-icon>
@@ -74,10 +74,10 @@
             return {
                 dsVatDung: [] as VatDung[],
                 tableHeader: [
-                    { text: 'VatDungID', value: 'VatDungID', align: 'center', sortable: true },
-                    { text: 'TenVatDung', value: 'TenVatDung', align: 'center', sortable: true },
-                    { text: 'SoLuongKho', value: 'SoLuongKho', align: 'center', sortable: true },
-                    { text: 'MoTa', value: 'MoTa', align: 'center', sortable: true },
+                    { text: 'STT', value: 'VatDungID', align: 'center', sortable: true },
+                    { text: 'Tên vật dụng', value: 'TenVatDung', align: 'center', sortable: true },
+                    { text: 'Số lượng kho', value: 'SoLuongKho', align: 'center', sortable: true },
+                    { text: 'Mô tả', value: 'MoTa', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
                 searchParamsVatDung: { includeEntities: true, rowsPerPage: 10 } as VatDungApiSearchParams,
