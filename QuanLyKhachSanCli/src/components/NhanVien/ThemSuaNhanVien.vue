@@ -1,16 +1,17 @@
 <template>
-    <v-dialog v-model="dialog" width="800" persistent scrollable>
-        <v-flex xs12>
-            <v-card-title class="primary white--text" style="height: 40px">
-                <h3>{{isUpdate ? 'Cập nhật nhân viên' : 'Thêm mới nhân viên'}}</h3>
-                <v-spacer></v-spacer>
-                <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
-            </v-card-title>
+    <v-dialog v-model="dialog" width="500" persistent scrollable>
+        <v-container pa-0 grid-list-md>
             <v-card>
+                <v-card-title class="primary white--text" style="padding: 5px 15px 5px 15px">
+                    <h3>{{isUpdate ? 'Cập nhật nhân viên' : 'Thêm mới nhân viên'}}</h3>
+                    <v-spacer></v-spacer>
+                    <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
+                </v-card-title>
+
                 <v-card-text>
                     <v-form scope="frmAddEdit">
-                        <v-layout row wrap >
-                            <v-flex xs6 sm4 md3>
+                        <v-layout row wrap>
+                            <v-flex xs6>
                                 <v-text-field v-model="nhanVien.TenNhanVien"
                                               label="Tên nhân viên"
                                               type="text"
@@ -20,9 +21,10 @@
                                               data-vv-name="TenNhanVien"
                                               hide-details
                                               clearable></v-text-field>
+                                <v-spacer></v-spacer>
                             </v-flex>
 
-                            <v-flex xs6 sm4 md3>
+                            <v-flex xs6>
                                 <v-text-field v-model="nhanVien.SoDienThoai"
                                               label="Số điện thoại"
                                               type="text"
@@ -34,7 +36,7 @@
                                               clearable></v-text-field>
                             </v-flex>
 
-                            <v-flex xs6 sm4 md3>
+                            <v-flex xs6>
                                 <v-autocomplete v-model="nhanVien.BoPhanID"
                                                 :items="dsBoPhan"
                                                 :loading="dsBoPhanLoading"
@@ -49,7 +51,18 @@
                                                 data-vv-name="BoPhanID"
                                                 clearable></v-autocomplete>
                             </v-flex>
-                            <v-flex xs6 sm4 md3>
+                            <v-flex xs6>
+                                <v-text-field v-model="nhanVien.LoaiTaiKhoanID"
+                                              label="Loại tài khoản"
+                                              type="number"
+                                              :error-messages="errors.collect('LoaiTaiKhoanID', 'frmAddEdit')"
+                                              v-validate="''"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="LoaiTaiKhoanID"
+                                              hide-details
+                                              clearable></v-text-field>
+                            </v-flex>
+                            <v-flex xs12>
                                 <v-text-field v-model="nhanVien.TenDangNhap"
                                               label="Tên đăng nhập"
                                               type="text"
@@ -61,7 +74,7 @@
                                               clearable></v-text-field>
                             </v-flex>
 
-                            <v-flex xs6 sm4 md3>
+                            <v-flex xs12>
                                 <v-text-field v-model="nhanVien.MatKhau"
                                               label="Mật khẩu"
                                               type="text"
@@ -69,18 +82,6 @@
                                               v-validate="''"
                                               data-vv-scope="frmAddEdit"
                                               data-vv-name="MatKhau"
-                                              hide-details
-                                              clearable></v-text-field>
-                            </v-flex>
-
-                            <v-flex xs6 sm4 md3>
-                                <v-text-field v-model="nhanVien.LoaiTaiKhoanID"
-                                              label="Loại tài khoản"
-                                              type="number"
-                                              :error-messages="errors.collect('LoaiTaiKhoanID', 'frmAddEdit')"
-                                              v-validate="''"
-                                              data-vv-scope="frmAddEdit"
-                                              data-vv-name="LoaiTaiKhoanID"
                                               hide-details
                                               clearable></v-text-field>
                             </v-flex>
@@ -92,8 +93,8 @@
                     <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
                 </v-card-actions>
             </v-card>
-        </v-flex>
-    </v-dialog>
+        </v-container>
+</v-dialog>
 </template>
 
 <script lang="ts">

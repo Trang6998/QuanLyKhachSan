@@ -7,44 +7,51 @@
             </v-breadcrumbs-item>
             <v-breadcrumbs-item to="/nhanvien" exact>NhanVien</v-breadcrumbs-item>
         </v-breadcrumbs>
-        <v-card>
+        <v-card width="100%" style="padding: 20px">
             <v-card-text>
                 <v-layout row wrap>
                     <v-flex xs12>
+                        <h3>Danh sách nhân viên</h3>
+                    </v-flex>
+                    <v-flex xs12>
                         <v-layout nowrap>
                             <v-flex xs6>
-                                <v-text-field v-model="searchParamsNhanVien.query" @input="getDataFromApi(searchParamsNhanVien)"></v-text-field>
+                                <v-text-field label="Tìm kiếm"
+                                              append-icon="search"
+                                              placeholder="Nhập thông tin nhân viên:Tên nhân viên, Số điện thoại"
+                                              v-model="searchParamsNhanVien.query"
+                                              @input="getDataFromApi(searchParamsNhanVien)"></v-text-field>
                             </v-flex>
                             <v-spacer></v-spacer>
-                            <v-btn color="primary" @click="showModalThemSua(false, {})">Thêm mới</v-btn>
+                            <v-btn small color="primary" @click="showModalThemSua(false, {})">+ Thêm mới</v-btn>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
-                    <v-data-table :headers="tableHeader"
-                                :items="dsNhanVien"
-                                @update:pagination="getDataFromApi" :pagination.sync="searchParamsNhanVien"
-                                :total-items="searchParamsNhanVien.totalItems"
-                                :loading="loadingTable"
-                                class="table-border table">
-                        <template slot="items" slot-scope="props">
-                            <td>{{ props.item.TenNhanVien }}</td>
-                            <td>{{ props.item.SoDienThoai }}</td>
-                            <td>{{ props.item.TenDangNhap }}</td>
-                            <td>{{ props.item.MatKhau }}</td>
-                            <td>{{ props.item.LoaiTaiKhoanID }}</td>
-                            <td>{{ props.item.BoPhanID }}</td>
-                            <td class="text-xs-center" style="width:80px;">
-                                <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">
-                                    <v-icon small>edit</v-icon>
-                                </v-btn>
-                                <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-                                    <v-icon small>delete</v-icon>
-                                </v-btn>
-                            </td>
-                            </td>
-                        </template>
+                        <v-data-table :headers="tableHeader"
+                                      :items="dsNhanVien"
+                                      @update:pagination="getDataFromApi" :pagination.sync="searchParamsNhanVien"
+                                      :total-items="searchParamsNhanVien.totalItems"
+                                      :loading="loadingTable"
+                                      class="table-border table">
+                            <template slot="items" slot-scope="props">
+                                <td>{{ props.item.TenNhanVien }}</td>
+                                <td>{{ props.item.SoDienThoai }}</td>
+                                <td>{{ props.item.TenDangNhap }}</td>
+                                <td>{{ props.item.MatKhau }}</td>
+                                <td>{{ props.item.LoaiTaiKhoanID }}</td>
+                                <td>{{ props.item.BoPhanID }}</td>
+                                <td class="text-xs-center" style="width:80px;">
+                                    <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">
+                                        <v-icon small>edit</v-icon>
+                                    </v-btn>
+                                    <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
+                                        <v-icon small>delete</v-icon>
+                                    </v-btn>
+                                </td>
+                                </td>
+                            </template>
                         </v-data-table>
-                    </v-flex xs12>
+                    </v-flex>
                 </v-layout>
             </v-card-text>
         </v-card>
