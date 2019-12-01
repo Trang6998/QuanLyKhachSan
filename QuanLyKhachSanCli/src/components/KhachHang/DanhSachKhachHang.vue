@@ -11,6 +11,7 @@
                             <v-flex xs6 md4>
                                 <v-text-field label="Tìm kiếm"
                                               append-icon="search"
+                                              placeholder="Nhập tên, số điện thoại, cmnd,..."
                                               ma-0 pa-0 hide-details
                                               style="padding-top: 0px"
                                               v-model="searchParamsKhachHang.query"

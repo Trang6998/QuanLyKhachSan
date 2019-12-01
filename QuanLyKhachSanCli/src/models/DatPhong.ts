@@ -1,6 +1,7 @@
 import { HoaDon } from "@/models/HoaDon";
 import { LoaiPhong } from "@/models/LoaiPhong";
 import { NhanVien } from "@/models/NhanVien";
+import { DichVu } from "./DichVu";
 
 export interface DatPhong {
     DatPhongID: number;
@@ -15,6 +16,7 @@ export interface DatPhong {
     NgayTao: Date;
     TrangThai: number;
     LoaiPhong?: LoaiPhong;
+    DichVu?: DichVu;
     NhanVien?: NhanVien;
     HoaDon?: HoaDon[];
 }

@@ -1,34 +1,31 @@
 <template>
-    <v-flex xs12>
-        <v-breadcrumbs divider="/" class="pa-0">
-            <v-icon slot="divider">chevron_right</v-icon>
-            <v-breadcrumbs-item>
-                <v-btn flat class="ma-0" @click="$router.go(-1)" small><v-icon>arrow_back</v-icon> Quay lại</v-btn>
-            </v-breadcrumbs-item>
-            <v-breadcrumbs-item to="/datphong" exact>Đặt phòng</v-breadcrumbs-item>
-        </v-breadcrumbs>
-        <v-card style="min-height: 40em">
-            <v-card-text>
+    <v-card width="100%" style="padding: 20px">
+        <v-layout row wrap>
+            <v-flex xs12>
+                <h3>Danh khách đặt phòng</h3>
+            </v-flex>
+            <v-flex xs12>
                 <v-layout row wrap>
-                    <v-flex>
+                    <v-flex xs12>
                         <v-layout nowrap>
                             <v-flex xs4>
                                 <v-text-field label="Tìm kiếm" append-icon="search" v-model="searchParamsDatPhong.HoTen" @input="getDataFromApi(searchParamsDatPhong)"></v-text-field>
                             </v-flex>
                             <v-flex xs2 nowrap style="padding-right: 5px; ">
-                                <v-datepicker label="Ngày đắt đầu" v-model="searchParamsDatPhong.NgayBD" @input="getDataFromApi(searchParamsDatPhong)"></v-datepicker>
+                                <v-datepicker label="Từ ngày" v-model="searchParamsDatPhong.NgayBD" @input="getDataFromApi(searchParamsDatPhong)"></v-datepicker>
                             </v-flex>
                             <v-flex xs2 style="padding-right: 10px; ">
-                                <v-datepicker label="Ngày kết thúc" v-model="searchParamsDatPhong.NgayKT" @input="getDataFromApi(searchParamsDatPhong)"></v-datepicker>
+                                <v-datepicker label="Đến ngày" v-model="searchParamsDatPhong.NgayKT" @input="getDataFromApi(searchParamsDatPhong)"></v-datepicker>
                             </v-flex>
-                            <v-flex xs2 >
-                                Trạng thái<br/>
-                                <select class="form-control" style="border:1px solid #ccc; margin-top:0.5em; width:10em;" v-model="searchParamsDatPhong.TrangThai" @change="getDataFromApi(searchParamsDatPhong)">
-                                    
-                                    <option v-bind:value="0">Đã đặt</option>
-                                    <option v-bind:value="1">Đã thuê</option>
-                                    <option v-bind:value="2">Đã hủy</option>
-                                </select>
+                            <v-flex xs2>
+                                <v-autocomplete v-model="searchParamsDatPhong.TrangThai"
+                                                :items="lstTrangThai"
+                                                item-text="name"
+                                                item-value="value"
+                                                label="Trạng thái"
+                                               @change="getDataFromApi(searchParamsDatPhong)"
+                                                ></v-autocomplete>
+                               
                             </v-flex>
                             <v-spacer></v-spacer>
                             <v-btn small color="primary" style="margin-top: auto;" @click="showDialogThemSua(false, {})">+ Thêm mới</v-btn>
@@ -46,7 +43,7 @@
                                 <td>{{ props.item.HoTen }}</td>
                                 <td>{{ props.item.SoDienThoai }}</td>
                                 <td>{{ props.item.ThoiGianDat === null ? "" : props.item.ThoiGianDat|moment('DD/MM/YYYY HH:mm:ss') }}</td>
-                                <td>{{ props.item.LoaiPhong.TenLoaiPhong }}</td>
+                                <td>{{ props.item.LoaiPhong != null? props.item.LoaiPhong.TenLoaiPhong :"" }}</td>
                                 <td>{{ props.item.SoLuongNguoi }}</td>
                                 <td>{{ props.item.SoNgayDat }}</td>
                                 <td>{{ props.item.TienCoc }}</td>
@@ -63,21 +60,22 @@
                         </v-data-table>
                     </v-flex>
                 </v-layout>
-            </v-card-text>
-        </v-card>
-        <v-dialog v-model="dialogConfirmDelete" max-width="290">
-            <v-card>
-                <v-card-title class="headline">Xác nhận xóa</v-card-title>
-                <v-card-text class="pt-3">Bạn có chắc chắn muốn xóa?</v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn @click.native="dialogConfirmDelete=false" flat>Hủy</v-btn>
-                    <v-btn color="red darken-1" @click.native="deleteDatPhong" flat>Xác Nhận</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <them-sua-dat-phong ref="themSuaDatPhong" @getDatPhong="getDataFromApi(searchParamsDatPhong)"></them-sua-dat-phong>
-    </v-flex>
+            </v-flex>
+            <v-dialog v-model="dialogConfirmDelete" max-width="290">
+                <v-card>
+                    <v-card-title class="headline">Xác nhận xóa</v-card-title>
+                    <v-card-text class="pt-3">Bạn có chắc chắn muốn xóa?</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click.native="dialogConfirmDelete=false" flat>Hủy</v-btn>
+                        <v-btn color="red darken-1" @click.native="deleteDatPhong" flat>Xác Nhận</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <them-sua-dat-phong ref="themSuaDatPhong" @getDatPhong="getDataFromApi(searchParamsDatPhong)"></them-sua-dat-phong>
+            
+        </v-layout>
+    </v-card>
 </template>
 <script lang="ts">
     import { Vue } from 'vue-property-decorator';
@@ -91,6 +89,12 @@
         },
         data() {
             return {
+                lstTrangThai: [
+                    { name: 'Tất cả', value: null as any },
+                    { name: 'Chưa nhận', value: 0 },
+                    { name: 'Đã nhận', value: 1 },
+                    { name: 'Đã hủy', value: 2},
+                ],
                 dsDatPhong: [] as DatPhong[],
                 tableHeader: [
                     { text: 'STT', value: 'DatPhongID', align: 'center', sortable: true },
@@ -104,7 +108,7 @@
                     { text: 'Ngày đặt', value: 'NgayTao', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
-                searchParamsDatPhong: { includeEntities: true, rowsPerPage: 10 } as DatPhongApiSearchParams,
+                searchParamsDatPhong: { includeEntities: true, rowsPerPage: 10, TrangThai: null as any } as DatPhongApiSearchParams,
                 loadingTable: false,
                 selectedDatPhong: {} as DatPhong,
                 dialogConfirmDelete: false,
@@ -118,6 +122,7 @@
         methods: {
             getDataFromApi(searchParamsDatPhong: DatPhongApiSearchParams): void {
                 this.loadingTable = true;
+                searchParamsDatPhong.laDatPhong = true;
                 DatPhongApi.search(searchParamsDatPhong).then(res => {
                     this.dsDatPhong = res.Data;
                     this.searchParamsDatPhong.totalItems = res.Pagination.totalItems;

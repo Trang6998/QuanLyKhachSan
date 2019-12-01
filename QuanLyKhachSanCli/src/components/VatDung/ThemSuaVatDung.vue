@@ -10,40 +10,38 @@
                 <v-card-text>
                     <v-form scope="frmAddEdit">
                         <v-layout row wrap>
-                            <v-flex xs6 sm4 md3>
+                            <v-flex xs6>
                                 <v-text-field v-model="vatDung.TenVatDung"
-                                              label="TenVatDung"
+                                              label="Tên vật dụng"
                                               type="text"
-                                              :error-messages="errors.collect('TenVatDung', 'frmAddEdit')"
-                                              v-validate="''"
+                                              :error-messages="errors.collect('Tên vật dụng', 'frmAddEdit')"
+                                              v-validate="'required'"
                                               data-vv-scope="frmAddEdit"
-                                              data-vv-name="TenVatDung"
-                                              hide-details
+                                              data-vv-name="Tên vật dụng"
                                               clearable></v-text-field>
                             </v-flex>
 
-                            <v-flex xs6 sm4 md3>
+                            <v-flex xs6>
                                 <v-text-field v-model="vatDung.SoLuongKho"
-                                              label="SoLuongKho"
+                                              label="Số lượng kho"
                                               type="text"
-                                              :error-messages="errors.collect('SoLuongKho', 'frmAddEdit')"
-                                              v-validate="''"
+                                              :error-messages="errors.collect('Số lượng kho', 'frmAddEdit')"
+                                              v-validate="'required'"
                                               data-vv-scope="frmAddEdit"
-                                              data-vv-name="SoLuongKho"
-                                              hide-details
+                                              data-vv-name="Số lượng kho"
                                               clearable></v-text-field>
                             </v-flex>
 
-                            <v-flex xs6 sm4 md3>
-                                <v-text-field v-model="vatDung.MoTa"
-                                              label="MoTa"
+                            <v-flex xs12>
+                                <v-textarea v-model="vatDung.MoTa"
+                                              label="Mô tả"
                                               type="text"
-                                              :error-messages="errors.collect('MoTa', 'frmAddEdit')"
+                                              :error-messages="errors.collect('Mô tả', 'frmAddEdit')"
                                               v-validate="''"
                                               data-vv-scope="frmAddEdit"
-                                              data-vv-name="MoTa"
+                                              data-vv-name="Mô tả"
                                               hide-details
-                                              clearable></v-text-field>
+                                              clearable></v-textarea>
                             </v-flex>
                         </v-layout>
                     </v-form>
@@ -76,29 +74,10 @@
                 dialog: false,
                 isUpdate: false,
                 vatDung: {} as VatDung,
-                dsChiTietPhieuNhap: [] as ChiTietPhieuNhap[],
-                dsChiTietPhieuNhapLoading: false,
-                searchChiTietPhieuNhap: '',
-                searchParamsChiTietPhieuNhap: { includeEntities: true } as ChiTietPhieuNhapApiSearchParams,
-                tableHeaderChiTietPhieuNhap: [
-                    { text: 'ChiTietPhieuNhapID', value: 'ChiTietPhieuNhapID', align: 'center', sortable: true },
-                    { text: 'PhieuNhapID', value: 'PhieuNhapID', align: 'center', sortable: true },
-                    { text: 'ThuocTinhID', value: 'ThuocTinhID', align: 'center', sortable: true },
-                    { text: 'SoLuong', value: 'SoLuong', align: 'center', sortable: true },
-                    { text: 'GiaNhap', value: 'GiaNhap', align: 'center', sortable: true },
-                    { text: 'GhiChu', value: 'GhiChu', align: 'center', sortable: true },
-                ],
                 dsVatDungPhong: [] as VatDungPhong[],
                 dsVatDungPhongLoading: false,
                 searchVatDungPhong: '',
                 searchParamsVatDungPhong: { includeEntities: true } as VatDungPhongApiSearchParams,
-                tableHeaderVatDungPhong: [
-                    { text: 'VatDungPhongID', value: 'VatDungPhongID', align: 'center', sortable: true },
-                    { text: 'SoLuong', value: 'SoLuong', align: 'center', sortable: true },
-                    { text: 'GhiChu', value: 'GhiChu', align: 'center', sortable: true },
-                    { text: 'VatDungID', value: 'VatDungID', align: 'center', sortable: true },
-                    { text: 'PhongID', value: 'PhongID', align: 'center', sortable: true },
-                ],
                 loading: false,
                 searchParamsVatDung: {} as VatDungApiSearchParams,
             }
@@ -150,17 +129,7 @@
                         }
                     }
                 });
-            },
-            getDSChiTietPhieuNhap(): void {
-                ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
-                    this.dsChiTietPhieuNhap = res.Data;
-                });
-            },
-            getDSVatDungPhong(): void {
-                VatDungPhongApi.search(this.searchParamsVatDungPhong).then(res => {
-                    this.dsVatDungPhong = res.Data;
-                });
-            },
+            }
         }
     });
 </script>

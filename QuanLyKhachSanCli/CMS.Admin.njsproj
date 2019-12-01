@@ -10,7 +10,7 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
-    <ToolsVersionPromptShown>3.0</ToolsVersionPromptShown>
+    <ToolsVersionPromptShown>3.6</ToolsVersionPromptShown>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -29,7 +29,7 @@
     <NodejsPort>1337</NodejsPort>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
-    <TypeScriptToolsVersion>3.4</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <EnableTypeScript>true</EnableTypeScript>
     <StartWebBrowser>true</StartWebBrowser>
     <ScriptArguments>serve</ScriptArguments>
@@ -207,6 +207,9 @@
     <Content Include="src\assets\logo.png" />
     <Content Include="src\components\BangGia\DanhSachBangGia.vue" />
     <Content Include="src\components\BangGia\ThemSuaBangGia.vue" />
+    <Content Include="src\components\BaoCao\BaoCaoDoanhThu.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\BoPhan\DanhSachBoPhan.vue" />
     <Content Include="src\components\BoPhan\ThemSuaBoPhan.vue" />
     <Content Include="src\components\ChiTietKiemKe\DanhSachChiTietKiemKe.vue" />
@@ -225,26 +228,29 @@
     <Content Include="src\components\DatDichVu\DichVuCuaToi.vue" />
     <Content Include="src\components\DatDichVu\ThemKhachDatDichVu.vue" />
     <Content Include="src\components\DatDichVu\ThemSuaDatDichVu.vue" />
+    <Content Include="src\components\DatPhong\ThemKhachDatPhong.vue" />
     <Content Include="src\components\DatPhong\DanhSachDatPhong.vue" />
     <Content Include="src\components\DatPhong\ThemKhachDatPhong.vue" />
     <Content Include="src\components\DatPhong\ThemSuaDatPhong.vue" />
     <Content Include="src\components\DichVu\ChiTietDichVu.vue" />
+    <Content Include="src\components\DatDichVu\ThemKhachDatDichVu.vue" />
     <Content Include="src\components\DichVu\DanhSachDichVu.vue" />
     <Content Include="src\components\DichVu\dsDichVu.vue" />
     <Content Include="src\components\DichVu\ThemSuaDichVu.vue" />
     <Content Include="src\components\HoaDon\DanhSachHoaDon.vue" />
     <Content Include="src\components\HoaDon\ThemSuaHoaDon.vue" />
     <Content Include="src\components\Home.vue" />
+    <Content Include="src\components\KhachHang\ThongTinCaNhan.vue" />
     <Content Include="src\components\KhachHang\DanhSachKhachHang.vue" />
     <Content Include="src\components\KhachHang\ThemSuaKhachHang.vue" />
     <Content Include="src\components\KiemKe\DanhSachKiemKe.vue" />
+    <Content Include="src\components\KiemKe\ModalChiTietKiemKe.vue" />
     <Content Include="src\components\KiemKe\ThemSuaKiemKe.vue" />
     <Content Include="src\components\Layout\LeftSideBar.vue">
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\components\LoaiPhong\DanhSachLoaiPhong.vue" />
     <Content Include="src\components\LoaiPhong\ThemSuaLoaiPhong.vue" />
-    <Content Include="src\components\Login\ErrorPage.vue" />
     <Content Include="src\components\Login\Login.vue" />
     <Content Include="src\components\NhanVien\DanhSachNhanVien.vue" />
     <Content Include="src\components\NhanVien\ThemSuaNhanVien.vue" />
@@ -404,6 +410,7 @@
     <Folder Include="src\components\Layout\" />
     <Folder Include="src\components\LoaiPhong\" />
     <Folder Include="src\components\Login\" />
+    <Folder Include="src\components\BaoCao\" />
     <Folder Include="src\components\NhanVien\" />
     <Folder Include="src\components\PhieuNhapKho\" />
     <Folder Include="src\components\Phong\" />

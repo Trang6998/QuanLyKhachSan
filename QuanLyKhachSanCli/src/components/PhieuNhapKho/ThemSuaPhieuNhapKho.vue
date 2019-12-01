@@ -167,7 +167,7 @@
                 dialog: false,
                 isUpdate: false,
                 dsNhanVien: [] as NhanVien[],
-                phieuNhapKho: {} as PhieuNhapKho,
+                phieuNhapKho: { ChiTietPhieuNhap: [] as ChiTietPhieuNhap[] } as PhieuNhapKho,
                 chiTietPhieuNhap: {} as ChiTietPhieuNhap,
                 dsChiTietPhieuNhap: [] as ChiTietPhieuNhap[],
                 selectedPhieuNhapKho: {} as ChiTietPhieuNhap,
@@ -238,7 +238,6 @@
                     if (res) {
                         this.phieuNhapKho.NhanVienID = 1;//store.state.user.Profile.NhanVien.NhanVienID;
                         this.phieuNhapKho.ChiTietPhieuNhap = this.dsChiTietPhieuNhap;
-                        this.phieuNhapKho.LoaiPhongID = undefined;
                         if (this.isUpdate) {
                             this.loading = true;
                             PhieuNhapKhoApi.update(this.phieuNhapKho.PhieuNhapID, this.phieuNhapKho).then(res => {
@@ -273,7 +272,7 @@
                         if (this.isUpdate) {
                             this.loading = true;
                             for (var ct in this.dsChiTietPhieuNhap) {
-                                ChiTietPhieuNhap.update(ct.ChiTietPhieuNhapID, ct).then(res => {
+                                ChiTietPhieuNhapApi.update((ct as ChiTietPhieuNhap).ChiTietPhieuNhapID, (ct as ChiTietPhieuNhap)).then(res => {
                                     this.loading = false;
                                     this.dialog = false;
                                     //this.$emit("getLaiDanhSach");
@@ -313,7 +312,7 @@
                                 this.$snotify.error('Cập nhật thất bại!');
                             });
                         } else {
-                            (this.phieuNhapKho.ChiTietPhieuNhap as ChiTietPhieuNhap[]).push(this.chiTietPhieuNhap);
+                            this.phieuNhapKho.ChiTietPhieuNhap.push(this.chiTietPhieuNhap);
                         }
                     }
                 });

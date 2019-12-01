@@ -83,8 +83,6 @@
     import { ChiTietKiemKe } from '@/models/ChiTietKiemKe';
     import ChiTietKiemKeApi, { ChiTietKiemKeApiSearchParams } from '@/apiResources/ChiTietKiemKeApi';
     import ModalChiTietKiemKe from './ModalChiTietKiemKe.vue'
-    import store from '@/store/store';
-
     export default Vue.extend({
         $_veeValidate: {
             validator: 'new'
@@ -157,7 +155,6 @@
                             });
                         } else {
                             this.loading = true;
-                            this.kiemKe.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
                             KiemKeApi.insert(this.kiemKe).then(res => {
                                 this.kiemKe = res;
                                 this.searchParamsChiTietKiemKe.kiemKeID = res.KiemKeID;
