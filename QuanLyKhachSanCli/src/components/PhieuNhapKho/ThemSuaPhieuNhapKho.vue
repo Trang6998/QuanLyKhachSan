@@ -52,7 +52,6 @@
                                                             <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
                                                                 <v-autocomplete v-model="chiTietPhieuNhap.ThuocTinhID"
                                                                                 :items="dsVatDung"
-                                                                                :search-input.sync="searchPhieuNhapKho"
                                                                                 item-text="TenVatDung"
                                                                                 item-value="VatDungID"
                                                                                 label="Vật dụng"
@@ -110,8 +109,6 @@
                                             <v-data-table :headers="tableHeaderChiTietPhieuNhap"
                                                           :items="dsChiTietPhieuNhap"
                                                           :total-items="searchParamsChiTietPhieuNhap.totalItems"
-                                                          selectedClass="table-info"
-                                                          @selectionChanged="chiTietPhieuNhap = $event"
                                                           class="table-border table">
                                                 <template slot="items" slot-scope="props">
                                                     <td>{{ props.index + 1 }}</td>
@@ -202,6 +199,7 @@
             show(isUpdate: boolean, item: any): void {
                 this.dialog = true;
                 this.isUpdate = isUpdate;
+                this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
                 this.dsChiTietPhieuNhap = [] as ChiTietPhieuNhap[];
                 this.phieuNhapKho = Object.assign({}, item);
                 if (isUpdate === true) {
@@ -218,6 +216,9 @@
                         this.dsVatDung = res.Data;
                     }
                 )
+            },
+            showChiTiet(item: any): void {
+                this.chiTietPhieuNhap = item;
             },
             getDataFromApi(id: number): void {
                 PhieuNhapKhoApi.detail(id).then(res => {
