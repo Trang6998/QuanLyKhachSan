@@ -223,8 +223,10 @@
     <Content Include="src\components\Commons\VueCkeditor.vue" />
     <Content Include="src\components\DatDichVu\DanhSachDatDichVu.vue" />
     <Content Include="src\components\DatDichVu\DichVuCuaToi.vue" />
+    <Content Include="src\components\DatDichVu\ThemKhachDatDichVu.vue" />
     <Content Include="src\components\DatDichVu\ThemSuaDatDichVu.vue" />
     <Content Include="src\components\DatPhong\DanhSachDatPhong.vue" />
+    <Content Include="src\components\DatPhong\ThemKhachDatPhong.vue" />
     <Content Include="src\components\DatPhong\ThemSuaDatPhong.vue" />
     <Content Include="src\components\DichVu\ChiTietDichVu.vue" />
     <Content Include="src\components\DichVu\DanhSachDichVu.vue" />
