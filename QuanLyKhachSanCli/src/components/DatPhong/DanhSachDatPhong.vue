@@ -11,9 +11,24 @@
             <v-card-text>
                 <v-layout row wrap>
                     <v-flex>
-                        <v-layout noswap>
-                            <v-flex xs5>
+                        <v-layout nowrap>
+                            <v-flex xs4>
                                 <v-text-field label="Tìm kiếm" append-icon="search" v-model="searchParamsDatPhong.HoTen" @input="getDataFromApi(searchParamsDatPhong)"></v-text-field>
+                            </v-flex>
+                            <v-flex xs2 nowrap style="padding-right: 5px; ">
+                                <v-datepicker label="Ngày đắt đầu" v-model="searchParamsDatPhong.NgayBD" @input="getDataFromApi(searchParamsDatPhong)"></v-datepicker>
+                            </v-flex>
+                            <v-flex xs2 style="padding-right: 10px; ">
+                                <v-datepicker label="Ngày kết thúc" v-model="searchParamsDatPhong.NgayKT" @input="getDataFromApi(searchParamsDatPhong)"></v-datepicker>
+                            </v-flex>
+                            <v-flex xs2 >
+                                Trạng thái<br/>
+                                <select class="form-control" style="border:1px solid #ccc; margin-top:0.5em; width:10em;" v-model="searchParamsDatPhong.TrangThai" @change="getDataFromApi(searchParamsDatPhong)">
+                                    
+                                    <option v-bind:value="0">Đã đặt</option>
+                                    <option v-bind:value="1">Đã thuê</option>
+                                    <option v-bind:value="2">Đã hủy</option>
+                                </select>
                             </v-flex>
                             <v-spacer></v-spacer>
                             <v-btn small color="primary" style="margin-top: auto;" @click="showDialogThemSua(false, {})">+ Thêm mới</v-btn>
