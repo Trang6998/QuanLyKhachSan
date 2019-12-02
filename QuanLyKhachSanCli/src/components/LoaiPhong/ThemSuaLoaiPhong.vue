@@ -209,6 +209,8 @@
                     this.searchParamsBangGia.loaiPhongID = this.loaiPhong.LoaiPhongID;
                     BangGiaApi.search(this.searchParamsBangGia).then(res => {
                         this.dsBangGia = res.Data;
+                        if (res.Data.length > 0)
+                            this.bangGia.ApDungTuNgay = res.Data[0].ApDungDenNgay;
                     });
                 }
             },
