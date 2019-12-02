@@ -92,7 +92,7 @@
                     { text: 'Trạng thái', value: 'TrangThai', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
-                searchParamsPhong: { includeEntities: true, rowsPerPage: 0 } as PhongApiSearchParams,
+                searchParamsPhong: { includeEntities: true, rowsPerPage: 10 } as PhongApiSearchParams,
                 searchParamsLoaiPhong: { includeEntities: true, rowsPerPage: 0 } as LoaiPhongApiSearchParams,
                 loadingTable: false,
                 selectedPhong: {} as Phong,
