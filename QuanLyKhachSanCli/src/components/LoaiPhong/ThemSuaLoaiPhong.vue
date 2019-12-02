@@ -75,8 +75,7 @@
                                                       clearable></v-text-field>
                                     </v-flex>
                                     <v-flex xs4 md4 sm4>
-                                        <v-datepicker v-model="bangGia.ApDungDenNgay"
-                                                      value="dsBangGia[0].ApDungDenNgay"
+                                        <v-datepicker v-model="bangGia.ApDungTuNgay"
                                                       label="áp dụng từ ngày"
                                                       v-validate="''"
                                                       :error-messages="errors.collect('ApDungTu', 'frmAddEdit')"
