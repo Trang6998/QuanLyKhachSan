@@ -114,15 +114,28 @@ namespace QuanLyKhachSanApp.Controllers
 
                 if (datPhong == null)
                     return NotFound();
+                datPhong.TrangThai = 2;
 
-                if (await db.HoaDon.AnyAsync(o => o.DatPhongID == datPhong.DatPhongID))
-                    return BadRequest("Unable to delete the datphong as it has related hoadon");
+                db.Entry(datPhong).State = EntityState.Modified;
 
-                db.Entry(datPhong).State = EntityState.Deleted;
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException ducEx)
+                {
+                    bool exists = db.DatPhong.Count(o => o.DatPhongID == datPhongID) > 0;
+                    if (!exists)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw ducEx;
+                    }
+                }
 
-                await db.SaveChangesAsync();
-
-                return Ok();
+                return Ok(datPhong);
             }
         }
 
