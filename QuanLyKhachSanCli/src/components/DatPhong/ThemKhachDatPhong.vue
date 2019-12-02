@@ -1,13 +1,17 @@
 <template>
     <v-layout style="width:fit-content">
-        <v-img style="width:fit-content" src="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
+        <v-img style="width:fit-content; height:890px" src="https://images.pexels.com/photos/189296/pexels-photo-189296.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
             <v-layout row>
                 <v-flex xs8></v-flex>
                 <v-flex xs4 style="padding: 40px">
                     <v-card height="600" style="border: 1px;border-radius: 15px">
                         <v-layout row wrap>
                             <v-flex xs12>
-                                <h1 style="text-align: center"> Đặt Phòng</h1>
+                                <v-card style="border: 1px;border-top-left-radius: 15px; border-top-right-radius: 15px">
+
+                                        <h1 style="text-align: center"> Đặt Phòng</h1>
+                                
+                                </v-card>
                             </v-flex>
                             <v-flex xs12 pl-5 pr-5>
                                 <v-text-field v-model="datPhong.HoTen"
