@@ -50,15 +50,25 @@
                                                 clearable></v-autocomplete>
                             </v-flex>
                             <v-flex xs6>
-                                <v-text-field v-model="nhanVien.TenDangNhap"
+                                <v-text-field v-model="users.UserName"
                                               label="Tên đăng nhập"
                                               type="text"
-                                              :error-messages="errors.collect('TenDangNhap', 'frmAddEdit')"
-                                              v-validate="''"
+                                              :error-messages="errors.collect('Tên đăng nhập', 'frmAddEdit')"
+                                              v-validate="'required'"
                                               data-vv-scope="frmAddEdit"
-                                              data-vv-name="TenDangNhap"
-                                              hide-details disabled
+                                              data-vv-name="Tên đăng nhập"
+                                              :disabled="isUpdate"
                                               clearable></v-text-field>
+                            </v-flex>
+                            <v-flex xs6>
+                                <v-text-field v-model="users.Password"
+                                              label="Mật khẩu"
+                                              :error-messages="errors.collect('Mật khẩu', 'frmAddEdit')"
+                                              v-validate="{ required: true, min: 8 }"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Mật khẩu"
+                                              v-show="!isUpdate"
+                                              ></v-text-field>
                             </v-flex>
                         </v-layout>
                     </v-form>
@@ -69,13 +79,14 @@
                 </v-card-actions>
             </v-card>
         </v-container>
-</v-dialog>
+    </v-dialog>
 </template>
 
 <script lang="ts">
     import { Vue } from 'vue-property-decorator';
     import NhanVienApi, { NhanVienApiSearchParams } from '@/apiResources/NhanVienApi';
     import { NhanVien } from '@/models/NhanVien';
+    import { Users } from '@/models/Users';
     import { BoPhan } from '@/models/BoPhan';
     import BoPhanApi, { BoPhanApiSearchParams } from '@/apiResources/BoPhanApi';
 
@@ -88,7 +99,10 @@
             return {
                 dialog: false,
                 isUpdate: false,
-                nhanVien: {} as NhanVien,
+                nhanVien: {
+                    Users: {} as Users
+                } as NhanVien,
+                users: {} as Users,
                 dsBoPhan: [] as BoPhan[],
                 dsBoPhanLoading: false,
                 searchBoPhan: '',
@@ -96,16 +110,7 @@
                 loading: false,
                 searchParamsNhanVien: {} as NhanVienApiSearchParams,
             }
-            
-        },
-        mounted() {
-            if (this.$route.name === 'suaNhanVien') {
-                this.isUpdate = true;
-                let id = parseInt(this.$route.params.id, 10);
-                this.getDataFromApi(id);
-            } else {
-                this.isUpdate = false;
-            }
+
         },
         created() {
             this.getDSBoPhan();
@@ -115,15 +120,22 @@
                 this.dialog = true;
                 this.isUpdate = isUpdate;
                 this.nhanVien = item;
+                if (isUpdate == true) {
+                    this.getDataFromApi(item.NhanVienID);
+                }
+                else
+                    this.users = {} as Users
             },
             getDataFromApi(id: number): void {
                 NhanVienApi.detail(id).then(res => {
                     this.nhanVien = res;
+                    this.users = res.Users as any;
                 });
             },
             save(): void {
                 this.$validator.validateAll('frmAddEdit').then((res) => {
-                   if (res) {
+                    if (res) {
+                        this.nhanVien.Users = this.users;
                         if (this.isUpdate) {
                             this.loading = true;
                             NhanVienApi.update(this.nhanVien.NhanVienID, this.nhanVien).then(res => {
@@ -138,7 +150,6 @@
                         } else {
                             this.loading = true;
                             NhanVienApi.insert(this.nhanVien).then(res => {
-                                this.$router.push('/nhanvien/');
                                 this.nhanVien = res;
                                 this.isUpdate = true;
                                 this.loading = false;
