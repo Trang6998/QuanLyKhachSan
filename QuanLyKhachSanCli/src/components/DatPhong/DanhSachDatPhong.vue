@@ -48,15 +48,31 @@
                                 <td>{{ props.item.TienCoc }}</td>
                                 <td>{{ props.item.NgayTao === null ? "" : props.item.NgayTao|moment('DD/MM/YYYY HH:mm:ss') }}</td>
                                 <td class="icon-xs-center" style="width:110px;">
-                                    <v-btn flat icon small @click="showDialogThemSua(true, props.item)" class="ma-0">
-                                        <v-icon small>edit</v-icon>
-                                    </v-btn>
-                                    <v-btn class="ma-0" flat color="green" icon small @click="confirm(props.item)">
-                                        <v-icon small>done</v-icon>
-                                    </v-btn>
-                                    <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-                                        <v-icon small>delete</v-icon>
-                                    </v-btn>
+                                    <v-tooltip top>
+                                        <v-badge left slot="activator">
+                                            <v-btn flat icon small @click="showDialogThemSua(true, props.item)" class="ma-0">
+                                                <v-icon small>edit</v-icon>
+                                            </v-btn>
+                                        </v-badge>
+                                        <span>Sửa</span>
+                                    </v-tooltip>
+                                    <v-tooltip top>
+                                        <v-badge left slot="activator">
+                                            <v-btn class="ma-0" flat color="green" icon small @click="confirm(props.item)">
+                                                <v-icon small>done</v-icon>
+                                            </v-btn>
+                                        </v-badge>
+                                        <span>Xác nhận thuê phòng</span>
+                                    </v-tooltip>
+                                    <v-tooltip top>
+                                        <v-badge left slot="activator">
+                                            <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
+                                                <v-icon small>clear</v-icon>
+                                            </v-btn>
+                                        </v-badge>
+                                        <span>Hủy đặt phòng</span>
+                                    </v-tooltip>
+                                    
                                 </td>
                             </template>
                         </v-data-table>

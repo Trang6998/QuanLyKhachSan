@@ -57,6 +57,21 @@ namespace QuanLyKhachSanApp.Controllers
 
             using (var db = new dbQuanLyKhachSan())
             {
+                var chiTiet = await db.ChiTietPhieuNhap
+                    .Include(o => o.VatDung)
+                    .SingleOrDefaultAsync(o => o.ThuocTinhID == chiTietPhieuNhap.ThuocTinhID && o.PhieuNhapID == chiTietPhieuNhap.PhieuNhapID && o.GiaNhap == chiTietPhieuNhap.GiaNhap);
+                
+                if (chiTiet != null)
+                {
+                    chiTiet.SoLuong += chiTietPhieuNhap.SoLuong;
+                    db.Entry(chiTiet).State = EntityState.Modified;
+                    try
+                    {
+                        await db.SaveChangesAsync();
+                    }
+                    catch { }
+                    return Ok(chiTiet);
+                }
                 db.ChiTietPhieuNhap.Add(chiTietPhieuNhap);
                 await db.SaveChangesAsync();
             }
@@ -73,6 +88,7 @@ namespace QuanLyKhachSanApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+            
             using (var db = new dbQuanLyKhachSan())
             {
                 db.Entry(chiTietPhieuNhap).State = EntityState.Modified;

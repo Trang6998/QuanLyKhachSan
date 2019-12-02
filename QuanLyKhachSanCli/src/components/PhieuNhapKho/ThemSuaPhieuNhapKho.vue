@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" width="800">
+    <v-dialog persistent v-model="dialog" width="800">
         <v-card>
             <v-card-title class="primary white--text" style="height: 3.5em">
                 <v-flex>
@@ -8,7 +8,7 @@
                 <v-spacer></v-spacer>
                 <v-flex>
                     <div class="text-xs-right">
-                        <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
+                        <v-btn class="white--text ma-0" small @click="save()" icon dark><v-icon>close</v-icon></v-btn>
                     </div>
                 </v-flex>
             </v-card-title>
@@ -21,7 +21,6 @@
                                           type="date"
                                           :error-messages="errors.collect('NgayNhap', 'frmAddEdit')"
                                           v-validate="''"
-                                          @leave="acd"
                                           data-vv-scope="frmAddEdit"
                                           data-vv-name="NgayNhap|moment('DD/MM/YYYY')"
                                           clearable>
@@ -37,7 +36,6 @@
                                 <v-tab-item :key="1">
                                     <v-card flat>
                                         <div>
-                                            <v-form scope="frmChiTiet">
                                                 <v-card>
                                                     <v-card-text>
                                                         <v-layout row wrap>
@@ -48,9 +46,9 @@
                                                                                 item-value="VatDungID"
                                                                                 label="Vật dụng"
                                                                                 placeholder="Vật dụng"
-                                                                                :error-messages="errors.collect('ThuocTinhID', 'frmChiTiet')"
+                                                                                :error-messages="errors.collect('ThuocTinhID', 'frmAddEdit')"
                                                                                 v-validate="''"
-                                                                                data-vv-scope="frmChiTiet"
+                                                                                data-vv-scope="frmAddEdit"
                                                                                 data-vv-name="ThuocTinhID"
                                                                                 clearable></v-autocomplete>
                                                             </v-flex>
@@ -58,9 +56,9 @@
                                                                 <v-text-field v-model="chiTietPhieuNhap.SoLuong"
                                                                               label="Số lượng"
                                                                               type="number"
-                                                                              :error-messages="errors.collect('SoLuong', 'frmChiTiet')"
+                                                                              :error-messages="errors.collect('SoLuong', 'frmAddEdit')"
                                                                               v-validate="''"
-                                                                              data-vv-scope="frmChiTiet"
+                                                                              data-vv-scope="frmAddEdit"
                                                                               data-vv-name="SoLuong"
                                                                               hide-details
                                                                               clearable></v-text-field>
@@ -69,9 +67,9 @@
                                                                 <v-text-field v-model="chiTietPhieuNhap.GiaNhap"
                                                                               label="Giá nhập"
                                                                               type="number"
-                                                                              :error-messages="errors.collect('GiaNhap', 'frmChiTiet')"
+                                                                              :error-messages="errors.collect('GiaNhap', 'frmAddEdit')"
                                                                               v-validate="''"
-                                                                              data-vv-scope="frmChiTiet"
+                                                                              data-vv-scope="frmAddEdit"
                                                                               data-vv-name="GiaNhap"
                                                                               hide-details
                                                                               clearable></v-text-field>
@@ -80,9 +78,9 @@
                                                                 <v-text-field v-model="chiTietPhieuNhap.GhiChu"
                                                                               label="Ghi chú"
                                                                               type="text"
-                                                                              :error-messages="errors.collect('GhiChu', 'frmChiTiet')"
+                                                                              :error-messages="errors.collect('GhiChu', 'frmAddEdit')"
                                                                               v-validate="''"
-                                                                              data-vv-scope="frmChiTiet"
+                                                                              data-vv-scope="frmAddEdit"
                                                                               data-vv-name="GhiChu"
                                                                               hide-details
                                                                               clearable></v-text-field>
@@ -92,10 +90,9 @@
                                                     </v-card-text>
                                                     <v-card-actions>
                                                         <v-spacer></v-spacer>
-                                                        <v-btn small class="primary" :disabled="loading" :loading="loading" @click.native="saveChiTiet">Lưu</v-btn>
+                                                        <v-btn small class="primary" @click.native="saveChiTiet">Lưu</v-btn>
                                                     </v-card-actions>
                                                 </v-card>
-                                            </v-form>
                                         </div>
                                         <v-card-text class="pa-0">
                                             <v-data-table :headers="tableHeaderChiTietPhieuNhap"
@@ -123,6 +120,7 @@
                                                 <v-text-field v-model="phieuNhapKho.TongTien"
                                                               label="Tổng tiền"
                                                               type="number"
+                                                              disabled
                                                               :error-messages="errors.collect('TongTien', 'frmAddEdit')"
                                                               v-validate="''"
                                                               data-vv-scope="frmAddEdit"
@@ -140,7 +138,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="primary" @click="close()" :disabled="loading" :loading="loading">Đóng</v-btn>
+                <v-btn class="primary" @click="save()">Đóng</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -169,7 +167,7 @@
                 dialog: false,
                 isUpdate: false,
                 dsNhanVien: [] as NhanVien[],
-                phieuNhapKho: { ChiTietPhieuNhap: [] as ChiTietPhieuNhap[] } as PhieuNhapKho,
+                phieuNhapKho: {} as PhieuNhapKho,
                 chiTietPhieuNhap: {} as ChiTietPhieuNhap,
                 dsChiTietPhieuNhap: [] as ChiTietPhieuNhap[],
                 selectedPhieuNhapKho: {} as ChiTietPhieuNhap,
@@ -186,7 +184,6 @@
                     { text: 'Thao tác', value: '#', align: 'center', sortable: true },
                 ],
                 dialogConfirmDelete: false,
-                loading: false,
                 searchParamsPhieuNhapKho: { phieuNhapID: null as any } as PhieuNhapKhoApiSearchParams,
                 isUpdateChiTiet: false,
                 TongTien: 0,
@@ -204,10 +201,11 @@
             show(isUpdate: boolean, item: any): void {
                 this.dialog = true;
                 this.isUpdate = isUpdate;
+                this.isUpdateChiTiet = false;
                 this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
                 this.dsChiTietPhieuNhap = [] as ChiTietPhieuNhap[];
                 this.phieuNhapKho = Object.assign({}, item);
-                if (isUpdate === true) {
+                if (isUpdate) {
                     this.searchParamsChiTietPhieuNhap.phieuNhapID = this.phieuNhapKho.PhieuNhapID;
                     ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
                         this.dsChiTietPhieuNhap = res.Data;
@@ -245,75 +243,50 @@
                 });
             },
             save(): void {
+                if (this.phieuNhapKho.NgayNhap == null || this.phieuNhapKho.TongTien < 0) {
+                    this.$snotify.error("Nhập đầy đủ các trường!");
+                    return;
+                }
                 this.$validator.validateAll('frmAddEdit').then((res) => {
-                    if (res ) {
-                        if (!isUpdate) {
-                            this.phieuNhapKho.NhanVienID = 1;//store.state.user.Profile.NhanVien.NhanVienID;
-                        }
-                        this.phieuNhapKho.NgayNhap = this.dsChiTietPhieuNhap;
-                        if (this.isUpdate) {
-                            this.loading = true;
-                            PhieuNhapKhoApi.update(this.phieuNhapKho.PhieuNhapID, this.phieuNhapKho).then(res => {
-                                this.loading = false;
-                                this.dialog = false;
-                                this.$emit("getLaiDanhSach");
-                                this.isUpdate = false;
-                                this.$snotify.success('Cập nhật thành công!');
-                            }).catch(res => {
-                                this.loading = false;
-                                this.$snotify.error('Cập nhật thất bại!');
-                            });
-                        } else {
-                            this.loading = true;
-                            PhieuNhapKhoApi.insert(this.phieuNhapKho).then(res => {
-                                this.phieuNhapKho = res;
-                                this.dialog = false;
-                                this.$emit("getLaiDanhSach");
-                                this.isUpdate = false;
-                                this.loading = false;
-                                this.$snotify.success('Thêm mới thành công!');
-                            }).catch(res => {
-                                this.loading = false;
-                                this.$snotify.error('Thêm mới thất bại!');
-                            });
-                        }
+                    if (res) {
+                        this.phieuNhapKho.NhanVienID = 1;//store.state.user.Profile.NhanVien.NhanVienID;
+                        PhieuNhapKhoApi.update(this.phieuNhapKho.PhieuNhapID, this.phieuNhapKho).then(res => {
+                            this.dialog = false;
+                            this.$emit("getLaiDanhSach");
+                            this.isUpdate = false;
+                            this.$snotify.success('Cập nhật thành công!');
+                        }).catch(res => {
+                            this.dialog = false;
+                            this.$snotify.error('Cập nhật thất bại!');
+                        });
                     }
                 });
-                
             },
             saveChiTiet(): void {
-                this.$validator.validateAll('frmChiTiet').then((res) => {
+                this.$validator.validateAll('frmAddEdit').then((res) => {
                     if (res) {
                         this.phieuNhapKho.TongTien += this.chiTietPhieuNhap.GiaNhap * this.chiTietPhieuNhap.SoLuong - this.TongTien;
-                        //if (isUpdate)
-                        //    PhieuNhapKhoApi.update(this.phieuNhapKho.PhieuNhapKhoID, this.PhieuNhapKho);
-                        //else {
-                        //    PhieuNhapKhoApi.insert(this.phieuNhapKho);
-                        //    isUpdate = true;
-                        //}
-                        
-                            this.chiTietPhieuNhap.PhieuNhapID = this.phieuNhapKho.PhieuNhapID;
+                        this.chiTietPhieuNhap.PhieuNhapID = this.phieuNhapKho.PhieuNhapID;
                         if (this.isUpdateChiTiet) {
                             ChiTietPhieuNhapApi.update(this.chiTietPhieuNhap.ChiTietPhieuNhapID, this.chiTietPhieuNhap).then(res => {
                                 this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
                                 this.isUpdateChiTiet = false;
                                 this.getDanhSachChiTiet(this.phieuNhapKho.PhieuNhapKhoID);
+                                this.TongTien = 0;
                                 this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
                                 this.$snotify.error('Cập nhật thất bại!');
                             });
                         } else {
-                            //this.phieuNhapKho.ChiTietPhieuNhap.push(this.chiTietPhieuNhap);
                             ChiTietPhieuNhapApi.insert(this.chiTietPhieuNhap).then(res => {
                                 this.getDanhSachChiTiet(this.phieuNhapKho.PhieuNhapKhoID);
-                            this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
+                                this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
+                                this.TongTien = 0;
                                 this.$snotify.success('Thêm mới thành công!');
                             }).catch(res => {
-                                this.loading = false;
                                 this.$snotify.error('Thêm mới thất bại!');
                             });
                         }
-                        this.TongTien = 0;
                     }
                 });
             },
@@ -329,10 +302,6 @@
                     this.$snotify.error('Xóa thất bại!');
                 });
             },
-            close(): void {
-                this.dialog = false;
-                this.$emit("getLaiDanhSach");
-            }
         }
     });
 </script>

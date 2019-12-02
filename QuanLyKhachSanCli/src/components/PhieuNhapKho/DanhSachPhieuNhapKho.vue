@@ -32,12 +32,23 @@
                                     <td>{{ props.item.NgayNhap === null ? "" : props.item.NgayNhap|moment('DD/MM/YYYY') }}</td>
                                     <td>{{ props.item.TongTien }}</td>
                                     <td class="text-xs-center" style="width:80px;">
-                                        <v-btn flat icon small @click="showDialogThemSua(true, props.item)" class="ma-0">
-                                            <v-icon small>edit</v-icon>
-                                        </v-btn>
-                                        <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-                                            <v-icon small>delete</v-icon>
-                                        </v-btn>
+                                        <v-tooltip top>
+                                            <v-badge left slot="activator">
+                                                <v-btn flat icon small @click="showDialogThemSua(true, props.item)" class="ma-0">
+                                                    <v-icon small>edit</v-icon>
+                                                </v-btn>
+                                            </v-badge>
+                                            <span>Sửa</span>
+                                        </v-tooltip>
+                                        <v-tooltip top>
+                                            <v-badge left slot="activator">
+                                                <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
+                                                    <v-icon small>delete</v-icon>
+                                                </v-btn>
+                                            </v-badge>
+                                            <span>Xóa</span>
+                                        </v-tooltip>
+                                        
                                     </td>
                                 </template>
                             </v-data-table>
@@ -92,6 +103,17 @@
         },
         methods: {
             showDialogThemSua(isUpdate: boolean, item: any): void {
+                if (!isUpdate) {
+                    item = {} as PhieuNhapKho;
+                    item.NgayNhap = new Date();
+                    item.TongTien = 0;
+                    PhieuNhapKhoApi.insert(item).then(res => {
+                        if (res) {
+                            item = res;
+                            (this.$refs.themSuaPhieuNhapKho as any).show(isUpdate, item);
+                        }
+                    })
+                }
                 (this.$refs.themSuaPhieuNhapKho as any).show(isUpdate, item);
             },
             getDataFromApi(searchParamsPhieuNhapKho: PhieuNhapKhoApiSearchParams): void {

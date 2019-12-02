@@ -48,7 +48,7 @@ namespace QuanLyKhachSanApp.Controllers
         }
 
         [HttpPost, Route("")]
-        public async Task<IHttpActionResult> Insert([FromBody]PhieuNhapKho phieuNhapKho,[FromBody]ChiTietPhieuNhap[] chiTiet)
+        public async Task<IHttpActionResult> Insert([FromBody]PhieuNhapKho phieuNhapKho)
         {
             if (phieuNhapKho.PhieuNhapID != 0) return BadRequest("Invalid PhieuNhapID");
 
@@ -56,14 +56,6 @@ namespace QuanLyKhachSanApp.Controllers
             {
                 db.PhieuNhapKho.Add(phieuNhapKho);
                 await db.SaveChangesAsync();
-            }
-            using (var ctCtrl = new ChiTietPhieuNhapController())
-            {
-                foreach (ChiTietPhieuNhap ct in chiTiet)
-                {
-                    ct.PhieuNhapID = phieuNhapKho.PhieuNhapID;
-                    await ctCtrl.Insert(ct);
-                }
             }
             return Ok(phieuNhapKho);
         }
