@@ -13,7 +13,7 @@ namespace QuanLyKhachSanApp.Controllers
     public class PhongController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? loaiPhongID = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? loaiPhongID = null, [FromUri]DateTime? ngayNhanPhong = null, [FromUri]int? query = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -26,6 +26,9 @@ namespace QuanLyKhachSanApp.Controllers
                 }
 
                 if (loaiPhongID.HasValue) results = results.Where(o => o.LoaiPhongID == loaiPhongID);
+                if (ngayNhanPhong.HasValue) results = results.Where(o => !o.ThuePhong
+                                                                          .Any(x => x.HoaDon.ThoiGianTraPhong > ngayNhanPhong));
+                if (query.HasValue) results = results.Where(o => o.SoPhong == query);
 
                 results = results.OrderBy(o => o.PhongID);
 

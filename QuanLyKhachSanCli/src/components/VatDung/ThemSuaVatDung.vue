@@ -1,126 +1,58 @@
 <template>
-    <v-flex xs12>
-        <v-breadcrumbs divider="/" class="pa-0">
-            <v-icon slot="divider">chevron_right</v-icon>
-            <v-breadcrumbs-item>
-                <v-btn flat class="ma-0" @click="$router.go(-1)" small><v-icon>arrow_back</v-icon> Quay lại</v-btn>
-            </v-breadcrumbs-item>
-            <v-breadcrumbs-item to="/vatdung" exact>VatDung</v-breadcrumbs-item>
-            <v-breadcrumbs-item>{{isUpdate?'Cập nhật':'Thêm mới'}}</v-breadcrumbs-item>
-        </v-breadcrumbs>
-        <v-card>
-            <v-card-text>
-                <v-form scope="frmAddEdit">
-                    <v-layout row wrap>
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="vatDung.TenVatDung"
-                            label="TenVatDung"
-                            type="text"
-                            :error-messages="errors.collect('TenVatDung', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="TenVatDung"
-                            hide-details
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
+    <v-dialog v-model="dialog" width="500" persistent scrollable>
+        <v-container pa-0 grid-list-md>
+            <v-card>
+                <v-card-title class="primary white--text" style="padding: 5px 15px 5px 15px">
+                    <h3>{{isUpdate ? 'Cập nhật vật dụng' : 'Thêm mới vật dụng'}}</h3>
+                    <v-spacer></v-spacer>
+                    <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
+                </v-card-title>
+                <v-card-text>
+                    <v-form scope="frmAddEdit">
+                        <v-layout row wrap>
+                            <v-flex xs6>
+                                <v-text-field v-model="vatDung.TenVatDung"
+                                              label="Tên vật dụng"
+                                              type="text"
+                                              :error-messages="errors.collect('Tên vật dụng', 'frmAddEdit')"
+                                              v-validate="'required'"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Tên vật dụng"
+                                              clearable></v-text-field>
+                            </v-flex>
 
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="vatDung.SoLuongKho"
-                            label="SoLuongKho"
-                            type="text"
-                            :error-messages="errors.collect('SoLuongKho', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="SoLuongKho"
-                            hide-details
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
+                            <v-flex xs6>
+                                <v-text-field v-model="vatDung.SoLuongKho"
+                                              label="Số lượng kho"
+                                              type="text"
+                                              :error-messages="errors.collect('Số lượng kho', 'frmAddEdit')"
+                                              v-validate="'required'"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Số lượng kho"
+                                              clearable></v-text-field>
+                            </v-flex>
 
-                        <v-flex xs6 sm4 md3>
-                            <v-text-field
-                            v-model="vatDung.MoTa"
-                            label="MoTa"
-                            type="text"
-                            :error-messages="errors.collect('MoTa', 'frmAddEdit')"
-                            v-validate="''"
-                            data-vv-scope="frmAddEdit"
-                            data-vv-name="MoTa"
-                            hide-details
-                            clearable
-                            ></v-text-field>
-                        </v-flex>
-
-                        <v-flex xs12>
-                            <v-tabs color="primary" dark slider-color="white">
-                                <v-tab :key="1" ripple>
-                                    ChiTietPhieuNhap
-                                </v-tab>
-                                <v-tab-item :key="1">
-                                    <v-card flat>
-                                            <div class="text-xs-right">
-                                                <v-btn color="info" to="/chitietphieunhap/add" small>Thêm mới</v-btn>
-                                            </div>
-                                        <v-card-text class="pa-0">
-                <v-data-table :headers="tableHeaderChiTietPhieuNhap"
-                              :items="dsChiTietPhieuNhap"
-                              :pagination.sync="searchParamsChiTietPhieuNhap"
-                              :total-items="searchParamsChiTietPhieuNhap.totalItems"
-                              :loading="dsChiTietPhieuNhapLoading"
-                              class="table-border table">
-                    <template slot="items" slot-scope="props">
-                <td>{{ props.item.ChiTietPhieuNhapID }}</td>
-                        <td>{{ props.item.VatDung.PhieuNhapID }}</td>
-                        <td>{{ props.item.VatDung.VatDungID }}</td>
-                <td>{{ props.item.SoLuong }}</td>
-                <td>{{ props.item.GiaNhap }}</td>
-                <td>{{ props.item.GhiChu }}</td>
-                        </template>
-                    </v-data-table>
-                                        </v-card-text>
-                                    </v-card>
-                                </v-tab-item>
-                                <v-tab :key="2" ripple>
-                                    VatDungPhong
-                                </v-tab>
-                                <v-tab-item :key="2">
-                                    <v-card flat>
-                                            <div class="text-xs-right">
-                                                <v-btn color="info" to="/vatdungphong/add" small>Thêm mới</v-btn>
-                                            </div>
-                                        <v-card-text class="pa-0">
-                <v-data-table :headers="tableHeaderVatDungPhong"
-                              :items="dsVatDungPhong"
-                              :pagination.sync="searchParamsVatDungPhong"
-                              :total-items="searchParamsVatDungPhong.totalItems"
-                              :loading="dsVatDungPhongLoading"
-                              class="table-border table">
-                    <template slot="items" slot-scope="props">
-                <td>{{ props.item.VatDungPhongID }}</td>
-                <td>{{ props.item.SoLuong }}</td>
-                <td>{{ props.item.GhiChu }}</td>
-                        <td>{{ props.item.VatDung.VatDungID }}</td>
-                        <td>{{ props.item.VatDung.PhongID }}</td>
-                        </template>
-                    </v-data-table>
-                                        </v-card-text>
-                                    </v-card>
-                                </v-tab-item>
-                            </v-tabs>
-                        </v-flex>
-
-                    </v-layout>
-                </v-form>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-flex>
+                            <v-flex xs12>
+                                <v-textarea v-model="vatDung.MoTa"
+                                              label="Mô tả"
+                                              type="text"
+                                              :error-messages="errors.collect('Mô tả', 'frmAddEdit')"
+                                              v-validate="''"
+                                              data-vv-scope="frmAddEdit"
+                                              data-vv-name="Mô tả"
+                                              hide-details
+                                              clearable></v-textarea>
+                            </v-flex>
+                        </v-layout>
+                    </v-form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-container>
+    </v-dialog>
 </template>
 
 <script lang="ts">
@@ -139,47 +71,27 @@
         components: {},
         data() {
             return {
+                dialog: false,
                 isUpdate: false,
                 vatDung: {} as VatDung,
-                dsChiTietPhieuNhap: [] as ChiTietPhieuNhap[],
-                dsChiTietPhieuNhapLoading: false,
-                searchChiTietPhieuNhap: '',
-                searchParamsChiTietPhieuNhap: { includeEntities: true } as ChiTietPhieuNhapApiSearchParams,
-                tableHeaderChiTietPhieuNhap: [
-                    { text: 'ChiTietPhieuNhapID', value: 'ChiTietPhieuNhapID', align: 'center', sortable: true },
-                    { text: 'PhieuNhapID', value: 'PhieuNhapID', align: 'center', sortable: true },
-                    { text: 'ThuocTinhID', value: 'ThuocTinhID', align: 'center', sortable: true },
-                    { text: 'SoLuong', value: 'SoLuong', align: 'center', sortable: true },
-                    { text: 'GiaNhap', value: 'GiaNhap', align: 'center', sortable: true },
-                    { text: 'GhiChu', value: 'GhiChu', align: 'center', sortable: true },
-                ],
                 dsVatDungPhong: [] as VatDungPhong[],
                 dsVatDungPhongLoading: false,
                 searchVatDungPhong: '',
                 searchParamsVatDungPhong: { includeEntities: true } as VatDungPhongApiSearchParams,
-                tableHeaderVatDungPhong: [
-                    { text: 'VatDungPhongID', value: 'VatDungPhongID', align: 'center', sortable: true },
-                    { text: 'SoLuong', value: 'SoLuong', align: 'center', sortable: true },
-                    { text: 'GhiChu', value: 'GhiChu', align: 'center', sortable: true },
-                    { text: 'VatDungID', value: 'VatDungID', align: 'center', sortable: true },
-                    { text: 'PhongID', value: 'PhongID', align: 'center', sortable: true },
-                ],
                 loading: false,
                 searchParamsVatDung: {} as VatDungApiSearchParams,
             }
         },
         watch: {
         },
-        mounted() {
-            if (this.$route.name === 'suaVatDung') {
-                this.isUpdate = true;
-                let id = parseInt(this.$route.params.id, 10);
-                this.getDataFromApi(id);
-            } else {
-                this.isUpdate = false;
-            }
-        },
+        
         methods: {
+            show(isUpdate: boolean, item: any) {
+                this.dialog = true;
+                this.isUpdate = isUpdate;
+                this.vatDung = item;
+            },
+
             getDataFromApi(id: number): void {
                 VatDungApi.detail(id).then(res => {
                     this.vatDung = res;
@@ -191,10 +103,11 @@
                         this.vatDung.ChiTietPhieuNhap = undefined;
                         this.vatDung.VatDungPhong = undefined;
                         if (this.isUpdate) {
-                            let id = parseInt(this.$route.params.id, 10);
                             this.loading = true;
-                            VatDungApi.update(id, this.vatDung).then(res => {
+                            VatDungApi.update(this.vatDung.VatDungID, this.vatDung).then(res => {
                                 this.loading = false;
+                                this.dialog = false;
+                                this.$emit("getLaiDanhSach");
                                 this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
                                 this.loading = false;
@@ -203,7 +116,8 @@
                         } else {
                             this.loading = true;
                             VatDungApi.insert(this.vatDung).then(res => {
-                                this.$router.push('/vatdung/' + res.VatDungID);
+                                this.dialog = false;
+                                this.$emit("getLaiDanhSach");
                                 this.vatDung = res;
                                 this.isUpdate = true;
                                 this.loading = false;
@@ -215,17 +129,7 @@
                         }
                     }
                 });
-            },
-            getDSChiTietPhieuNhap(): void {
-                ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
-                    this.dsChiTietPhieuNhap = res.Data;
-                });
-            },
-            getDSVatDungPhong(): void {
-                VatDungPhongApi.search(this.searchParamsVatDungPhong).then(res => {
-                    this.dsVatDungPhong = res.Data;
-                });
-            },
+            }
         }
     });
 </script>

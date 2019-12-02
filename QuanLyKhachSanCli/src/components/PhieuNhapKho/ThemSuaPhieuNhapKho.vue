@@ -21,21 +21,13 @@
                                           type="date"
                                           :error-messages="errors.collect('NgayNhap', 'frmAddEdit')"
                                           v-validate="''"
+                                          @leave="acd"
                                           data-vv-scope="frmAddEdit"
                                           data-vv-name="NgayNhap|moment('DD/MM/YYYY')"
                                           clearable>
                             </v-datepicker>
                         </v-flex>
-                        <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
-                            <v-text-field v-model="phieuNhapKho.TongTien"
-                                          label="Tổng tiền"
-                                          type="number"
-                                          :error-messages="errors.collect('TongTien', 'frmAddEdit')"
-                                          v-validate="''"
-                                          data-vv-scope="frmAddEdit"
-                                          data-vv-name="TongTien"
-                                          clearable></v-text-field>
-                        </v-flex>
+
                         <v-flex xs12>
                             <v-tabs color="primary" dark slider-color="white">
                                 <v-tab :key="1" ripple>
@@ -45,14 +37,13 @@
                                 <v-tab-item :key="1">
                                     <v-card flat>
                                         <div>
-                                            <v-card>
-                                                <v-card-text>
-                                                    <v-form scope="frmChiTiet">
+                                            <v-form scope="frmChiTiet">
+                                                <v-card>
+                                                    <v-card-text>
                                                         <v-layout row wrap>
                                                             <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
                                                                 <v-autocomplete v-model="chiTietPhieuNhap.ThuocTinhID"
                                                                                 :items="dsVatDung"
-                                                                                :search-input.sync="searchPhieuNhapKho"
                                                                                 item-text="TenVatDung"
                                                                                 item-value="VatDungID"
                                                                                 label="Vật dụng"
@@ -98,20 +89,18 @@
                                                             </v-flex>
 
                                                         </v-layout>
-                                                    </v-form>
-                                                </v-card-text>
-                                                <v-card-actions>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn small class="primary" :disabled="loading" :loading="loading" @click.native="saveChiTiet">Lưu</v-btn>
-                                                </v-card-actions>
-                                            </v-card>
+                                                    </v-card-text>
+                                                    <v-card-actions>
+                                                        <v-spacer></v-spacer>
+                                                        <v-btn small class="primary" :disabled="loading" :loading="loading" @click.native="saveChiTiet">Lưu</v-btn>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-form>
                                         </div>
                                         <v-card-text class="pa-0">
                                             <v-data-table :headers="tableHeaderChiTietPhieuNhap"
                                                           :items="dsChiTietPhieuNhap"
                                                           :total-items="searchParamsChiTietPhieuNhap.totalItems"
-                                                          selectedClass="table-info"
-                                                          @selectionChanged="chiTietPhieuNhap = $event"
                                                           class="table-border table">
                                                 <template slot="items" slot-scope="props">
                                                     <td>{{ props.index + 1 }}</td>
@@ -125,23 +114,33 @@
                                                         </v-btn>
                                                         <a v-on:click="deletePhieuNhapKho(props.item.ChiTietPhieuNhapID)" onClick="return confirm('are you sure?');"><v-icon small>delete</v-icon></a>
                                                         <!--<v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
-        <v-icon small>delete</v-icon>
-    </v-btn>-->
+                    <v-icon small>delete</v-icon>
+                </v-btn>-->
                                                     </td>
                                                 </template>
                                             </v-data-table>
+                                            <v-flex xs6 sm4 md4 style="padding-right: 1.5em">
+                                                <v-text-field v-model="phieuNhapKho.TongTien"
+                                                              label="Tổng tiền"
+                                                              type="number"
+                                                              :error-messages="errors.collect('TongTien', 'frmAddEdit')"
+                                                              v-validate="''"
+                                                              data-vv-scope="frmAddEdit"
+                                                              data-vv-name="TongTien"
+                                                              clearable></v-text-field>
+                                            </v-flex>
                                         </v-card-text>
                                     </v-card>
                                 </v-tab-item>
                             </v-tabs>
                         </v-flex>
-
+                        
                     </v-layout>
                 </v-form>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
+                <v-btn class="primary" @click="close()" :disabled="loading" :loading="loading">Đóng</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -170,7 +169,7 @@
                 dialog: false,
                 isUpdate: false,
                 dsNhanVien: [] as NhanVien[],
-                phieuNhapKho: {} as PhieuNhapKho,
+                phieuNhapKho: { ChiTietPhieuNhap: [] as ChiTietPhieuNhap[] } as PhieuNhapKho,
                 chiTietPhieuNhap: {} as ChiTietPhieuNhap,
                 dsChiTietPhieuNhap: [] as ChiTietPhieuNhap[],
                 selectedPhieuNhapKho: {} as ChiTietPhieuNhap,
@@ -189,7 +188,8 @@
                 dialogConfirmDelete: false,
                 loading: false,
                 searchParamsPhieuNhapKho: { phieuNhapID: null as any } as PhieuNhapKhoApiSearchParams,
-                isUpdateChiTiet: false
+                isUpdateChiTiet: false,
+                TongTien: 0,
             }
         },
         watch: { 
@@ -204,6 +204,7 @@
             show(isUpdate: boolean, item: any): void {
                 this.dialog = true;
                 this.isUpdate = isUpdate;
+                this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
                 this.dsChiTietPhieuNhap = [] as ChiTietPhieuNhap[];
                 this.phieuNhapKho = Object.assign({}, item);
                 if (isUpdate === true) {
@@ -221,10 +222,21 @@
                     }
                 )
             },
+            showChiTiet(item: any): void {
+                this.chiTietPhieuNhap = item;
+                this.isUpdateChiTiet = true;
+                this.TongTien = this.chiTietPhieuNhap.GiaNhap*this.chiTietPhieuNhap.SoLuong;
+            },
             getDataFromApi(id: number): void {
                 PhieuNhapKhoApi.detail(id).then(res => {
                     this.phieuNhapKho = res;
                 });
+            },
+            getDanhSachChiTiet(): void {
+                this.searchParamsChiTietPhieuNhap.phieuNhapID = this.phieuNhapKho.PhieuNhapID;
+                    ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
+                        this.dsChiTietPhieuNhap = res.Data;
+                    });
             },
             getNhanVien(): void {
                 var search = {} as NhanVienApiSearchParams;
@@ -234,9 +246,11 @@
             },
             save(): void {
                 this.$validator.validateAll('frmAddEdit').then((res) => {
-                    if (res) {
-                        this.phieuNhapKho.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
-                        this.phieuNhapKho.ChiTietPhieuNhap = undefined;
+                    if (res ) {
+                        if (!isUpdate) {
+                            this.phieuNhapKho.NhanVienID = 1;//store.state.user.Profile.NhanVien.NhanVienID;
+                        }
+                        this.phieuNhapKho.NgayNhap = this.dsChiTietPhieuNhap;
                         if (this.isUpdate) {
                             this.loading = true;
                             PhieuNhapKhoApi.update(this.phieuNhapKho.PhieuNhapID, this.phieuNhapKho).then(res => {
@@ -265,21 +279,41 @@
                         }
                     }
                 });
+                
             },
             saveChiTiet(): void {
                 this.$validator.validateAll('frmChiTiet').then((res) => {
                     if (res) {
+                        this.phieuNhapKho.TongTien += this.chiTietPhieuNhap.GiaNhap * this.chiTietPhieuNhap.SoLuong - this.TongTien;
+                        //if (isUpdate)
+                        //    PhieuNhapKhoApi.update(this.phieuNhapKho.PhieuNhapKhoID, this.PhieuNhapKho);
+                        //else {
+                        //    PhieuNhapKhoApi.insert(this.phieuNhapKho);
+                        //    isUpdate = true;
+                        //}
+                        
+                            this.chiTietPhieuNhap.PhieuNhapID = this.phieuNhapKho.PhieuNhapID;
                         if (this.isUpdateChiTiet) {
-                            this.loading = true;
-                            ChiTietPhieuNhapApi.update(this.phieuNhapKho.PhieuNhapID, this.chiTietPhieuNhap).then(res => {
-                                
+                            ChiTietPhieuNhapApi.update(this.chiTietPhieuNhap.ChiTietPhieuNhapID, this.chiTietPhieuNhap).then(res => {
+                                this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
+                                this.isUpdateChiTiet = false;
+                                this.getDanhSachChiTiet(this.phieuNhapKho.PhieuNhapKhoID);
                                 this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
                                 this.$snotify.error('Cập nhật thất bại!');
                             });
                         } else {
-                            (this.phieuNhapKho.ChiTietPhieuNhap as ChiTietPhieuNhap[]).push(this.chiTietPhieuNhap);
+                            //this.phieuNhapKho.ChiTietPhieuNhap.push(this.chiTietPhieuNhap);
+                            ChiTietPhieuNhapApi.insert(this.chiTietPhieuNhap).then(res => {
+                                this.getDanhSachChiTiet(this.phieuNhapKho.PhieuNhapKhoID);
+                            this.chiTietPhieuNhap = {} as ChiTietPhieuNhap;
+                                this.$snotify.success('Thêm mới thành công!');
+                            }).catch(res => {
+                                this.loading = false;
+                                this.$snotify.error('Thêm mới thất bại!');
+                            });
                         }
+                        this.TongTien = 0;
                     }
                 });
             },
@@ -295,6 +329,10 @@
                     this.$snotify.error('Xóa thất bại!');
                 });
             },
+            close(): void {
+                this.dialog = false;
+                this.$emit("getLaiDanhSach");
+            }
         }
     });
 </script>

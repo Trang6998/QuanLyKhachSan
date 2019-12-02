@@ -29,7 +29,7 @@
     <NodejsPort>1337</NodejsPort>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
-    <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>3.4</TypeScriptToolsVersion>
     <EnableTypeScript>true</EnableTypeScript>
     <StartWebBrowser>true</StartWebBrowser>
     <ScriptArguments>serve</ScriptArguments>
@@ -207,6 +207,9 @@
     <Content Include="src\assets\logo.png" />
     <Content Include="src\components\BangGia\DanhSachBangGia.vue" />
     <Content Include="src\components\BangGia\ThemSuaBangGia.vue" />
+    <Content Include="src\components\BaoCao\BaoCaoDoanhThu.vue">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\BoPhan\DanhSachBoPhan.vue" />
     <Content Include="src\components\BoPhan\ThemSuaBoPhan.vue" />
     <Content Include="src\components\ChiTietKiemKe\DanhSachChiTietKiemKe.vue" />
@@ -222,7 +225,6 @@
     <Content Include="src\components\Commons\ViewDetailLichBieu.vue" />
     <Content Include="src\components\Commons\VueCkeditor.vue" />
     <Content Include="src\components\DatDichVu\DanhSachDatDichVu.vue" />
-    <Content Include="src\components\DatDichVu\DichVuCuaToi.vue" />
     <Content Include="src\components\DatDichVu\ThemSuaDatDichVu.vue" />
     <Content Include="src\components\DatPhong\ThemKhachDatPhong.vue" />
     <Content Include="src\components\DatPhong\DanhSachDatPhong.vue" />
@@ -246,6 +248,7 @@
     </Content>
     <Content Include="src\components\LoaiPhong\DanhSachLoaiPhong.vue" />
     <Content Include="src\components\LoaiPhong\ThemSuaLoaiPhong.vue" />
+    <Content Include="src\components\Login\Login.vue" />
     <Content Include="src\components\NhanVien\DanhSachNhanVien.vue" />
     <Content Include="src\components\NhanVien\ThemSuaNhanVien.vue" />
     <Content Include="src\components\PhieuNhapKho\DanhSachPhieuNhapKho.vue" />
@@ -404,6 +407,7 @@
     <Folder Include="src\components\Layout\" />
     <Folder Include="src\components\LoaiPhong\" />
     <Folder Include="src\components\Login\" />
+    <Folder Include="src\components\BaoCao\" />
     <Folder Include="src\components\NhanVien\" />
     <Folder Include="src\components\PhieuNhapKho\" />
     <Folder Include="src\components\Phong\" />
@@ -457,6 +461,7 @@
     <TypeScriptCompile Include="src\models\PhieuNhapKho.ts" />
     <TypeScriptCompile Include="src\models\Phong.ts" />
     <TypeScriptCompile Include="src\models\ThuePhong.ts" />
+    <TypeScriptCompile Include="src\models\Users.ts" />
     <TypeScriptCompile Include="src\models\VatDung.ts" />
     <TypeScriptCompile Include="src\models\VatDungPhong.ts" />
     <TypeScriptCompile Include="src\registerServiceWorker.ts" />

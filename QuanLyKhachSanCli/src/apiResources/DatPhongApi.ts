@@ -5,6 +5,10 @@ import { DatPhong } from '@/models/DatPhong'
 export interface DatPhongApiSearchParams extends Pagination {
     nhanVienID?:number;
     HoTen?: string;
+    NgayBD?: Date;
+    NgayKT?: Date;
+    TrangThai?: number;
+    laDatPhong?: boolean;
 }
 class DatPhongApi extends BaseApi {
     search(searchParams: DatPhongApiSearchParams): Promise<PaginatedResponse<DatPhong>> {

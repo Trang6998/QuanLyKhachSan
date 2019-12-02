@@ -13,7 +13,7 @@ namespace QuanLyKhachSanApp.Controllers
     public class DatPhongController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null, [FromUri]string HoTen = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? nhanVienID = null, [FromUri]string HoTen = null,[FromUri]DateTime? NgayBD = null, [FromUri]DateTime? NgayKT = null,[FromUri]int? TrangThai = null, [FromUri]bool? laDatPhong = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -22,12 +22,17 @@ namespace QuanLyKhachSanApp.Controllers
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
-                    results = results.Include(o => o.LoaiPhong);
+                    results = results.Include(o => o.LoaiPhong).Include(o => o.DichVu);
                 }
-
+                if(TrangThai.HasValue) results = results.Where(o => o.TrangThai == TrangThai);
                 if (nhanVienID.HasValue) results = results.Where(o => o.NhanVienID == nhanVienID);
                 if (!string.IsNullOrWhiteSpace(HoTen)) results = results.Where(o => o.HoTen.Contains(HoTen));
-
+                if (NgayBD.HasValue) results = results.Where(o => o.ThoiGianDat >= NgayBD);
+                if (NgayKT.HasValue) results = results.Where(o => o.ThoiGianDat <= NgayKT);
+                if (laDatPhong.HasValue && laDatPhong == true)
+                    results = results.Where(o => o.LoaiPhongID != null);
+                if (laDatPhong.HasValue && laDatPhong == false)
+                    results = results.Where(o => o.DichVuID != null);
                 results = results.OrderBy(o => o.DatPhongID);
 
                 return Ok((await GetPaginatedResponse(results, pagination)));
@@ -109,15 +114,28 @@ namespace QuanLyKhachSanApp.Controllers
 
                 if (datPhong == null)
                     return NotFound();
+                datPhong.TrangThai = 2;
 
-                if (await db.HoaDon.AnyAsync(o => o.DatPhongID == datPhong.DatPhongID))
-                    return BadRequest("Unable to delete the datphong as it has related hoadon");
+                db.Entry(datPhong).State = EntityState.Modified;
 
-                db.Entry(datPhong).State = EntityState.Deleted;
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException ducEx)
+                {
+                    bool exists = db.DatPhong.Count(o => o.DatPhongID == datPhongID) > 0;
+                    if (!exists)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw ducEx;
+                    }
+                }
 
-                await db.SaveChangesAsync();
-
-                return Ok();
+                return Ok(datPhong);
             }
         }
 

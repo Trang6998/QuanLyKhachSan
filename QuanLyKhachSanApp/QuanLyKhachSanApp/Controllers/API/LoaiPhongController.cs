@@ -19,11 +19,24 @@ namespace QuanLyKhachSanApp.Controllers
             {
                 IQueryable<LoaiPhong> results = db.LoaiPhong;
 
-                if (!string.IsNullOrWhiteSpace(query)) results = results.Where(o => o.TenLoaiPhong.Contains(query));
-
+                if (!string.IsNullOrWhiteSpace(query))
+                {
+                    results = results.Where(o => o.TenLoaiPhong.Contains(query));
+                    results = results.OrderBy(o => o.LoaiPhongID);
+                    return Ok((await GetPaginatedResponse(results, pagination)));
+                }
+                 
                 results = results.OrderBy(o => o.LoaiPhongID);
+                
+                var res = results.Select(x => new
+                {
+                    x.LoaiPhongID,
+                    x.TenLoaiPhong,
+                    x.MoTa,
+                    GiaPhong = x.BangGia.Where(p => p.ApDungTuNgay <= DateTime.Now &&p.ApDungDenNgay >= DateTime.Now).FirstOrDefault().GiaPhong,
+                });
 
-                return Ok((await GetPaginatedResponse(results, pagination)));
+                return Ok((await GetPaginatedResponse(res, pagination)));
             }
         }
 

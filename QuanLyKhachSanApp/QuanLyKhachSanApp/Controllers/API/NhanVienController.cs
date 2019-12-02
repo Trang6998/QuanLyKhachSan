@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HVITCore.Controllers;
 using System.Data.Entity.Infrastructure;
 using QuanLyKhachSanApp.Models;
+using HVIT.Security;
 
 namespace QuanLyKhachSanApp.Controllers
 {
@@ -13,7 +14,7 @@ namespace QuanLyKhachSanApp.Controllers
     public class NhanVienController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]string query = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? boPhanID = null, [FromUri]string query = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -22,9 +23,9 @@ namespace QuanLyKhachSanApp.Controllers
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
-                    results = results.Include(o => o.BoPhan);
+                    results = results.Include(o => o.BoPhan).Include(o => o.Users);
                 }
-
+                if (boPhanID.HasValue) results = results.Where(o => o.BoPhanID == boPhanID);
                 if (!string.IsNullOrWhiteSpace(query)) results = results.Where(o => o.TenNhanVien.Contains(query) || o.SoDienThoai.Contains(query));
 
                 results = results.OrderBy(o => o.NhanVienID);
@@ -39,7 +40,7 @@ namespace QuanLyKhachSanApp.Controllers
             using (var db = new dbQuanLyKhachSan())
             {
                 var nhanVien = await db.NhanVien
-                    .Include(o => o.BoPhan)
+                    .Include(o => o.BoPhan).Include(o => o.Users)
                     .SingleOrDefaultAsync(o => o.NhanVienID == nhanVienID);
 
                 if (nhanVien == null)
@@ -55,7 +56,13 @@ namespace QuanLyKhachSanApp.Controllers
 
             using (var db = new dbQuanLyKhachSan())
             {
+                nhanVien.Users.CreatedTime = DateTime.Now;
+                nhanVien.Users.Lang = "vi";
+                nhanVien.Users.Active = true;
+                nhanVien.Users.PasswordSalt = AuthenticationHelper.RamdomString(5);
+                nhanVien.Users.Password = AuthenticationHelper.GetMd5Hash(nhanVien.Users.PasswordSalt + nhanVien.Users.Password);
                 db.NhanVien.Add(nhanVien);
+                //db.Users.Add();
                 await db.SaveChangesAsync();
             }
 
@@ -101,7 +108,7 @@ namespace QuanLyKhachSanApp.Controllers
         {
             using (var db = new dbQuanLyKhachSan())
             {
-                var nhanVien = await db.NhanVien.SingleOrDefaultAsync(o => o.NhanVienID == nhanVienID);
+                var nhanVien = await db.NhanVien.Include(o => o.Users).SingleOrDefaultAsync(o => o.NhanVienID == nhanVienID);
 
                 if (nhanVien == null)
                     return NotFound();
@@ -118,6 +125,8 @@ namespace QuanLyKhachSanApp.Controllers
                 if (await db.PhieuNhapKho.AnyAsync(o => o.NhanVienID == nhanVien.NhanVienID))
                     return BadRequest("Unable to delete the nhanvien as it has related phieunhapkho");
 
+                if (nhanVien.Users != null)
+                    db.Entry(nhanVien.Users).State = EntityState.Deleted;
                 db.Entry(nhanVien).State = EntityState.Deleted;
 
                 await db.SaveChangesAsync();

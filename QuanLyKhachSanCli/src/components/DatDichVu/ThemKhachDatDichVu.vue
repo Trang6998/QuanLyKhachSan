@@ -31,7 +31,7 @@
                             <v-flex xs12 pl-5 pr-5>
                                 <v-datepicker
                                             v-model="datPhong.ThoiGianDat"
-                                            label="Thời Gian Đặt"
+                                            label="Thời gian đặt"
                                             :error-messages="errors.collect('Thời Gian Đặt', 'frmAddEdit')"
                                             v-validate="'required'"
                                             data-vv-scope="frmAddEdit"
@@ -42,7 +42,7 @@
 
                             <v-flex xs12 pl-5 pr-5>
                                 <v-text-field v-model="datPhong.SoLuongNguoi"
-                                              label="Số Lượng Người"
+                                              label="Số lượng người"
                                               :error-messages="errors.collect('Số Lượng Người', 'frmAddEdit')"
                                               v-validate="'required'"
                                               data-vv-scope="frmAddEdit"
@@ -55,7 +55,7 @@
                                                 v-model="datPhong.DichVuID"
                                                 item-text="TenDichVu"
                                                 item-value="DichVuID"
-                                                label="Dịch Vụ"
+                                                label="Dịch vụ"
                                                 :error-messages="errors.collect('Dịch Vụ', 'frmAddEdit')"
                                                 v-validate="'required'"
                                                 data-vv-scope="frmAddEdit"

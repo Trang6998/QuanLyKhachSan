@@ -3,7 +3,9 @@ import { BaseApi } from './BaseApi'
 import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { Phong } from '@/models/Phong'
 export interface PhongApiSearchParams extends Pagination {
-    loaiPhongID?:number;
+    loaiPhongID?: number;
+    ngayNhanPhong?: Date;
+    query?: number;
 }
 class PhongApi extends BaseApi {
     search(searchParams: PhongApiSearchParams): Promise<PaginatedResponse<Phong>> {

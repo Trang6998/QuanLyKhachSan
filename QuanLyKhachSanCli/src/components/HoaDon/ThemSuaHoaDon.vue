@@ -335,6 +335,7 @@
     import { DichVu } from '@/models/DichVu';
     import { BangGia } from '@/models/BangGia';
     import store from '@/store/store';
+
     export default Vue.extend({
         $_veeValidate: {
             validator: 'new'
@@ -453,6 +454,7 @@
                 });
             },
             getDSPhong(): void {
+                this.searchParamsPhong.ngayNhanPhong = this.hoaDon.ThoiGianNhanPhong;
                 PhongApi.search(this.searchParamsPhong).then(res => {
                     this.getGiaApDung();
                     this.dsPhong = res.Data;
@@ -475,7 +477,7 @@
             },
             getGiaApDung(): void {
                 if (this.searchParamsPhong.loaiPhongID != null && this.searchParamsPhong.loaiPhongID != undefined) {
-                    var thoiGian = this.$moment(this.hoaDon.ThoiGianNhanPhong).format("DD/MM/YYYY");
+                    var thoiGian = this.$moment(this.hoaDon.ThoiGianNhanPhong).format("DD/MM/YYYY hh:mm");
                     BangGiaApi.giaapdung(thoiGian,
                         this.searchParamsPhong.loaiPhongID as any).then(res => {
                             this.bangGia = res
@@ -573,7 +575,7 @@
                         this.hoaDon.ThuePhong = undefined;
                         if (this.isUpdate) {
                             this.loading = true;
-                            HoaDonApi.update( this.hoaDon.HoaDonID, this.hoaDon).then(res => {
+                            HoaDonApi.update(this.hoaDon.HoaDonID, this.hoaDon).then(res => {
                                 this.loading = false;
                                 this.dialog = false;
                                 this.$emit("getLaiDanhSach");
@@ -603,4 +605,3 @@
         }
     });
 </script>
-
