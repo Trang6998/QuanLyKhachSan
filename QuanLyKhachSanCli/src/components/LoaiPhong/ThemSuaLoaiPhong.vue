@@ -54,7 +54,7 @@
                                               hide-details
                                               clearable></v-text-field>
                             </v-flex>
-                            <v-flex xs12 class="mt-4">
+                            <v-flex xs12 class="mt-4" v-if="loaiPhong.LoaiPhongID != null && loaiPhong.LoaiPhongID != undefined">
 
 
                                 <v-layout>
@@ -209,6 +209,8 @@
                     this.searchParamsBangGia.loaiPhongID = this.loaiPhong.LoaiPhongID;
                     BangGiaApi.search(this.searchParamsBangGia).then(res => {
                         this.dsBangGia = res.Data;
+                        if (res.Data.length > 0)
+                            this.bangGia.ApDungTuNgay = res.Data[0].ApDungDenNgay;
                     });
                 }
             },
@@ -259,17 +261,12 @@
                         } else {
                             this.$validator.validateAll('frmAddEditBangGia').then((res) => {
                             if (res) {
-                            this.bangGia.LoaiPhong = this.loaiPhong;
-                            this.bangGia.ThuePhong = undefined;
-                            this.loading = true;
-                            this.loaiPhong.GiaPhong = this.bangGia.GiaPhong;
-                            BangGiaApi.insert(this.bangGia).then(res => {
-                                this.loading = false;
-                                console.log(this.bangGia.LoaiPhongID);
-                                LoaiPhongApi.update(this.loaiPhong.LoaiPhongID, this.loaiPhong);
-                                this.$snotify.success('Thêm mới thành công!');
-                                this.dialog = false;
-                                this.$emit("getLaiDanhSach");
+                                this.loading = true;
+                                LoaiPhongApi.insert(this.loaiPhong).then(res => {
+                                    this.loaiPhong = res;
+                                    this.isUpdate = true;
+                                    this.loading = false;
+                                    this.$snotify.success('Thêm mới thành công!');
                             }).catch(res => {
                                 this.loading = false;
                                 this.$snotify.error('Thêm mới thất bại!');
@@ -290,12 +287,11 @@
                             this.loading = true;
                             this.bangGia.BangGiaID = 0;
                             this.bangGia.LoaiPhongID = this.loaiPhong.LoaiPhongID;
-                            this.loaiPhong.GiaPhong = this.bangGia.GiaPhong;
                             BangGiaApi.insert(this.bangGia).then(res => {
                                 this.bangGia = {} as BangGia;
                                 this.loading = false;
                                 this.getDSBangGia();
-                                LoaiPhongApi.update(this.loaiPhong.LoaiPhongID, this.loaiPhong);
+                                this.$emit("getLaiDanhSach");
                                 this.$snotify.success('Thêm mới thành công!');
                             }).catch(res => {
                                 this.loading = false;
@@ -310,7 +306,6 @@
                     this.dsBangGia = res.Data;
                 });
             },
-
         }
     });
 </script>

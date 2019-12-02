@@ -27,7 +27,7 @@ namespace QuanLyKhachSanApp.Controllers
 
                 if (loaiPhongID.HasValue) results = results.Where(o => o.LoaiPhongID == loaiPhongID);
 
-                results = results.OrderBy(o => o.BangGiaID);
+                results = results.OrderByDescending(o => o.ApDungDenNgay);
 
                 return Ok((await GetPaginatedResponse(results, pagination)));
             }

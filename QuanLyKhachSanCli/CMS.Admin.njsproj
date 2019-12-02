@@ -225,12 +225,9 @@
     <Content Include="src\components\Commons\ViewDetailLichBieu.vue" />
     <Content Include="src\components\Commons\VueCkeditor.vue" />
     <Content Include="src\components\DatDichVu\DanhSachDatDichVu.vue" />
-    <Content Include="src\components\DatDichVu\DichVuCuaToi.vue" />
-    <Content Include="src\components\DatDichVu\ThemKhachDatDichVu.vue" />
     <Content Include="src\components\DatDichVu\ThemSuaDatDichVu.vue" />
     <Content Include="src\components\DatPhong\ThemKhachDatPhong.vue" />
     <Content Include="src\components\DatPhong\DanhSachDatPhong.vue" />
-    <Content Include="src\components\DatPhong\ThemKhachDatPhong.vue" />
     <Content Include="src\components\DatPhong\ThemSuaDatPhong.vue" />
     <Content Include="src\components\DichVu\ChiTietDichVu.vue" />
     <Content Include="src\components\DatDichVu\ThemKhachDatDichVu.vue" />
@@ -464,6 +461,7 @@
     <TypeScriptCompile Include="src\models\PhieuNhapKho.ts" />
     <TypeScriptCompile Include="src\models\Phong.ts" />
     <TypeScriptCompile Include="src\models\ThuePhong.ts" />
+    <TypeScriptCompile Include="src\models\Users.ts" />
     <TypeScriptCompile Include="src\models\VatDung.ts" />
     <TypeScriptCompile Include="src\models\VatDungPhong.ts" />
     <TypeScriptCompile Include="src\registerServiceWorker.ts" />

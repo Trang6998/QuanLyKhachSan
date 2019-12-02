@@ -8,15 +8,25 @@
                 <v-layout row wrap>
                     <v-flex xs12>
                         <v-layout nowrap>
-                            <v-flex xs6>
+                            <v-flex xs4>
                                 <v-text-field label="Tìm kiếm"
-                                              append-icon="search"  ma-0 pa-0 hide-details
+                                              append-icon="search" ma-0 pa-0 hide-details
                                               placeholder="Nhập tên nhân viên, số điện thoại..."
                                               v-model="searchParamsNhanVien.query"
                                               @input="getDataFromApi(searchParamsNhanVien)"></v-text-field>
                             </v-flex>
+                            <v-flex xs4>
+                                <v-autocomplete v-model="searchParamsNhanVien.boPhanID"
+                                                :items="dsBoPhan"
+                                                item-text="TenBoPhan"
+                                                item-value="BoPhanID"
+                                                label="Bộ phận"
+                                                placeholder="Chọn bộ phận"
+                                                @input="getDataFromApi(searchParamsNhanVien)"
+                                                clearable></v-autocomplete>
+                            </v-flex>
                             <v-spacer></v-spacer>
-                            <v-btn small color="primary" style="margin-top: auto"  @click="showModalThemSua(false, {})">+ Thêm mới</v-btn>
+                            <v-btn small color="primary" style="margin-top: auto" @click="showModalThemSua(false, {})">+ Thêm mới</v-btn>
                         </v-layout>
                     </v-flex>
                     <v-flex xs12>
@@ -30,7 +40,7 @@
                                 <td>{{ props.index + 1}}</td>
                                 <td>{{ props.item.TenNhanVien }}</td>
                                 <td>{{ props.item.SoDienThoai }}</td>
-                                <td>{{ props.item.TenDangNhap }}</td>
+                                <td>{{ props.item.Users? props.item.Users.UserName : '' }}</td>
                                 <td>{{ props.item.BoPhan ? props.item.BoPhan.TenBoPhan : "" }}</td>
                                 <td class="text-xs-center" style="width:80px;">
                                     <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">
@@ -66,6 +76,8 @@
     import { Vue } from 'vue-property-decorator';
     import NhanVienApi, { NhanVienApiSearchParams } from '@/apiResources/NhanVienApi';
     import { NhanVien } from '@/models/NhanVien';
+    import BoPhanApi, { BoPhanApiSearchParams } from '@/apiResources/BoPhanApi';
+    import { BoPhan } from '@/models/BoPhan';
     import ThemSuaNhanVien from './ThemSuaNhanVien.vue';
 
     export default Vue.extend({
@@ -74,6 +86,7 @@
         },
         data() {
             return {
+                dsBoPhan: [] as BoPhan[],
                 dsNhanVien: [] as NhanVien[],
                 tableHeader: [
                     { text: 'STT', value: 'TenNhanVien', align: 'center', sortable: true },
@@ -84,6 +97,7 @@
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
                 searchParamsNhanVien: { includeEntities: true, rowsPerPage: 10 } as NhanVienApiSearchParams,
+                searchParamsBoPhan: { includeEntities: true, rowsPerPage: 0 } as BoPhanApiSearchParams,
                 loadingTable: false,
                 selectedNhanVien: {} as NhanVien,
                 dialogConfirmDelete: false,
@@ -92,6 +106,7 @@
         watch: {
         },
         created() {
+            this.getDSBoPhan();
             this.getDataFromApi(this.searchParamsNhanVien);
         },
         methods: {
@@ -117,6 +132,12 @@
                     this.dialogConfirmDelete = false;
                 }).catch(res => {
                     this.$snotify.error('Xóa thất bại!');
+                });
+            },
+            
+            getDSBoPhan(): void {
+                BoPhanApi.search(this.searchParamsBoPhan).then(res => {
+                    this.dsBoPhan = res.Data;
                 });
             },
         }
