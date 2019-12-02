@@ -21,6 +21,14 @@ namespace QuanLyKhachSanApp.Controllers
 
                 if (!string.IsNullOrWhiteSpace(query)) results = results.Where(o => o.TenLoaiPhong.Contains(query));
 
+                var res = results.Select(x => new
+                {
+                    x.LoaiPhongID,
+                    x.TenLoaiPhong,
+                    x.MoTa,
+                    GiaPhong = x.BangGia.FirstOrDefault(y => y.ApDungTuNgay <= DateTime.Now && y.ApDungDenNgay >= DateTime.Now),
+                });
+                 
                 results = results.OrderBy(o => o.LoaiPhongID);
 
                 return Ok((await GetPaginatedResponse(results, pagination)));
