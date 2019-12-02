@@ -1,6 +1,6 @@
 <template>
     <v-layout style="width:fit-content">
-        <v-img style="width:fit-content" src="https://images.pexels.com/photos/1395966/pexels-photo-1395966.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
+        <v-img style="width:fit-content; height:890px" src="https://images.pexels.com/photos/1395966/pexels-photo-1395966.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
             <v-layout row>
                 <v-flex xs8></v-flex>
                 <v-flex xs4 style="padding: 40px">

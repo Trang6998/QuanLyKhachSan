@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" width="100%" height="auto" persistent scrollable>
+    <v-dialog v-model="dialog" width="800" persistent scrollable>
         <v-container pa-0 grid-list-md>
             <v-card>
                 <v-card-title class="primary white--text" style="padding: 5px 15px 5px 15px">
@@ -7,12 +7,6 @@
                     <v-spacer></v-spacer>
                     <v-btn class="white--text ma-0" small @click.native="dialog = false" icon dark><v-icon>close</v-icon></v-btn>
                 </v-card-title>
-                <!--thong tin loại phòng ,
-                bảng giá loại phòng
-                ô text nhập thông tin giá loại phòng
-
-                -->
-
                 <v-card-text>
                     <v-form scope="frmAddEdit">
                         <v-layout>
@@ -61,9 +55,9 @@
                                     <v-toolbar-title>Bảng giá loại phòng </v-toolbar-title>
 
                                 </v-layout>
-                                <v-layout row wrap>
+                                <v-layout nowrap>
 
-                                    <v-flex xs3 md3 sm3>
+                                    <v-flex xs3>
                                         <v-text-field v-model="bangGia.GiaPhong"
                                                       label="Giá phòng mới"
                                                       type="text"
@@ -74,9 +68,9 @@
                                                       hide-details
                                                       clearable></v-text-field>
                                     </v-flex>
-                                    <v-flex xs4 md4 sm4>
+                                    <v-flex xs3>
                                         <v-datepicker v-model="bangGia.ApDungTuNgay"
-                                                      label="áp dụng từ ngày"
+                                                      label="Áp dụng từ"
                                                       v-validate="''"
                                                       :error-messages="errors.collect('ApDungTu', 'frmAddEdit')"
                                                       data-vv-name="ApDungTu"
@@ -85,9 +79,9 @@
                                                       clearable>
                                         </v-datepicker>
                                     </v-flex>
-                                    <v-flex xs4 md4 sm4>
+                                    <v-flex xs3>
                                         <v-datepicker v-model="bangGia.ApDungDenNgay"
-                                                      label="áp dụng từ ngày"
+                                                      label="Áp dụng đến"
                                                       v-validate="''"
                                                       :error-messages="errors.collect('ApDungDen', 'frmAddEdit')"
                                                       data-vv-name="ApDungDen"
@@ -96,9 +90,9 @@
                                                       clearable>
                                         </v-datepicker>
                                     </v-flex>
-                                    <v-flex xs1 md1 sm1 class="pa-2">
-                                        <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="saveBangGia">{{isUpdateGia ='Thêm'}}</v-btn>
-
+                                    <v-spacer></v-spacer>
+                                    <v-flex xs3 class="pt-3">
+                                        <v-btn class="primary" style="float: right; margin-right: 0px" small :disabled="loading" :loading="loading" @click.native="saveBangGia">Thêm</v-btn>
                                     </v-flex>
                                 </v-layout>
                                 <v-card-text class="pa-0">
@@ -204,14 +198,8 @@
                 this.isUpdate = isUpdate;
                 this.dsBangGia = [];
                 this.loaiPhong = item;
-    //            this.loaiPhong = Object.assign({}, item);
                 if (isUpdate === true) {
-                    this.searchParamsBangGia.loaiPhongID = this.loaiPhong.LoaiPhongID;
-                    BangGiaApi.search(this.searchParamsBangGia).then(res => {
-                        this.dsBangGia = res.Data;
-                        if (res.Data.length > 0)
-                            this.bangGia.ApDungTuNgay = res.Data[0].ApDungDenNgay;
-                    });
+                    this.getDataFromApiBangGia(this.searchParamsBangGia);
                 }
             },
 
@@ -234,11 +222,13 @@
             },
             getDataFromApiBangGia(searchParamsBangGia: BangGiaApiSearchParams): void {
                 this.searchParamsBangGia.loaiPhongID = this.loaiPhong.LoaiPhongID;
-
                 BangGiaApi.search(searchParamsBangGia).then(res => {
                     this.dsBangGia = res.Data;
                     this.searchParamsBangGia.totalItems = res.Pagination.totalItems;
                     this.dsBangGiaLoading = false;
+                    debugger
+                    if (res.Data.length > 0)
+                         this.bangGia.ApDungTuNgay = res.Data[0].ApDungDenNgay;
                 });
             },
             save(): void {
@@ -290,7 +280,7 @@
                             BangGiaApi.insert(this.bangGia).then(res => {
                                 this.bangGia = {} as BangGia;
                                 this.loading = false;
-                                this.getDSBangGia();
+                                this.getDataFromApiBangGia(this.searchParamsBangGia);
                                 this.$emit("getLaiDanhSach");
                                 this.$snotify.success('Thêm mới thành công!');
                             }).catch(res => {
@@ -299,11 +289,6 @@
                             });
                         }
                     }
-                });
-            },
-            getDSBangGia(): void {
-                BangGiaApi.search(this.searchParamsBangGia).then(res => {
-                    this.dsBangGia = res.Data;
                 });
             },
         }

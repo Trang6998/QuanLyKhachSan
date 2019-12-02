@@ -34,13 +34,10 @@
 
 
                             <template slot="items" slot-scope="props">
-                                <td>{{ props.index + 1 }}</td>
-                                <td>{{ props.item.TenLoaiPhong }}</td>
-                                <td>{{ props.item.GiaPhong }}</td>
-                                <td>{{ props.item.MoTa }}</td>
-
-
-
+                                <td class="text-xs-center">{{ props.index + 1 }}</td>
+                                <td class="text-xs-center">{{ props.item.TenLoaiPhong }}</td>
+                                <td class="text-xs-center">{{ props.item.GiaPhong? props.item.GiaPhong: "Chưa cập nhật" }}</td>
+                                <td class="text-xs-center">{{ props.item.MoTa }}</td>
                                 <td class="text-xs-center" style="width:80px;">
                                     <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">
                                         <v-icon small>edit</v-icon>
@@ -89,7 +86,7 @@
                 tableHeader: [
                     { text: 'STT', value: 'LoaiPhongID', align: 'center', sortable: true },
                     { text: 'Tên loại phòng', value: 'TenLoaiPhong', align: 'center', sortable: true },
-                    { text: 'Giá hiện tại', value: 'GiaPhong', align: 'center', sortable: true },
+                    { text: 'Giá đang áp dụng', value: 'GiaPhong', align: 'center', sortable: true },
                     { text: 'Mo tả', value: 'MoTa', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
