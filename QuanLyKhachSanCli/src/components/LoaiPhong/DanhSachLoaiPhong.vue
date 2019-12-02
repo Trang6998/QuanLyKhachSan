@@ -14,7 +14,7 @@
                                               append-icon="search"
                                               ma-0 pa-0 hide-details
                                               style="padding-top: 0px"
-                                              v-model="searchParamsLoaiPhong.tenLoaiPhong"
+                                              v-model="searchParamsLoaiPhong.query"
                                               @input="getDataFromApi(searchParamsLoaiPhong)">
 
                                 </v-text-field>
