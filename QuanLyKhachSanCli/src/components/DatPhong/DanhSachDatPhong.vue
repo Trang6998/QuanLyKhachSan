@@ -23,9 +23,8 @@
                                                 item-text="name"
                                                 item-value="value"
                                                 label="Trạng thái"
-                                               @change="getDataFromApi(searchParamsDatPhong)"
-                                                ></v-autocomplete>
-                               
+                                                @change="getDataFromApi(searchParamsDatPhong)"></v-autocomplete>
+
                             </v-flex>
                             <v-spacer></v-spacer>
                             <v-btn small color="primary" style="margin-top: auto;" @click="showDialogThemSua(false, {})">+ Thêm mới</v-btn>
@@ -48,9 +47,12 @@
                                 <td>{{ props.item.SoNgayDat }}</td>
                                 <td>{{ props.item.TienCoc }}</td>
                                 <td>{{ props.item.NgayTao === null ? "" : props.item.NgayTao|moment('DD/MM/YYYY HH:mm:ss') }}</td>
-                                <td class="text-xs-center" style="width:80px;">
+                                <td class="icon-xs-center" style="width:110px;">
                                     <v-btn flat icon small @click="showDialogThemSua(true, props.item)" class="ma-0">
                                         <v-icon small>edit</v-icon>
+                                    </v-btn>
+                                    <v-btn class="ma-0" flat color="green" icon small @click="confirm(props.item)">
+                                        <v-icon small>done</v-icon>
                                     </v-btn>
                                     <v-btn flat color="red" icon small class="ma-0" @click="confirmDelete(props.item)">
                                         <v-icon small>delete</v-icon>
@@ -63,8 +65,8 @@
             </v-flex>
             <v-dialog v-model="dialogConfirmDelete" max-width="290">
                 <v-card>
-                    <v-card-title class="headline">Xác nhận xóa</v-card-title>
-                    <v-card-text class="pt-3">Bạn có chắc chắn muốn xóa?</v-card-text>
+                    <v-card-title class="headline">Xác nhận hủy đặt phòng</v-card-title>
+                    <v-card-text class="pt-3">Bạn có chắc chắn muốn hủy?</v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn @click.native="dialogConfirmDelete=false" flat>Hủy</v-btn>
@@ -72,8 +74,19 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
+            <v-dialog v-model="dialogConfirm" max-width="290">
+                <v-card>
+                    <v-card-title class="headline">Xác nhận thuê phòng</v-card-title>
+                    <v-card-text class="pt-3">Bạn có chắc chắn muốn xác nhận?</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click.native="dialogConfirm=false" flat>Hủy</v-btn>
+                        <v-btn color="red darken-1" @click.native="confirmDatPhong" flat>Xác Nhận</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
             <them-sua-dat-phong ref="themSuaDatPhong" @getDatPhong="getDataFromApi(searchParamsDatPhong)"></them-sua-dat-phong>
-            
+
         </v-layout>
     </v-card>
 </template>
@@ -112,6 +125,7 @@
                 loadingTable: false,
                 selectedDatPhong: {} as DatPhong,
                 dialogConfirmDelete: false,
+                dialogConfirm: false,
             }
         },
         watch: {
@@ -137,12 +151,27 @@
                 this.dialogConfirmDelete = true;
             },
             deleteDatPhong(): void {
-                DatPhongApi.delete(this.selectedDatPhong.DatPhongID).then(res => {
-                    this.$snotify.success('Xóa thành công!');
+                this.selectedDatPhong.TrangThai = 2;
+                DatPhongApi.update(this.selectedDatPhong.DatPhongID, this.selectedDatPhong).then(res => {
+                    this.$snotify.success('Hủy đặt phòng thành công!');
                     this.getDataFromApi(this.searchParamsDatPhong);
                     this.dialogConfirmDelete = false;
                 }).catch(res => {
-                    this.$snotify.error('Xóa thất bại!');
+                    this.$snotify.error('Hủy đặt phòng thất bại!');
+                });
+            },
+            confirm(datPhong: DatPhong): void {
+                this.selectedDatPhong = datPhong;
+                this.dialogConfirm = true;
+            },
+            confirmDatPhong(): void {
+                this.selectedDatPhong.TrangThai = 1;
+                DatPhongApi.update(this.selectedDatPhong.DatPhongID, this.selectedDatPhong).then(res => {
+                    this.$snotify.success('Xác nhận thành công!');
+                    this.getDataFromApi(this.searchParamsDatPhong);
+                    this.dialogConfirm = false;
+                }).catch(res => {
+                    this.$snotify.error('Xác nhận thất bại!');
                 });
             },
         }
