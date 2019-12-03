@@ -94,7 +94,7 @@
                                         <v-btn flat icon small @click="showChiTiet(props.item)" class="ma-0">
                                             <v-icon small>edit</v-icon>
                                         </v-btn>
-                                        <a v-on:click="deleteChiTiet(props.item)" onClick="return confirm('are you sure?');"><v-icon small>delete</v-icon></a>
+                                        <a v-on:click="deleteChiTiet(props.item)"><v-icon small>delete</v-icon></a>
 
                                     </td>
                                 </template>
@@ -233,6 +233,10 @@
                 });
             },
             saveChiTiet(): void {
+                if (this.chiTietPhieuNhap.SoLuong <= 0 || this.chiTietPhieuNhap.GiaNhap <= 0) {
+                    this.$snotify.error("Giá trị không thể bé hơn 0!");
+                    return;
+                }
                 this.$validator.validateAll('frmAddEdit').then((res) => {
                     if (res) {
                         this.phieuNhapKho.TongTien += this.chiTietPhieuNhap.GiaNhap * this.chiTietPhieuNhap.SoLuong - this.TongTien;
@@ -261,17 +265,19 @@
                 });
             },
             deleteChiTiet(item: any): void {
-                this.phieuNhapKho.TongTien -= item.SoLuong * item.GiaNhap;
-                ChiTietPhieuNhapApi.delete(item.ChiTietPhieuNhapID).then(res => {
-                    this.$snotify.success('Xóa thành công!');
-                    this.searchParamsChiTietPhieuNhap.phieuNhapID = this.phieuNhapKho.PhieuNhapID;
-                    ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
-                        this.dsChiTietPhieuNhap = res.Data;
+                if (confirm("Do you really want to delete?")) {
+                    this.phieuNhapKho.TongTien -= item.SoLuong * item.GiaNhap;
+                    ChiTietPhieuNhapApi.delete(item.ChiTietPhieuNhapID).then(res => {
+                        this.$snotify.success('Xóa thành công!');
+                        this.searchParamsChiTietPhieuNhap.phieuNhapID = this.phieuNhapKho.PhieuNhapID;
+                        ChiTietPhieuNhapApi.search(this.searchParamsChiTietPhieuNhap).then(res => {
+                            this.dsChiTietPhieuNhap = res.Data;
+                        });
+                        this.dialogConfirmDelete = false;
+                    }).catch(res => {
+                        this.$snotify.error('Xóa thất bại!');
                     });
-                    this.dialogConfirmDelete = false;
-                }).catch(res => {
-                    this.$snotify.error('Xóa thất bại!');
-                });
+                }
             },
         }
     });

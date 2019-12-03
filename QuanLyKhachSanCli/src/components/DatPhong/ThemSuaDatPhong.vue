@@ -153,6 +153,10 @@
                 });
             },
             save(): void {
+                if (this.datPhong.SoNgayDat <= 0 || this.datPhong.SoLuongNguoi <= 0 || this.datPhong.SoDienThoai.length != 10 || this.datPhong.TienCoc < 0) {
+                    this.$snotify.error("Vui lòng nhập đúng định dạng các trường!");
+                    return;
+                }
                 this.$validator.validateAll('frmAddEdit').then((res) => {
                     if (res) {
                         this.datPhong.LoaiPhong = undefined;
