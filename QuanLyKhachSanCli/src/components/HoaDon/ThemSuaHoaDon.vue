@@ -477,8 +477,7 @@
             },
             getGiaApDung(): void {
                 if (this.searchParamsPhong.loaiPhongID != null && this.searchParamsPhong.loaiPhongID != undefined) {
-                    var thoiGian = this.$moment(this.hoaDon.ThoiGianNhanPhong).format("DD/MM/YYYY hh:mm");
-                    BangGiaApi.giaapdung(thoiGian,
+                    BangGiaApi.giaapdung(this.hoaDon.ThoiGianNhanPhong,
                         this.searchParamsPhong.loaiPhongID as any).then(res => {
                             this.bangGia = res
                         })
