@@ -1,13 +1,15 @@
 <template>
     <v-layout style="width:fit-content">
-        <v-img style="width:fit-content; height:890px" src="https://images.pexels.com/photos/1395966/pexels-photo-1395966.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
+        <v-img style="width:fit-content; height:860px" src="https://images.pexels.com/photos/1395966/pexels-photo-1395966.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260">
             <v-layout row>
                 <v-flex xs8></v-flex>
                 <v-flex xs4 style="padding: 40px">
                     <v-card height="500" style="border: 1px;border-radius: 15px">
                         <v-layout row wrap>
                             <v-flex xs12>
-                                <h1 style="text-align: center"> Đặt Dịch Vụ</h1>
+                                <v-card style="border: 1px;border-top-left-radius: 15px; border-top-right-radius: 15px">
+                                    <h1 style="text-align: center"> ĐẶT DỊCH VỤ</h1>
+                                </v-card>
                             </v-flex>
                             <v-flex xs12 pl-5 pr-5>
                                 <v-text-field v-model="datPhong.HoTen"
@@ -122,24 +124,31 @@ import DichVuApi from '@/apiResources/DichVuApi';
                 })
             },
             save(): void {
-
+                if ( this.datPhong.SoLuongNguoi <= 0) {
+                    this.$snotify.error("Vui lòng nhập đúng định dạng các trường!");
+                    return;
+                }
                 this.$validator.validateAll('frmAddEdit').then((res) => {
-                    if (res) {
-                        this.datPhong.HoaDon = undefined;
-                        this.datPhong.LoaiPhong = undefined;
-                        this.datPhong.NhanVien = undefined;
-                        this.datPhong.TrangThai = 1;
-                        this.loading = true;
-                        DatPhongApi.insert(this.datPhong).then(res => {
-                            this.datPhong = {} as DatPhong;
-                            this.loading = false;
-                            this.$snotify.success('Đặt dịch vụ thành công!');
-                        }).catch(res => {
-                            this.loading = false;
-                            this.$snotify.error('Đặt dịch vụ thất bại!');
-                        });
+                 
+                        if (res) {
+                            this.datPhong.HoaDon = undefined;
+                            this.datPhong.LoaiPhong = undefined;
+                            this.datPhong.NhanVien = undefined;
+                            this.datPhong.TrangThai = 1;
+                            this.loading = true;
+                       
+                                DatPhongApi.insert(this.datPhong).then(res => {
 
-                    }
+                                    this.datPhong = {} as DatPhong;
+                                    this.loading = false;
+                                    this.$snotify.success('Đặt dịch vụ thành công!');
+
+                                }).catch(res => {
+                                    this.loading = false;
+                                    this.$snotify.error('Đặt dịch vụ thất bại!');
+                                });
+                        }
+                    
                 });
 
             },
