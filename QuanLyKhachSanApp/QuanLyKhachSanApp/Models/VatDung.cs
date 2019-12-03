@@ -15,8 +15,7 @@ namespace QuanLyKhachSanApp.Models
         [MaxLength(50)]
         public string TenVatDung { get; set; }
 
-        [MaxLength(10)]
-        public string SoLuongKho { get; set; }
+        public int? SoLuongKho { get; set; }
 
         [MaxLength(200)]
         public string MoTa { get; set; }

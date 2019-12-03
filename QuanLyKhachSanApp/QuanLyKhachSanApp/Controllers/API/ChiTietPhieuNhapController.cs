@@ -54,28 +54,20 @@ namespace QuanLyKhachSanApp.Controllers
         public async Task<IHttpActionResult> Insert([FromBody]ChiTietPhieuNhap chiTietPhieuNhap)
         {
             if (chiTietPhieuNhap.ChiTietPhieuNhapID != 0) return BadRequest("Invalid ChiTietPhieuNhapID");
-
+            
             using (var db = new dbQuanLyKhachSan())
             {
-                var chiTiet = await db.ChiTietPhieuNhap
-                    .Include(o => o.VatDung)
-                    .SingleOrDefaultAsync(o => o.ThuocTinhID == chiTietPhieuNhap.ThuocTinhID && o.PhieuNhapID == chiTietPhieuNhap.PhieuNhapID && o.GiaNhap == chiTietPhieuNhap.GiaNhap);
-                
-                if (chiTiet != null)
+                var vatDung = await db.VatDung.SingleOrDefaultAsync(o => o.VatDungID == chiTietPhieuNhap.ThuocTinhID);
+                vatDung.SoLuongKho += chiTietPhieuNhap.SoLuong;
+                db.Entry(vatDung).State = EntityState.Modified;
+                try
                 {
-                    chiTiet.SoLuong += chiTietPhieuNhap.SoLuong;
-                    db.Entry(chiTiet).State = EntityState.Modified;
-                    try
-                    {
-                        await db.SaveChangesAsync();
-                    }
-                    catch { }
-                    return Ok(chiTiet);
+                    await db.SaveChangesAsync();
                 }
+                catch { }
                 db.ChiTietPhieuNhap.Add(chiTietPhieuNhap);
                 await db.SaveChangesAsync();
             }
-
             return Ok(chiTietPhieuNhap);
         }
 
@@ -88,11 +80,23 @@ namespace QuanLyKhachSanApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
             using (var db = new dbQuanLyKhachSan())
             {
-                db.Entry(chiTietPhieuNhap).State = EntityState.Modified;
+                var chiTiet = await db.ChiTietPhieuNhap.SingleOrDefaultAsync(o => o.ChiTietPhieuNhapID == chiTietPhieuNhap.ChiTietPhieuNhapID);
+                var vatDung = await db.VatDung.SingleOrDefaultAsync(o => o.VatDungID == chiTietPhieuNhap.ThuocTinhID);
+                vatDung.SoLuongKho += chiTietPhieuNhap.SoLuong - chiTiet.SoLuong;
+                db.Entry(vatDung).State = EntityState.Modified;
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch { }
+            }
 
+            using (var db = new dbQuanLyKhachSan())
+            {
+
+                db.Entry(chiTietPhieuNhap).State = EntityState.Modified;
                 try
                 {
                     await db.SaveChangesAsync();
@@ -120,16 +124,29 @@ namespace QuanLyKhachSanApp.Controllers
             using (var db = new dbQuanLyKhachSan())
             {
                 var chiTietPhieuNhap = await db.ChiTietPhieuNhap.SingleOrDefaultAsync(o => o.ChiTietPhieuNhapID == chiTietPhieuNhapID);
-
+                
                 if (chiTietPhieuNhap == null)
                     return NotFound();
-
+                //sl = chiTietPhieuNhap.SoLuong;
+                var vatDung = await db.VatDung.SingleOrDefaultAsync(o => o.VatDungID == chiTietPhieuNhap.ThuocTinhID);
+                vatDung.SoLuongKho -= chiTietPhieuNhap.SoLuong;
+                db.Entry(vatDung).State = EntityState.Modified;
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch { }
                 db.Entry(chiTietPhieuNhap).State = EntityState.Deleted;
 
                 await db.SaveChangesAsync();
 
-                return Ok();
+                
             }
+            using (var db = new dbQuanLyKhachSan())
+            {
+
+            }
+            return Ok();
         }
 
     }
