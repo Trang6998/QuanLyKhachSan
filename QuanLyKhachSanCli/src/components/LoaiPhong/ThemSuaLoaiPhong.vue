@@ -228,7 +228,7 @@
                     this.dsBangGiaLoading = false;
                     debugger
                     if (res.Data.length > 0)
-                         this.bangGia.ApDungTuNgay = res.Data[0].ApDungDenNgay;
+                        this.bangGia.ApDungTuNgay = res.Data[0].ApDungDenNgay;
                 });
             },
             save(): void {
@@ -271,12 +271,13 @@
             saveBangGia(): void {
                 this.$validator.validateAll('frmAddEdit').then((res) => {
                     if (res) {
-                        if (this.isUpdateGia) {
+
                             this.bangGia.ThuePhong = undefined;
                             this.bangGia.LoaiPhong = undefined;
                             this.loading = true;
                             this.bangGia.BangGiaID = 0;
-                            this.bangGia.LoaiPhongID = this.loaiPhong.LoaiPhongID;
+                        this.bangGia.LoaiPhongID = this.loaiPhong.LoaiPhongID;
+                        if (this.bangGia.GiaPhong > 0 && this.bangGia.ApDungDenNgay >= this.bangGia.ApDungTuNgay) {
                             BangGiaApi.insert(this.bangGia).then(res => {
                                 this.bangGia = {} as BangGia;
                                 this.loading = false;
@@ -287,6 +288,10 @@
                                 this.loading = false;
                                 this.$snotify.error('Thêm mới thất bại!');
                             });
+                        }
+                        else {
+                            this.loading = false;
+                            this.$snotify.error('Sai thông tin!');
                         }
                     }
                 });
