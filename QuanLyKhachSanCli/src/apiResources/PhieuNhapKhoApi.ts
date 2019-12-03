@@ -3,7 +3,9 @@ import { BaseApi } from './BaseApi'
 import { PaginatedResponse,Pagination } from './PaginatedResponse'
 import { PhieuNhapKho } from '@/models/PhieuNhapKho'
 export interface PhieuNhapKhoApiSearchParams extends Pagination {
-    phieuNhapID?:number;
+    phieuNhapID?: number;
+    ngayBD?: Date;
+    ngayKT?: Date;
 }
 class PhieuNhapKhoApi extends BaseApi {
     search(searchParams: PhieuNhapKhoApiSearchParams): Promise<PaginatedResponse<PhieuNhapKho>> {

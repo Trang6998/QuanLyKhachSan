@@ -13,7 +13,7 @@ namespace QuanLyKhachSanApp.Controllers
     public class PhieuNhapKhoController : BaseApiController
     {
         [HttpGet, Route("")]
-        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? phieuNhapID = null)
+        public async Task<IHttpActionResult> Search([FromUri]Pagination pagination, [FromUri]int? phieuNhapID = null, [FromUri]DateTime? ngayBD = null, [FromUri]DateTime? ngayKT = null)
         {
             using (var db = new dbQuanLyKhachSan())
             {
@@ -22,9 +22,12 @@ namespace QuanLyKhachSanApp.Controllers
                     pagination = new Pagination();
                 if (pagination.includeEntities)
                 {
+                    results = results.Include(x => x.NhanVien);
                 }
 
                 if (phieuNhapID.HasValue) results = results.Where(o => o.PhieuNhapID == phieuNhapID);
+                if (ngayBD.HasValue) results = results.Where(o => o.NgayNhap >= ngayBD);
+                if (ngayKT.HasValue) results = results.Where(o => o.NgayNhap <= ngayKT);
 
                 results = results.OrderBy(o => o.PhieuNhapID);
 
