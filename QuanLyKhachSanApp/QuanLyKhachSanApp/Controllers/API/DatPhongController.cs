@@ -33,6 +33,7 @@ namespace QuanLyKhachSanApp.Controllers
                     results = results.Where(o => o.LoaiPhongID != null);
                 if (laDatPhong.HasValue && laDatPhong == false)
                     results = results.Where(o => o.DichVuID != null);
+                results = results.Where(o => o.LoaiPhongID != null);
                 results = results.OrderBy(o => o.DatPhongID);
 
                 return Ok((await GetPaginatedResponse(results, pagination)));

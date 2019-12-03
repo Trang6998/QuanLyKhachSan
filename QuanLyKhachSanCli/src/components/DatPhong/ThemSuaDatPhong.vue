@@ -96,7 +96,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="primary" :disabled="loading" :loading="loading" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
+                <v-btn class="primary" @click.native="save">{{isUpdate?'Cập nhật':'Thêm mới'}}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -121,9 +121,7 @@
                 isUpdate: false,
                 datPhong: {} as DatPhong,
                 dsLoaiPhong: [] as LoaiPhong[],
-                dsHoaDonLoading: false,
                 searchHoaDon: '',
-                loading: false,
                 searchParamsDatPhong: {} as DatPhongApiSearchParams,
             }
         },
@@ -138,6 +136,7 @@
             show(isUpdate: boolean, item: any) {
                 this.isUpdate = isUpdate;
                 this.datPhong = item;
+                if (!isUpdate) this.datPhong.TienCoc = 0;
                 this.dialog = true;
             },
             getLoaiPhong(): void {
@@ -160,30 +159,25 @@
                 this.$validator.validateAll('frmAddEdit').then((res) => {
                     if (res) {
                         this.datPhong.LoaiPhong = undefined;
+                        this.datPhong.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
                         if (this.datPhong.TrangThai == 2)
                             this.datPhong.NhanVienID = store.state.user.Profile.NhanVien.NhanVienID;
                         if (this.isUpdate) {
-                            this.loading = true;
                             DatPhongApi.update(this.datPhong.DatPhongID, this.datPhong).then(res => {
-                                this.loading = false;
                                 this.$emit("getDatPhong");
                                 this.dialog = false;
                                 this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
-                                this.loading = false;
                                 this.$snotify.error('Cập nhật thất bại!');
                             });
                         } else {
-                            this.loading = true;
                             DatPhongApi.insert(this.datPhong).then(res => {
-                                this.datPhong = res;
-                                this.isUpdate = true;
+                                //this.datPhong = res;
+                                //this.isUpdate = true;
                                 this.$emit("getDatPhong");
                                 this.dialog = false;
-                                this.loading = false;
                                 this.$snotify.success('Thêm mới thành công!');
                             }).catch(res => {
-                                this.loading = false;
                                 this.$snotify.error('Thêm mới thất bại!');
                             });
                         }

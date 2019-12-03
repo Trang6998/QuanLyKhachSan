@@ -47,6 +47,9 @@
                                 <td>{{ props.item.SoNgayDat }}</td>
                                 <td>{{ props.item.TienCoc }}</td>
                                 <td>{{ props.item.NgayTao === null ? "" : props.item.NgayTao|moment('DD/MM/YYYY HH:mm:ss') }}</td>
+                                <td v-if="props.item.TrangThai == 0">Đã đặt</td>
+                                <td v-if="props.item.TrangThai == 1">Đã thuê</td>
+                                <td v-if="props.item.TrangThai == 2">Đã hủy</td>
                                 <td class="icon-xs-center" style="width:110px;">
                                     <v-tooltip top>
                                         <v-badge left slot="activator">
@@ -72,7 +75,7 @@
                                         </v-badge>
                                         <span>Hủy đặt phòng</span>
                                     </v-tooltip>
-                                    
+
                                 </td>
                             </template>
                         </v-data-table>
@@ -135,6 +138,7 @@
                     { text: 'Số ngày đặt', value: 'SoNgayDat', align: 'center', sortable: true },
                     { text: 'Tiền cọc', value: 'TienCoc', align: 'center', sortable: true },
                     { text: 'Ngày đặt', value: 'NgayTao', align: 'center', sortable: true },
+                    { text: 'Trạng thái', value: 'TrangThai', align: 'center', sortable: true },
                     { text: 'Thao tác', value: '#', align: 'center', sortable: false },
                 ],
                 searchParamsDatPhong: { includeEntities: true, rowsPerPage: 10, TrangThai: null as any } as DatPhongApiSearchParams,
