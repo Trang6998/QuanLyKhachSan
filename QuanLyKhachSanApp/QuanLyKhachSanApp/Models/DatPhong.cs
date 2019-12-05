@@ -20,7 +20,7 @@ namespace QuanLyKhachSanApp.Models
         [MaxLength(50)]
         public string HoTen { get; set; }
 
-        [MaxLength(10)]
+        [MaxLength(20)]
         public string SoDienThoai { get; set; }
 
         public DateTime? ThoiGianDat { get; set; }

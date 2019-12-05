@@ -134,13 +134,14 @@ import DichVuApi from '@/apiResources/DichVuApi';
                             this.datPhong.HoaDon = undefined;
                             this.datPhong.LoaiPhong = undefined;
                             this.datPhong.NhanVien = undefined;
-                            this.datPhong.TrangThai = 1;
+                            this.datPhong.TrangThai = 0;
                             this.loading = true;
                        
                                 DatPhongApi.insert(this.datPhong).then(res => {
 
                                     this.datPhong = {} as DatPhong;
                                     this.loading = false;
+                                    this.$eventBus.$emit('getSoKhachDatDichVu');
                                     this.$snotify.success('Đặt dịch vụ thành công!');
 
                                 }).catch(res => {

@@ -1,7 +1,9 @@
 <template>
     <v-navigation-drawer persistent :mini-variant="miniVariant"
                          width="250"
-                         :clipped="$vuetify.breakpoint.lgAndUp" id="appDrawer" style="position:fixed; top:0; left:0; overflow-y:auto;"
+                         :clipped="$vuetify.breakpoint.lgAndUp"
+                         id="appDrawer" style="position:fixed; top:0; left:0; overflow-y:auto;"
+                         :value="showLeftSideBar" @input="toggleSidebar"
                          enable-resize-watcher fixed app>
         <v-list id="leftSideBar">
             <v-list dense expand>
@@ -27,9 +29,16 @@
                                 <v-list-tile-content>
                                     <v-list-tile-title><span>{{ subItem.title }}</span></v-list-tile-title>
                                 </v-list-tile-content>
-                                <v-list-tile-action v-if="subItem.action">
+                                <v-list-tile-action v-if="subItem.action1">
                                     <div id="ex4">
-                                        <span class="p1 fa-stack fa-2x has-badge" :data-count="tongDonChuaNhan">
+                                        <span class="p1 fa-stack fa-2x has-badge" :data-count="tongSoKhachDatPhong">
+                                        </span>
+                                    </div>
+                                    <!--<v-icon :class="[subItem.actionClass || 'success--text']">{{ subItem.action }}</v-icon>-->
+                                </v-list-tile-action>
+                                <v-list-tile-action v-if="subItem.action2">
+                                    <div id="ex4">
+                                        <span class="p1 fa-stack fa-2x has-badge" :data-count="tongSoKhachDatDichVu">
                                         </span>
                                     </div>
                                     <!--<v-icon :class="[subItem.actionClass || 'success--text']">{{ subItem.action }}</v-icon>-->
@@ -61,6 +70,8 @@
     import { HTTP } from '@/HTTPServices.ts';
     import * as MUTATION_TYPES from '../../store/MUTATION_TYPES'
     import store from '../../store/store'
+    import DatPhongApi, { DatPhongApiSearchParams } from '@/apiResources/DatPhongApi';
+    import { DatPhong } from '@/models/DatPhong';
     export default Vue.extend({
         name: 'LeftSideBar',
         components: {
@@ -74,25 +85,44 @@
                     maxScrollbarLength: 160
                 },
                 menus: [] as any,
-                tongDonChuaNhan: 0 as any,
+                tongSoKhachDatPhong: 0 as any,
+                tongSoKhachDatDichVu: 0 as any,
                 lstNhomMxh: [] as any,
+                
             }
         },
         created() {
             this.getMenu();
+            this.$eventBus.$on('getSoKhachDatPhong', this.getSoKhachDatPhong);
+            this.$eventBus.$on('getSoKhachDatDichVu', this.getSoKhachDatDichVu);
         },
         computed: {
-
-            //showLeftSideBar(): boolean {
-            //    return this.$store.state.app.showLeftSideBar
-            //},
+            showLeftSideBar(): boolean {
+                return store.state.app.showLeftSideBar
+            },
         },
         methods: {
-            //toggleSidebar(val: any) {
-            //    if (val !== this.$store.state.app.showLeftSideBar) {
-            //        store.commit(MUTATION_TYPES.TOOGLE_LEFT_SIDE_BAR)
-            //    }
-            //},
+            toggleSidebar(val: any) {
+                if (val !== store.state.app.showLeftSideBar) {
+                    store.commit(MUTATION_TYPES.TOOGLE_LEFT_SIDE_BAR)
+                }
+            },
+            getSoKhachDatPhong() {
+                var searchParamsDatPhong = {} as DatPhongApiSearchParams;
+                searchParamsDatPhong.laDatPhong = true;
+                searchParamsDatPhong.TrangThai = 0;
+                DatPhongApi.search(searchParamsDatPhong).then(res => {
+                    this.tongSoKhachDatPhong = res.Data.length
+                })
+            },
+            getSoKhachDatDichVu() {
+                var searchParamsDatPhong = {} as DatPhongApiSearchParams;
+                searchParamsDatPhong.laDatPhong = false;
+                searchParamsDatPhong.TrangThai = 0;
+                DatPhongApi.search(searchParamsDatPhong).then(res => {
+                    this.tongSoKhachDatDichVu = res.Data.length
+                })
+            },
             getMenu() {
                 this.menus = [{
                     title: 'Trang chủ',
@@ -110,14 +140,31 @@
                     link: '/',
                     show: true,
                     items: [
-                        { title: 'Quản lý vật dụng', link: '/vatdung', show: true },
-                        { title: 'Quản lý phòng', link: '/phong', show: true },
-                        { title: 'Quản lý loại phòng', link: '/loaiphong', show: true },
-                        { title: 'Quản lý dịch vụ', link: '/dichvu', show: true },
-                        { title: 'Khách đặt phòng', link: '/datphong', action: 'add', show: true },
-                        { title: 'Khách đặt dịch vụ', link: '/datdichvu', action: 'add', show: true },
+                        { title: 'Khách đặt phòng', link: '/datphong', action1: 'add', show: true },
+                        { title: 'Khách đặt dịch vụ', link: '/datdichvu', action2: 'add', show: true },
                         { title: 'Quản lý hóa đơn', link: '/hoadon', show: true },
+                    ]
+                },
+                {
+                    title: 'Quản lý kho',
+                    icon: 'store',
+                    link: '/',
+                    show: true,
+                    items: [
+                        { title: 'Quản lý vật dụng', link: '/vatdung', show: true },
+                        { title: 'Quản lý dịch vụ', link: '/dichvu', show: true },
                         { title: 'Nhập kho', link: '/phieunhapkho', show: true },
+                    ]
+                },
+                {
+                    title: 'Quản lý danh mục',
+                    icon: 'reorder',
+                    link: '/',
+                    show: true,
+                    items: [
+                        { title: 'Danh sách phòng', link: '/phong', show: true },
+                        { title: 'Danh sách loại phòng', link: '/loaiphong', show: true },
+                        { title: 'Danh sách dịch vụ', link: '/dichvu', show: true },
                         { title: 'Danh sách nhân viên', link: '/nhanvien', show: true },
                         { title: 'Danh sách khách hàng', link: '/khachhang', show: true },
                     ]
@@ -130,7 +177,6 @@
                     items: [
                         { title: 'Kiểm kê vật dụng', link: 'kiemke', show: true},
                         { title: 'Báo cáo doanh thu', link: 'baocaodoanhthu', show: true},
-                        { title: 'Thống kê sử dụng dịch vụ', link: 'baocaodichvu', show: true},
                     ]
                 },
                 ]

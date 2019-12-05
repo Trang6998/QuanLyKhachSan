@@ -166,6 +166,7 @@
                             DatPhongApi.update(this.datPhong.DatPhongID, this.datPhong).then(res => {
                                 this.$emit("getDatPhong");
                                 this.dialog = false;
+                                this.$eventBus.$emit('getSoKhachDatPhong');
                                 this.$snotify.success('Cập nhật thành công!');
                             }).catch(res => {
                                 this.$snotify.error('Cập nhật thất bại!');
@@ -174,6 +175,7 @@
                             DatPhongApi.insert(this.datPhong).then(res => {
                                 //this.datPhong = res;
                                 //this.isUpdate = true;
+                                this.$eventBus.$emit('getSoKhachDatPhong');
                                 this.$emit("getDatPhong");
                                 this.dialog = false;
                                 this.$snotify.success('Thêm mới thành công!');

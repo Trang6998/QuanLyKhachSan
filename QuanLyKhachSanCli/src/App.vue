@@ -2,9 +2,9 @@
 <template>
     <v-app>
         <left-side-bar v-if="isLoggedIn"></left-side-bar>
-        <v-toolbar v-if="isLoggedIn" style="background: #e46c0a;" dark app :clipped-left="$vuetify.breakpoint.lgAndUp" fixed>
+        <v-toolbar v-if="isLoggedIn" color="primary" height="50px" dark app :clipped-left="$vuetify.breakpoint.lgAndUp" fixed>
             <v-toolbar-title style="width: 100%" class="ml-0 pl-3">
-                <v-toolbar-side-icon  @click.stop="updateDrawer"></v-toolbar-side-icon>
+                <v-toolbar-side-icon  @click.stop="show"></v-toolbar-side-icon>
                 <span class="hidden-sm-and-down">Quản lý khách sạn</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
@@ -166,17 +166,16 @@
                     && store.state.user.AccessToken.IsAuthenticated;
             }
         },
+        created() {
+             this.$eventBus.$emit('getSoKhachDatPhong');
+             this.$eventBus.$emit('getSoKhachDatDichVu');
+        },
         methods: {
             show() {
-                this.$store.state.app.showLeftSideBar = !this.$store.state.app.showLeftSideBar
+                store.state.app.showLeftSideBar = !store.state.app.showLeftSideBar
             },
             logout() {
                 auth.logout();
-            },
-             updateDrawer() {
-                let app = this.$store.state.app;
-                app.drawer = !this.$store.state.app.drawer;
-                this.$store.commit('UPDATE_APP', app);
             },
         }
     });

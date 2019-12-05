@@ -59,6 +59,7 @@ namespace QuanLyKhachSanApp.Controllers
 
             using (var db = new dbQuanLyKhachSan())
             {
+                phong.VatDungPhong.ToList().ForEach(x => x.VatDung = null);
                 db.Phong.Add(phong);
                 await db.SaveChangesAsync();
             }

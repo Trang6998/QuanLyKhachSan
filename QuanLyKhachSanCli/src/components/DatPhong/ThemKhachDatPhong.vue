@@ -124,6 +124,8 @@
         },
         created() {
             this.getDataFromApi()
+            this.$eventBus.$emit('getSoKhachDatPhong');
+            this.$eventBus.$emit('getSoKhachDatDichVu');
         },
         methods: {
             getDataFromApi(): void {
@@ -141,11 +143,12 @@
                         this.datPhong.HoaDon = undefined;
                         this.datPhong.LoaiPhong = undefined;
                         this.datPhong.NhanVien = undefined;
-                        this.datPhong.TrangThai = 1;
+                        this.datPhong.TrangThai = 0;
                         this.loading = true;
                         DatPhongApi.insert(this.datPhong).then(res => {
                             this.datPhong = {} as DatPhong;
                             this.loading = false;
+                            this.$eventBus.$emit('getSoKhachDatPhong');
                             this.$snotify.success('Đặt phòng thành công!');
                         }).catch(res => {
                             this.loading = false;

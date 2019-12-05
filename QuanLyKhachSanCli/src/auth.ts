@@ -1,8 +1,10 @@
 import router from './router';
 import store from './store/store';
+
 import apisServer from './apisServer';
 import axios from 'axios';
 import { HTTPSingleton } from '@/HTTPServices';
+import { debug } from 'util';
 
 /**
  * @var{string} LOGIN_URL The endpoint for logging in. This endpoint should be proxied by Webpack dev server
@@ -39,8 +41,11 @@ export default {
                 HTTPSingleton.getInstance().setAccessToken();
                 if (redirect) {
                     router.push({
+                        path: '/' + redirect,
                         name: redirect
                     });
+                    location.reload();
+                    
                 }
                 resolve(response.data);
             }).catch(err => {

@@ -45,7 +45,6 @@
                         <v-flex xs6 style="padding-right: 15px">
                             <v-text-field v-model="datPhong.SoDienThoai"
                                           label="Số điện thoại"
-                                          type="text"
                                           :error-messages="errors.collect('Số điện thoại', 'frmAddEdit')"
                                           v-validate="'required|numeric'"
                                           data-vv-scope="frmAddEdit"
@@ -152,6 +151,7 @@
                             this.loading = true;
                             DatPhongApi.update(this.datPhong.DatPhongID, this.datPhong).then(res => {
                                 this.loading = false;
+                                this.$eventBus.$emit('getSoKhachDatDichVu');
                                 this.$emit("getDatPhong");
                                 this.dialog = false;
                                 this.$snotify.success('Cập nhật thành công!');
@@ -164,6 +164,7 @@
                             DatPhongApi.insert(this.datPhong).then(res => {
                                 this.datPhong = res;
                                 this.isUpdate = true;
+                                this.$eventBus.$emit('getSoKhachDatDichVu');
                                 this.$emit("getDatPhong");
                                 this.dialog = false;
                                 this.loading = false;

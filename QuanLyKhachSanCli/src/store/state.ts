@@ -4,7 +4,14 @@ export const STORAGE_KEY = 'insight-client-system';
 let Cookies = require('js-cookie');
 
 let syncedData = {
-
+    app: {
+        drawer: true,
+        showLeftSideBar: true,
+        showRightSideBar: false,
+        searchText: '',
+        searchTimestamp: null,
+        title: ''
+    },
     user: {
         AccessToken: {
             IsAuthenticated: false,

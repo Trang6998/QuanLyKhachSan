@@ -12,7 +12,8 @@ namespace QuanLyKhachSanApp.Models
         [Required]
         public int DichVuID { get; set; }
 
-        [MaxLength(50)]
+        
+
         public string TenDichVu { get; set; }
 
         [MaxLength(200)]

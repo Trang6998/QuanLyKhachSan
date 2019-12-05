@@ -1,15 +1,17 @@
 <template>
     <v-img :aspect-ratio="16/7"
            height="100%"
+           width="100%"
+           src="https://360nhadat.com/wp-content/uploads/2018/01/Condotel-Phu-Quoc-5.jpg"
            gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)">
-        <v-container fluid fill-height>
-            <v-layout align-center wrap justify-center class="login_page_wrapper" style="position:relative; top:-45px">
-                <v-flex xs12 class="text-xs-center">
-                    <h2 class="white--text mt-2">
+        <v-container fluid fill-height style="padding: 0px">
+            <v-layout align-center wrap justify-center class="login_page_wrapper" style="position:relative; top:-35px">
+                <v-flex xs12 class="text-xs-center" style="margin-top: 60px">
+                    <h1 class="white--text mt-2">
                         <span>
                             Đăng nhập hệ thống
                         </span>
-                    </h2>
+                    </h1>
                 </v-flex>
                 <v-flex xs12 sm8 md4 style="position:relative;top:-30px;">
                     <v-card class="elevation-12">
@@ -54,14 +56,13 @@
         methods: {
             submit() {
                 this.loggingIn = true;
-                auth.login(this.credentials, 'home')
+                auth.login(this.credentials, 'khachdatphong')
                     .then((response: any) => {
                         this.loggingIn = false;
                         if (!store.state.user.AccessToken.IsAuthenticated) {
                             this.$snotify.error('Sai tên đăng nhập hoặc mật khẩu.');
                         }
                         else {
-                            this.$eventBus.$emit('onLoggedIn');
                         }
                     })
                     .catch((errorResponse: any) => {
