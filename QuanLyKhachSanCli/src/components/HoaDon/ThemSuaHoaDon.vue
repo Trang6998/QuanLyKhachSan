@@ -476,8 +476,9 @@
                 });
             },
             getGiaApDung(): void {
+                var thoigian = this.$moment(this.hoaDon.ThoiGianNhanPhong).format("DD/MM/YYYY");
                 if (this.searchParamsPhong.loaiPhongID != null && this.searchParamsPhong.loaiPhongID != undefined) {
-                    BangGiaApi.giaapdung(this.hoaDon.ThoiGianNhanPhong,
+                    BangGiaApi.giaapdung(thoigian,
                         this.searchParamsPhong.loaiPhongID as any).then(res => {
                             this.bangGia = res
                         })

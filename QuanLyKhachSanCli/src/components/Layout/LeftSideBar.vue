@@ -88,7 +88,7 @@
                 tongSoKhachDatPhong: 0 as any,
                 tongSoKhachDatDichVu: 0 as any,
                 lstNhomMxh: [] as any,
-                
+                boPhanID: store.state.user.Profile.NhanVien.BoPhanID
             }
         },
         created() {
@@ -138,45 +138,45 @@
                     title: 'Quản lý kinh doanh',
                     icon: 'account_circle',
                     link: '/',
-                    show: true,
+                    show: (this.boPhanID == 2||this.boPhanID == 1 ||this.boPhanID==6) ? true: false,
                     items: [
-                        { title: 'Khách đặt phòng', link: '/datphong', action1: 'add', show: true },
-                        { title: 'Khách đặt dịch vụ', link: '/datdichvu', action2: 'add', show: true },
-                        { title: 'Quản lý hóa đơn', link: '/hoadon', show: true },
+                        { title: 'Khách đặt phòng', link: '/datphong', action1: 'add', show: (this.boPhanID == 2|| this.boPhanID == 1|| this.boPhanID==6) ? true : false, },
+                        { title: 'Khách đặt dịch vụ', link: '/datdichvu', action2: 'add', show: (this.boPhanID == 2||this.boPhanID == 1|| this.boPhanID==6)? true: false },
+                        { title: 'Quản lý hóa đơn', link: '/hoadon', show: (this.boPhanID == 2||this.boPhanID == 1|| this.boPhanID==6) ? true: false },
                     ]
                 },
                 {
                     title: 'Quản lý kho',
                     icon: 'store',
                     link: '/',
-                    show: true,
+                    show: (this.boPhanID == 5|| this.boPhanID==6) ? true: false,
                     items: [
-                        { title: 'Quản lý vật dụng', link: '/vatdung', show: true },
-                        { title: 'Quản lý dịch vụ', link: '/dichvu', show: true },
-                        { title: 'Nhập kho', link: '/phieunhapkho', show: true },
+                        { title: 'Quản lý vật dụng', link: '/vatdung', show: (this.boPhanID == 5|| this.boPhanID==6) ? true: false, },
+                        { title: 'Quản lý dịch vụ', link: '/dichvu', show: (this.boPhanID == 5|| this.boPhanID==6) ? true: false, },
+                        { title: 'Nhập kho', link: '/phieunhapkho', show: (this.boPhanID == 5|| this.boPhanID==6) ? true: false, },
                     ]
                 },
                 {
                     title: 'Quản lý danh mục',
                     icon: 'reorder',
                     link: '/',
-                    show: true,
+                    show: (this.boPhanID == 1002|| this.boPhanID==6) ? true: false,
                     items: [
-                        { title: 'Danh sách phòng', link: '/phong', show: true },
-                        { title: 'Danh sách loại phòng', link: '/loaiphong', show: true },
-                        { title: 'Danh sách dịch vụ', link: '/dichvu', show: true },
-                        { title: 'Danh sách nhân viên', link: '/nhanvien', show: true },
-                        { title: 'Danh sách khách hàng', link: '/khachhang', show: true },
+                        { title: 'Danh sách phòng', link: '/phong', show: (this.boPhanID == 1002|| this.boPhanID==6) ? true: false, },
+                        { title: 'Danh sách loại phòng', link: '/loaiphong', show: (this.boPhanID == 1002|| this.boPhanID==6) ? true: false, },
+                        { title: 'Danh sách dịch vụ', link: '/dichvu', show: (this.boPhanID == 1002|| this.boPhanID==6) ? true: false, },
+                        { title: 'Danh sách nhân viên', link: '/nhanvien', show: (this.boPhanID == 1002|| this.boPhanID==6) ? true: false, },
+                        { title: 'Danh sách khách hàng', link: '/khachhang', show: (this.boPhanID == 1002|| this.boPhanID==6) ? true: false, },
                     ]
                 },
                 {
                     title: 'Báo cáo thống kê',
                     icon: 'list_alt',
                     link: '/',
-                    show: true,
+                    show: (this.boPhanID == 3||this.boPhanID == 4|| this.boPhanID==6) ? true: false,
                     items: [
-                        { title: 'Kiểm kê vật dụng', link: 'kiemke', show: true},
-                        { title: 'Báo cáo doanh thu', link: 'baocaodoanhthu', show: true},
+                        { title: 'Kiểm kê vật dụng', link: 'kiemke', show: (this.boPhanID == 3||this.boPhanID == 4|| this.boPhanID==6) ? true: false,},
+                        { title: 'Báo cáo doanh thu', link: 'baocaodoanhthu', show: (this.boPhanID == 3||this.boPhanID == 4|| this.boPhanID==6) ? true: false,},
                     ]
                 },
                 ]

@@ -52,7 +52,7 @@
                         <td>{{ props.item.KhachHang ? props.item.KhachHang.HoTen : ''}}</td>
                         <td>{{ props.item.KhachHang ? props.item.KhachHang.SoDienThoai : ''}}</td>
                         <td>{{ props.item.ThoiGianNhanPhong === null ? "" : props.item.ThoiGianNhanPhong|moment('DD/MM/YYYY HH:mm:ss') }}</td>
-                        <td>{{ (props.item.TongThanhToan != 0) ? (props.item.TongThanhToan + (props.item.PhuThu? props.item.PhuThu: 0)) : 0}}</td>
+                        <td>{{ (props.item.TongThanhToanPhong + props.item.TongThanhToanDichVu  + (props.item.PhuThu? props.item.PhuThu: 0)) }}</td>
                         <td>{{ props.item.TrangThai ? "Đã thanh toán" : "Chưa thanh toán" }}</td>
                         <td class="text-xs-center" style="width:80px;">
                             <v-btn flat icon small @click="showModalThemSua(true, props.item)" class="ma-0">

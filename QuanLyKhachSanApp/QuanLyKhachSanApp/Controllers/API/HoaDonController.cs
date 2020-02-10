@@ -56,8 +56,8 @@ namespace QuanLyKhachSanApp.Controllers
                         x.KhachHang.HoTen,
                         x.KhachHang.SoDienThoai
                     },
-                    TongThanhToan = x.ThuePhong.Sum(y => y.BangGia.GiaPhong) + x.DatDichVu.Sum(y => y.DichVu.GiaBan*y.SoLuong),
-                    
+                    TongThanhToanPhong = x.ThuePhong.Sum(y => y.BangGia.GiaPhong),
+                    TongThanhToanDichVu = x.DatDichVu.Sum(y => y.DichVu.GiaBan * y.SoLuong),
                 });
 
                 res = res.OrderBy(o => o.HoaDonID);
@@ -99,7 +99,8 @@ namespace QuanLyKhachSanApp.Controllers
                     hoaDon.LyDo,
                     hoaDon.PhuThu,
                     hoaDon.SoTaiKhoan,
-                    TongThanhToan = hoaDon.ThuePhong.Sum(y => y.BangGia.GiaPhong) + hoaDon.DatDichVu.Sum(y => y.DichVu.GiaBan * y.SoLuong),
+                    TongThanhToanPhong = hoaDon.ThuePhong.Sum(y => y.BangGia.GiaPhong),
+                    TongThanhToanDichVu = hoaDon.DatDichVu.Sum(y => y.DichVu.GiaBan * y.SoLuong),
                     ThuePhong = hoaDon.ThuePhong.Select(x => new
                     {
                         x.ThuePhongID,
