@@ -19,7 +19,7 @@
     "vee-validate": "^2.1.5",
     "vue": "^2.5.16",
     "vue-class-component": "^6.2.0",
-    "vue-moment": "^4.0.0",
+    "vue-moment": "^4.1.0",
     "vue-property-decorator": "^7.0.0",
     "vue-router": "^3.0.1",
     "vue-snotify": "^3.2.1",
